@@ -9,6 +9,7 @@ import sys
 
 
 DATABASE_FILENAME = "/tmp/db.loggy"
+index = {}
 
 
 def set(key, value):
