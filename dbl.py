@@ -6,10 +6,11 @@
 
 
 # Problem 1: search is slow, have to go through the whole file to find last key/value.
-# Solution: build index in memory pointing to byte position of value.
+# Solution: build index in memory pointing to byte position of value. [chosen]
 
 # Problem 2: the client looses it's index once the command is run.
-# Solution: have an index loaded in a instance always available.
+# Solution 1: have an index loaded in a instance always available.
+# Solution 2: Add repl to interact with the db. [chosen]
 
 
 import os
@@ -27,13 +28,15 @@ index = {}
 
 
 def validate(key, value):
-	assert KEY_VALUE_SEPARATOR not in key, f"Key cannot contain separator ({KEY_VALUE_SEPARATOR})"
-	assert END_RECORD not in value, f"Value cannot contain new line character ({END_RECORD})"
+	assert KEY_VALUE_SEPARATOR not in key, \
+	f"Key cannot contain separator ({KEY_VALUE_SEPARATOR})"
+
+	assert END_RECORD not in value, \
+	f"Value cannot contain new line character ({END_RECORD})"
 
 
 def set(key, value):
-	if DEBUG:
-		print_debug("Inside set", key, value)
+	if DEBUG: print_debug("Inside set", key, value)
 
 	validate(key, value)
 
@@ -41,7 +44,9 @@ def set(key, value):
 	separator_b = encode(KEY_VALUE_SEPARATOR)
 	value_b = encode(value)
 	end_b = encode(END_RECORD)
+
 	content = key_b + separator_b + value_b + end_b
+
 	END = os.path.getsize(DATABASE_FILENAME)
 	value_start = END + len(key_b) + len(separator_b)
 	index[key] = (value_start, len(value_b))
@@ -50,11 +55,12 @@ def set(key, value):
 		file.seek(END, 0)
 		file.write(content)
 
+	if DEBUG: print_debug("Record written.")
+
 
 def build_index():
 	# TODO: check last key/value read and resume from there
-	if DEBUG:
-		print_debug("Bulding index...")
+	if DEBUG: print_debug("Bulding index...")
 
 	with open(DATABASE_FILENAME, 'rb') as file:
 		key = ""
@@ -74,10 +80,11 @@ def build_index():
 			else:
 				current += c
 
+	if DEBUG: print_debug("Index built.")
+
 
 def get(key):
-	if DEBUG:
-		print_debug("Inside get", key)
+	if DEBUG: print_debug("Inside get", key)
 
 	if not index:
 		build_index()
@@ -98,13 +105,14 @@ def get(key):
 
 
 if __name__ == "__main__":
-	if len(sys.argv) == 1:
-		print("Two operations available: get and set")
-		exit(-1)
-	elif len(sys.argv) == 3 and sys.argv[1] == 'get':
-		print(get(sys.argv[2]))
-	elif len(sys.argv) == 4 and sys.argv[1] == 'set':
-		set(sys.argv[2], sys.argv[3])
-		print("Record written.")
-	else:
-		print("Invalid command. No operation performed.")
+	if "--debug" in sys.argv:
+		DEBUG = True
+	while True:
+		print("=>", end=" ")
+		operator, *operands = input().split()
+
+		if operator == "set":
+			set(*operands)
+		elif operator == "get":
+			value = get(*operands)
+			print(value)
