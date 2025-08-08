@@ -5,6 +5,14 @@ import loggy
 
 
 class LoggyTest(unittest.TestCase):
+    def test_set_value_cannot_contain_end_record_character(self):
+        with self.assertRaises(AssertionError):
+            loggy.set("key", "value\n")
+
+    def test_set_key_cannot_contain_key_value_separator(self):
+        with self.assertRaises(AssertionError):
+            loggy.set("key,key", "value")
+
     def test_set_and_get(self):
         loggy.set("42", "Douglas Adams")
         assert(loggy.get("42") == "Douglas Adams")

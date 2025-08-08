@@ -15,25 +15,32 @@
 import os
 import sys
 
+from helper import print_debug, encode, decode
+
 
 DATABASE_FILENAME = "/tmp/db.loggy"
 END_RECORD = "\n"
 KEY_VALUE_SEPARATOR = ","
-ENCODING = "utf-8"
-DEBUG = True
-
+DEBUG = False
 
 index = {}
 
 
+def validate(key, value):
+	assert KEY_VALUE_SEPARATOR not in key, f"Key cannot contain separator ({KEY_VALUE_SEPARATOR})"
+	assert END_RECORD not in value, f"Value cannot contain new line character ({END_RECORD})"
+
+
 def set(key, value):
 	if DEBUG:
-		print("Inside set", key, value)
+		print_debug("Inside set", key, value)
 
-	key_b = key.encode(ENCODING)
-	separator_b = KEY_VALUE_SEPARATOR.encode(ENCODING)
-	value_b = value.encode(ENCODING)
-	end_b = END_RECORD.encode(ENCODING)
+	validate(key, value)
+
+	key_b = encode(key)
+	separator_b = encode(KEY_VALUE_SEPARATOR)
+	value_b = encode(value)
+	end_b = encode(END_RECORD)
 	content = key_b + separator_b + value_b + end_b
 	END = os.path.getsize(DATABASE_FILENAME)
 	value_start = END + len(key_b) + len(separator_b)
@@ -45,15 +52,16 @@ def set(key, value):
 
 
 def build_index():
+	# TODO: check last key/value read and resume from there
 	if DEBUG:
-		print("Bulding index...")
+		print_debug("Bulding index...")
 
 	with open(DATABASE_FILENAME, 'rb') as file:
 		key = ""
 		current = ""
 		start, end = 0, 0
 		while (c:= file.read(1)):
-			c = c.decode(ENCODING)
+			c = decode(c)
 			if c == KEY_VALUE_SEPARATOR:
 				key = current
 				current = ""
@@ -69,7 +77,7 @@ def build_index():
 
 def get(key):
 	if DEBUG:
-		print("Inside get", key)
+		print_debug("Inside get", key)
 
 	if not index:
 		build_index()
@@ -82,7 +90,7 @@ def get(key):
 	with open(DATABASE_FILENAME, 'rb') as file:
 		try:
 			file.seek(offset, 0)
-			value = file.read(size).decode(ENCODING)
+			value = decode(file.read(size))
 		except KeyError:
 			value = None
 
