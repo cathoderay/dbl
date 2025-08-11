@@ -67,7 +67,7 @@ class DBL:
         content = key_b + separator_b + value_b + end_b
 
         with open(filename, "ab") as file:
-            END = os.path.getsize(filename) if os.path.exists(filename) else 0
+            END = os.path.getsize(filename)
             value_start = END + len(key_b) + len(separator_b)
             self.index[key] = (value_start, len(value_b))
             file.seek(END, 0)
