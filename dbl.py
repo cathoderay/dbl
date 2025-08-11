@@ -27,6 +27,9 @@
     # Problem 7: check if index is updated before get a new key
     # Solution 1: add how many bytes were read [done]
 
+    # Problem 8: allow only one process to write to avoid corrupted data
+    # Solution 1: add lock for writes (allow many to read) [todo]
+
 
 import os
 import sys
