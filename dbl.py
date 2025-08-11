@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Experiment on log-structured database
+# Naive experiment on log-structured database
 # Author: Ronald Kaiser
 
 
@@ -159,17 +159,39 @@ def update_from_compact():
     build_index()
 
 
+def _remove_file(filename):
+    if DEBUG: print_debug(f"Removing {filename}...")
+    if os.path.exists(filename):
+        os.remove(filename)
+    if DEBUG: print_debug("Done.")
+
+
+def clean_database():
+    if DEBUG: print_debug(f"Inside clean database")
+    _remove_file(DATABASE_FILENAME)
+    if DEBUG: print_debug("Done.")
+
+
+def clean_compact():
+    if DEBUG: print_debug(f"Inside clean compact")
+    _remove_file(COMPACT_TEMP_FILENAME)
+    if DEBUG: print_debug("Done.")
+
+
 if __name__ == "__main__":
     if "--debug" in sys.argv:
         DEBUG = True
     if "--prebuild-index" in sys.argv:
         build_index()
+    operations = "help,set,get,compact,replace_from_compact,build_index,toggle_debug,check_debug,clean_database,clean_compact"
     while True:
         print("=>", end=" ")
         try:
             operator, *operands = input().split()
 
-            if operator == "set":
+            if operator == "help":
+                print("Operations available:", operations)
+            elif operator == "set":
                 set(*operands)
             elif operator == "get":
                 value = get(*operands)
@@ -181,6 +203,15 @@ if __name__ == "__main__":
             elif operator == "build_index":
                 build_index()
                 print(index)
+            elif operator == "toggle_debug":
+                DEBUG ^= True
+                print(DEBUG)
+            elif operator == "clean_database":
+                clean_database()
+            elif operator == "clean_compact":
+                clean_compact()
+            elif operator == "check_debug":
+                print(DEBUG)
             else:
                 print("Unknown command.")
 
