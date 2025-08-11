@@ -21,13 +21,13 @@
     # Problem 5: compaction does not replace current data
     # Solution 1: offer an option to update it [done]
 
-    # Problem 6: how fast is search with index vs not using index
+    # Problem 6: is it really faster with index? how much?
     # Solution 1: benchmark it [todo]
 
-    # Problem 7: check if index is updated before get a new key
-    # Solution 1: add how many bytes were read [done]
+    # Problem 7: when new key/value is added by another process, local index is not updated
+    # Solution 1: add how many bytes were read, and build index from there [done]
 
-    # Problem 8: allow only one process to write to avoid corrupted data
+    # Problem 8: multiple processes can write at the same time and mess with data in disk
     # Solution 1: add lock for writes (allow many to read) [todo]
 
 
