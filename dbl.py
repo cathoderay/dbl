@@ -75,6 +75,7 @@ class DBL:
             self.index[key] = (value_start, len(value_b))
             file.seek(END, 0)
             file.write(content)
+            self.bytes_read = file.tell()
 
         if DEBUG: print_debug("Record written.")
 
@@ -82,8 +83,8 @@ class DBL:
         if DEBUG: print_debug("Bulding index...")
 
         with open(DATABASE_FILENAME, 'rb') as file:
-            if self.index:
-                file.seek(self.bytes_read + 1, 0)
+            if self.index and self.bytes_read < os.path.getsize(DATABASE_FILENAME):
+                file.seek(self.bytes_read, 0)
             key = b""
             current = b""
             start, end = 0, 0
@@ -108,17 +109,18 @@ class DBL:
 
         self.build_index()
 
+        value = None
         try:
             offset, size = self.index[key]
         except KeyError:
-            return None
+            return value
 
         with open(DATABASE_FILENAME, 'rb') as file:
             try:
                 file.seek(offset, 0)
                 value = decode(file.read(size))
-            except KeyError:
-                value = None
+            except Exception as e:
+                print(str(e))
 
         return value
 
@@ -170,8 +172,7 @@ class DBL:
     def clean_database(self):
         if DEBUG: print_debug(f"Inside clean database")
         self._remove_file(DATABASE_FILENAME)
-        self.index = {}
-        self.bytes_read = 0
+        self._clean_index()
         if DEBUG: print_debug("Done.")
 
     def clean_compact(self):
@@ -179,14 +180,29 @@ class DBL:
         self._remove_file(COMPACT_TEMP_FILENAME)
         if DEBUG: print_debug("Done.")
 
+    def _clean_index(self):
+        self.index = {}
+        self.bytes_read = 0
+
+    def clean_index(self):
+        if DEBUG: print_debug(f"Inside clean index")
+        self._clean_index()
+        if DEBUG: print_debug("Done.")
+
+    def clean_all(self):
+        if DEBUG: print_debug("Inside clean ll")
+        self.clean_index()
+        self.clean_database()
+        self.clean_compact()
+        self.bytes_read = 0
+        if DEBUG: print_debug("Done.")
+
 
 if __name__ == "__main__":
     dbl = DBL()
-    if "--debug" in sys.argv:
-        DEBUG = True
-    if "--prebuild-index" in sys.argv:
-        dbl.build_index()
-    operations = "help,set,get,compact,compact_and_replace,replace_from_compact,build_index,toggle_debug,check_debug,clean_database,clean_compact,bytes_read"
+    if "--debug" in sys.argv: DEBUG = True
+    if "--prebuild-index" in sys.argv: dbl.build_index()
+    operations = "help,set,get,compact,compact_and_replace,replace_from_compact,build_index,toggle_debug,check_debug,clean_database,clean_compact,clean_index,clean_all,bytes_read"
     while True:
         print("=>", end=" ")
         try:
@@ -216,6 +232,10 @@ if __name__ == "__main__":
                 dbl.clean_database()
             elif operator == "clean_compact":
                 dbl.clean_compact()
+            elif operator == "clean_index":
+                dbl.clean_index()
+            elif operator == "clean_all":
+                dbl.clean_all()
             elif operator == "check_debug":
                 print(DEBUG)
             elif operator == "bytes_read":
