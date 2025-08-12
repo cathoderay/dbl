@@ -19,7 +19,12 @@ class DBL:
         self.bytes_indexed = 0
 
     @dbl_log
-    def set(self, key, value, filename=conf.DATABASE_FILENAME):
+    def set(self, key, value, is_compact=False):
+        if is_compact:
+            filename = conf.COMPACT_TEMP_FILENAME
+        else:
+            filename = conf.DATABASE_FILENAME
+
         validate(key, value)
 
         key_b = encode(key)
@@ -32,11 +37,11 @@ class DBL:
         with open(filename, "ab") as file:
             END = os.path.getsize(filename)
             value_start = END + len(key_b) + len(separator_b)
-            self.index[key] = (value_start, len(value_b))
             file.seek(END, 0)
             file.write(content)
             self.bytes_indexed = file.tell()
-
+            if not is_compact:
+                self.index[key] = (value_start, len(value_b))
         print_debug("Record written.")
 
     @dbl_log
@@ -65,7 +70,7 @@ class DBL:
                 else:
                     current += c
             self.bytes_indexed = file.tell()
-
+        print_debug("Index built.")
         return self.index
 
     @dbl_log
@@ -95,7 +100,7 @@ class DBL:
     def _compact(self):
         for key in self.index.copy():
             value = self.get(key)
-            self.set(key, value, filename=conf.COMPACT_TEMP_FILENAME)
+            self.set(key, value, is_compact=True)
 
     @dbl_log
     def compact(self):
@@ -152,6 +157,18 @@ class DBL:
         self.clean_database()
         self.clean_compact()
 
+    @dbl_log
+    def _get_index_metadata(self):
+        metadata = []
+        metadata.append(f"Number of keys: {len(self.index)}")
+        metadata.append(f"Bytes indexed: {self.bytes_indexed}")
+        metadata.append(f"Size of index object in bytes: {sys.getsizeof(self.index)}")
+        return metadata
+
+    @dbl_log
+    def get_index_metadata(self):
+        for line in self._get_index_metadata():
+            print(line)
 
 class REPL:
     @dbl_log
@@ -162,18 +179,28 @@ class REPL:
             "set": lambda operands: self.dbl.set(*operands),
             "get": lambda operands: self.dbl.get(*operands),
             "compact": lambda operands: self.dbl.compact(),
-            "compact_and_replace": lambda operands: dbl.compact_and_replace(),
+            "compact_and_replace": lambda operands: self.dbl.compact_and_replace(),
             "replace_from_compact": lambda operands: self.dbl.replace_from_compact(),
             "build_index": lambda operands: self.dbl.build_index(),
-            "toggle_debug": lambda operands: self.toggle_debug(),
-            "check_debug": lambda operands: conf.DEBUG,
+            "toggle_debug_flag": lambda operands: self.toggle_debug(),
+            "check_debug_flag": lambda operands: conf.DEBUG,
             "clean_database": lambda operands: self.dbl.clean_database(),
             "clean_compact": lambda operands: self.dbl.clean_compact(),
             "clean_index": lambda operands: self.dbl.clean_index(),
             "clean_all": lambda operands: self.dbl.clean_all(),
-            "bytes_indexed": lambda operands: self.dbl.bytes_indexed
+            "index_metadata": lambda operands: self.dbl.get_index_metadata(),
         }
+
         print_ascii_logo()
+
+        self.dbl = DBL()
+        while True:
+            print("=>", end=" ")
+            try:
+                operator, *operands = input().split()
+                self.run(operator, operands)
+            except Exception as e:
+                print(str(e))
 
     @dbl_log
     def help(self):
@@ -188,7 +215,7 @@ class REPL:
 
     @dbl_log
     def run(self, operator, operands):
-        to_print = "get check_debug bytes_indexed toggle_debug".split()
+        to_print = "get check_debug_flag bytes_indexed toggle_debug_flag".split()
         try:
             if operator in to_print:
                 print(self.operations[operator](operands))
@@ -201,11 +228,3 @@ class REPL:
 if __name__ == "__main__":
     if "--debug" in sys.argv: conf.DEBUG = True
     repl = REPL()
-    repl.dbl = DBL()
-    while True:
-        print("=>", end=" ")
-        try:
-            operator, *operands = input().split()
-            repl.run(operator, operands)
-        except Exception as e:
-            print(str(e))

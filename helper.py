@@ -1,8 +1,21 @@
 import conf
+from datetime import datetime
 
 
-def print_debug(*args):
-    if conf.DEBUG: print("DEBUG: ", *args)
+def print_debug(data):
+    if not conf.DEBUG:
+        return
+
+    if isinstance(data, str):
+        _print_debug(data)
+
+    if isinstance(data, list):
+        for datum in data:
+            _print_debug(datum)
+
+
+def _print_debug(line):
+    print(f"DEBUG [{datetime.now()}]", line)
 
 
 def encode(data):
@@ -15,9 +28,9 @@ def decode(data):
 
 def dbl_log(func):
     def wrapper(*args, **kwargs):
-        if conf.DEBUG: print("DEBUG: ", "Entering", str(func.__name__), f"{args}", f"{kwargs}")
+        print_debug(f"Entering {str(func.__name__)} {args} {kwargs}")
         result = func(*args, **kwargs)
-        if conf.DEBUG: print("DEBUG: ", "Exiting", str(func.__name__))
+        print_debug(f"Exiting {str(func.__name__)}")
         return result
     return wrapper
 

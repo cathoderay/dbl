@@ -1,7 +1,9 @@
+import sys
+
 from dbl import DBL
 
 
-N = 100000
+N = 100 if not sys.argv[-1][-1].isdigit() else int(sys.argv[-1])
 dbl = DBL()
 
 
