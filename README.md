@@ -64,4 +64,7 @@ Bytes indexed: 84
 Size of index object in bytes: 184
 => get drink
 water
+=> ^C
+Thanks for using dbl!
+Don't forget to eat your veggies! 🥦
 ```
