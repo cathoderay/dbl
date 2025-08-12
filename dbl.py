@@ -50,6 +50,10 @@ class DBL:
         print_debug("Record written.")
 
     @dbl_log
+    def update_index(self, index_key, index_value):
+        self.index[index_key] = index_value
+
+    @dbl_log
     def build_index(self, filename=conf.DATABASE_FILENAME):
         with open(filename, 'rb') as file:
             filename_size = os.path.getsize(filename)
@@ -70,9 +74,7 @@ class DBL:
                 elif decode(c) == conf.END_RECORD:
                     current = b""
                     end = file.tell()
-                    print_debug(f"Found new entry for {key}.")
-                    self.index[decode(key)] = (start, end - start - 1)
-                    print_debug(f"Index updated for {key}.")
+                    self.update_index(decode(key), (start, end - start - 1))
                     start, end = end, end
                 else:
                     current += c
@@ -239,11 +241,14 @@ class REPL:
         return conf.DEBUG
 
     @dbl_log
+    def should_print(self, operator):
+        return operator in "get check_debug_flag bytes_indexed toggle_debug_flag".split()
+
+    @dbl_log
     def run(self, operator, operands):
-        to_print = "get check_debug_flag bytes_indexed toggle_debug_flag".split()
         try:
             result = self.operations[operator](operands)
-            if operator in to_print: print(result)
+            if self.should_print(operator): print(result)
         except KeyError:
             print("Unknown command.")
 
