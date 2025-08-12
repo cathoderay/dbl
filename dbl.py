@@ -51,7 +51,7 @@ class DBL:
             file.write(content)
             if not is_compact:
                 self.bytes_indexed = file.tell()
-                self.update_index(key, IndexValue(value_start, len(value_b)))
+                self._update_index(key, IndexValue(value_start, len(value_b)))
 
     @dbl_log
     def set(self, key, value, is_compact=False):
@@ -59,7 +59,7 @@ class DBL:
         return f"{key} => {value}"
 
     @dbl_log
-    def update_index(self, index_key, index_value):
+    def _update_index(self, index_key, index_value):
         self.index[index_key] = index_value
 
     @dbl_log
@@ -84,7 +84,7 @@ class DBL:
                 elif decode(c) == conf.END_RECORD:
                     current = b""
                     end = file.tell()
-                    self.update_index(decode(key), IndexValue(start, end - start - 1))
+                    self._update_index(decode(key), IndexValue(start, end - start - 1))
                     start, end = end, end
                 else:
                     current += c
@@ -98,7 +98,7 @@ class DBL:
     @dbl_log
     def get(self, key, filename=conf.DATABASE_FILENAME):
         if not os.path.exists(filename):
-            print("Empty db. Use command 'set' to insert a new entry.")
+            print("Empty db. Use operation 'set' to insert a new entry.")
             return
         self._build_index()
 
@@ -243,7 +243,7 @@ class REPL:
         print("Don't forget to eat your veggies! 🥦")
 
     def print_instructions(self):
-        print("Type help to list available commands.")
+        print("Type help to list available operations.")
 
     @dbl_log
     def help(self):
