@@ -65,7 +65,9 @@ class DBL:
                 elif decode(c) == conf.END_RECORD:
                     current = b""
                     end = file.tell()
+                    print_debug(f"Found new entry for {key}.")
                     self.index[decode(key)] = (start, end - start - 1)
+                    print_debug(f"Index updated for {key}.")
                     start, end = end, end
                 else:
                     current += c
