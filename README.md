@@ -155,4 +155,5 @@ Type help to list available commands.
     >>> dbl.get("food")
     'broccoli'
     >>> dbl.set("happy-emoji", "😊")
-    'happy-emoji => 😊'```
+    'happy-emoji => 😊'
+```
