@@ -103,7 +103,7 @@ class DBL:
                     print_debug("Resuming from last point...")
                     file.seek(self.bytes_indexed, os.SEEK_SET)
             key = current = b""
-            start, end = file.tell(), file.tell()
+            start = end = file.tell()
             new_entries = 0
             while (c:= file.read(1)):
                 if decode(c) == conf.KEY_VALUE_SEPARATOR:
