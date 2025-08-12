@@ -31,4 +31,4 @@
 # Solution 1: add lock for writes (allow many to read) [todo]
 
 # Problem 9: dictionary footprint of index seems too high
-# Solution 1: consider approaches to solve it
+# Solution 1: consider approaches to reduce it
