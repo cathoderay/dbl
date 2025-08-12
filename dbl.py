@@ -206,7 +206,7 @@ class REPL:
     def loop(self):
         try:
             while True:
-                print("=>", end=" ")
+                print("\n=>", end=" ")
                 try:
                     operator, *operands = input().split()
                     self.run(operator, operands)
