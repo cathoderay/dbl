@@ -1,6 +1,5 @@
 import unittest
 
-
 from dbl import DBL
 
 
@@ -42,6 +41,11 @@ class LoggyTest(unittest.TestCase):
         assert(dbl.get("name2") == "John")
         assert(dbl.get("name3") == "Ringo")
         assert(dbl.get("name4") == "George")
+
+    def test_get_encoded_data(self):
+        dbl = DBL()
+        encoded = dbl.get_encoded_data("key", "value✅")
+        assert((b'key', b',', b'value\xe2\x9c\x85', b'\n') == encoded)
 
 
 if __name__ == "__main__":
