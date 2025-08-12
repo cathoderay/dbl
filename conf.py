@@ -1,0 +1,6 @@
+DATABASE_FILENAME = "dbl.data"
+COMPACT_TEMP_FILENAME = "dbl.compact"
+END_RECORD = "\n"
+KEY_VALUE_SEPARATOR = ","
+DEBUG = True
+ENCODING = "utf-8"

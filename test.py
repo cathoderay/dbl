@@ -22,13 +22,13 @@ class LoggyTest(unittest.TestCase):
 
     def test_set_updates_local_index(self):
         dbl = DBL()
-        bytes_read_before = dbl.bytes_read
+        bytes_indexed_before = dbl.bytes_indexed
         assert(len(dbl.index) == 0)
         dbl.get("42")
         assert(len(dbl.index) >= 0)
         dbl.set("42", "Test")
-        bytes_read_after = dbl.bytes_read
-        assert(bytes_read_before < bytes_read_after)
+        bytes_indexed_after = dbl.bytes_indexed
+        assert(bytes_indexed_before < bytes_indexed_after)
 
     def test_set_emoji(self):
         dbl = DBL()

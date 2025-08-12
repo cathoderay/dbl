@@ -35,21 +35,17 @@ import os
 import sys
 import shutil
 
-from helper import print_debug, encode, decode
-
-
-DATABASE_FILENAME = "dbl.data"
-COMPACT_TEMP_FILENAME = "dbl.compact"
-END_RECORD = "\n"
-KEY_VALUE_SEPARATOR = ","
-DEBUG = False
+from conf import KEY_VALUE_SEPARATOR, END_RECORD, DATABASE_FILENAME, COMPACT_TEMP_FILENAME
+from helper import print_debug, encode, decode, print_ascii_logo, print_operations, dbl_log
 
 
 class DBL:
+    @dbl_log
     def __init__(self):
         self.index = {}
-        self.bytes_read = 0
+        self.bytes_indexed = 0
 
+    @dbl_log
     def validate(self, key, value):
         assert KEY_VALUE_SEPARATOR not in key, \
         f"Key cannot contain separator ({KEY_VALUE_SEPARATOR})"
@@ -57,9 +53,8 @@ class DBL:
         assert END_RECORD not in value, \
         f"Value cannot contain character ({END_RECORD})"
 
+    @dbl_log
     def set(self, key, value, filename=DATABASE_FILENAME):
-        if DEBUG: print_debug("Inside set", key, value)
-
         self.validate(key, value)
 
         key_b = encode(key)
@@ -75,19 +70,23 @@ class DBL:
             self.index[key] = (value_start, len(value_b))
             file.seek(END, 0)
             file.write(content)
-            self.bytes_read = file.tell()
+            self.bytes_indexed = file.tell()
 
-        if DEBUG: print_debug("Record written.")
+        print_debug("Record written.")
 
-    def build_index(self):
-        if DEBUG: print_debug("Bulding index...")
-
-        with open(DATABASE_FILENAME, 'rb') as file:
-            if self.index and self.bytes_read < os.path.getsize(DATABASE_FILENAME):
-                file.seek(self.bytes_read, 0)
-            key = b""
-            current = b""
-            start, end = 0, 0
+    @dbl_log
+    def build_index(self, filename=DATABASE_FILENAME):
+        with open(filename, 'rb') as file:
+            filename_size = os.path.getsize(filename)
+            if self.index:
+                if self.bytes_indexed == filename_size:
+                    print_debug("Index already built.")
+                    return
+                elif self.bytes_indexed < filename_size:
+                    print_debug("Resuming from last point...")
+                    file.seek(self.bytes_indexed, 0)
+            key = current = b""
+            start, end = file.tell(), file.tell()
             while (c:= file.read(1)):
                 if decode(c) == KEY_VALUE_SEPARATOR:
                     key = current
@@ -100,121 +99,105 @@ class DBL:
                     start, end = end, end
                 else:
                     current += c
-            self.bytes_read = file.tell()
+            self.bytes_indexed = file.tell()
 
-        if DEBUG: print_debug("Index built.")
+        return self.index
 
-    def get(self, key):
-        if DEBUG: print_debug("Inside get", key)
-
+    @dbl_log
+    def get(self, key, filename=DATABASE_FILENAME):
         self.build_index()
 
-        value = None
         try:
             offset, size = self.index[key]
         except KeyError:
-            return value
+            return None
 
-        with open(DATABASE_FILENAME, 'rb') as file:
-            try:
+        try:
+            with open(filename, 'rb') as file:
                 file.seek(offset, 0)
                 value = decode(file.read(size))
-            except Exception as e:
-                print(str(e))
+                return value
+        except Exception as e:
+            print(str(e))
 
-        return value
-
+    @dbl_log
     def _cleanup_compact(self):
-        if DEBUG: print_debug("Inside cleanup compact")
-        if DEBUG: print_debug(f"Cleaning up {COMPACT_TEMP_FILENAME}...")
+        print_debug(f"Cleaning up {COMPACT_TEMP_FILENAME}...")
         file = open(COMPACT_TEMP_FILENAME, "w")
         file.close()
-        if DEBUG: print_debug(f"Done.")
 
+    @dbl_log
     def _compact(self):
-        if DEBUG: print_debug(f"Compacting...")
-        for key in self.index:
+        for key in self.index.copy():
             value = self.get(key)
             self.set(key, value, filename=COMPACT_TEMP_FILENAME)
-        if DEBUG: print_debug(f"Done.")
 
+    @dbl_log
     def compact(self):
-        if DEBUG: print_debug("Inside compact")
         if not self.index: self.build_index()
         self._cleanup_compact()
         self._compact()
-        print(f"Compact version generated at: {COMPACT_TEMP_FILENAME}")
 
+    @dbl_log
     def _copy_from_compact(self):
-        if DEBUG: print_debug(f"Copying from {COMPACT_TEMP_FILENAME} to {DATABASE_FILENAME}...")
         shutil.copyfile(COMPACT_TEMP_FILENAME, DATABASE_FILENAME)
-        if DEBUG: print_debug(f"Done.")
 
+    @dbl_log
     def _remove_compact(self):
-        if DEBUG: print_debug(f"Removing {COMPACT_TEMP_FILENAME}...")
         if os.path.exists(COMPACT_TEMP_FILENAME):
             os.remove(COMPACT_TEMP_FILENAME)
-        if DEBUG: print_debug(f"Done.")
 
+    @dbl_log
     def replace_from_compact(self):
-        if DEBUG: print_debug("Inside replace from compact")
-
         self._copy_from_compact()
         self._remove_compact()
         self.build_index()
 
+    @dbl_log
     def _remove_file(self, filename):
-        if DEBUG: print_debug(f"Removing {filename}...")
         if os.path.exists(filename):
             os.remove(filename)
-        if DEBUG: print_debug("Done.")
 
+    @dbl_log
     def clean_database(self):
-        if DEBUG: print_debug(f"Inside clean database")
         self._remove_file(DATABASE_FILENAME)
         self._clean_index()
-        if DEBUG: print_debug("Done.")
 
+    @dbl_log
     def clean_compact(self):
-        if DEBUG: print_debug(f"Inside clean compact")
         self._remove_file(COMPACT_TEMP_FILENAME)
-        if DEBUG: print_debug("Done.")
 
+    @dbl_log
     def _clean_index(self):
         self.index = {}
-        self.bytes_read = 0
+        self.bytes_indexed = 0
 
+    @dbl_log
     def clean_index(self):
-        if DEBUG: print_debug(f"Inside clean index")
         self._clean_index()
-        if DEBUG: print_debug("Done.")
 
+    @dbl_log
     def clean_all(self):
-        if DEBUG: print_debug("Inside clean ll")
         self.clean_index()
         self.clean_database()
         self.clean_compact()
-        self.bytes_read = 0
-        if DEBUG: print_debug("Done.")
 
 
 if __name__ == "__main__":
     dbl = DBL()
     if "--debug" in sys.argv: DEBUG = True
     if "--prebuild-index" in sys.argv: dbl.build_index()
-    operations = "help,set,get,compact,compact_and_replace,replace_from_compact,build_index,toggle_debug,check_debug,clean_database,clean_compact,clean_index,clean_all,bytes_read"
+    print_ascii_logo()
     while True:
         print("=>", end=" ")
         try:
             operator, *operands = input().split()
-
             if operator == "help":
-                print("Operations available:", operations)
+                print_operations()
             elif operator == "set":
                 dbl.set(*operands)
             elif operator == "get":
-                value = dbl.get(*operands)
-                print(value)
+                print(dbl.get(*operands))
             elif operator == "compact":
                 dbl.compact()
             elif operator == "compact_and_replace":
@@ -223,11 +206,9 @@ if __name__ == "__main__":
             elif operator == "replace_from_compact":
                 dbl.replace_from_compact()
             elif operator == "build_index":
-                dbl.build_index()
-                print(dbl.index)
+                print(dbl.build_index())
             elif operator == "toggle_debug":
                 DEBUG ^= True
-                print(DEBUG)
             elif operator == "clean_database":
                 dbl.clean_database()
             elif operator == "clean_compact":
@@ -238,8 +219,8 @@ if __name__ == "__main__":
                 dbl.clean_all()
             elif operator == "check_debug":
                 print(DEBUG)
-            elif operator == "bytes_read":
-                print(dbl.bytes_read)
+            elif operator == "bytes_indexed":
+                print(dbl.bytes_indexed)
             else:
                 print("Unknown command.")
 
