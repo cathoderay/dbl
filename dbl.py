@@ -242,10 +242,8 @@ class REPL:
     def run(self, operator, operands):
         to_print = "get check_debug_flag bytes_indexed toggle_debug_flag".split()
         try:
-            if operator in to_print:
-                print(self.operations[operator](operands))
-            else:
-                self.operations[operator](operands)
+            result = self.operations[operator](operands)
+            if operator in to_print: print(result)
         except KeyError:
             print("Unknown command.")
 
