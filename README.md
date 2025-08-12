@@ -2,6 +2,18 @@
 
 Naive implementation of a key-value log structured database inspired by "Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems" book by Martin Kleppmann.
 
+## Usage example (Python)
+```
+    >>> from dbl import DBL
+    >>> dbl = DBL()
+    >>> dbl.set("food", "broccoli")
+    >>> dbl.get("food")
+    'broccoli'
+    >>> dbl.set("happy-emoji", "😊")
+    >>> dbl.get("happy-emoji")
+    '😊'
+```
+
 ## Usage example (REPL)
 
 ```
