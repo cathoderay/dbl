@@ -49,8 +49,8 @@ class DBL:
             value_start = END + len(key_b) + len(separator_b)
             file.seek(END, 0)
             file.write(content)
-            self.bytes_indexed = file.tell()
             if not is_compact:
+                self.bytes_indexed = file.tell()
                 self.update_index(key, IndexValue(value_start, len(value_b)))
         print_debug("Record written.")
 
@@ -115,13 +115,13 @@ class DBL:
 
     @dbl_log
     def _compact(self):
-        for key in self.index.copy():
+        for key in self.index:
             value = self.get(key)
             self.set(key, value, is_compact=True)
 
     @dbl_log
     def compact(self):
-        if not self.index: self.build_index()
+        self.build_index()
         self._cleanup_compact()
         self._compact()
 
