@@ -66,18 +66,17 @@ class DBL:
 
         filename = self.get_filename(is_compact)
 
+        content = b""
+        for key, value in items:
+            key_b, sep_b, value_b, end_b = self.get_encoded_data(key, value)
+            content += key_b + sep_b + value_b + end_b
+
         with open(filename, "ab") as file:
             file.seek(0, os.SEEK_END)
-            for key, value in items:
-                key_b, sep_b, value_b, end_b = self.get_encoded_data(key, value)
-                content = key_b + sep_b + value_b + end_b
+            file.write(content)
 
-                value_start = file.tell() + len(key_b) + len(sep_b)
-                file.write(content)
-
-                if not is_compact:
-                    self.bytes_indexed = file.tell()
-                    self._update_index(key, IndexValue(value_start, len(value_b)))
+        if not is_compact:
+            self._build_index()
 
     @dbl_log
     def set(self, key, value, is_compact=False):
