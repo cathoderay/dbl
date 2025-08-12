@@ -35,8 +35,8 @@ import os
 import sys
 import shutil
 
-from conf import KEY_VALUE_SEPARATOR, END_RECORD, DATABASE_FILENAME, COMPACT_TEMP_FILENAME
-from helper import print_debug, encode, decode, print_ascii_logo, print_operations, dbl_log
+import conf
+from helper import print_debug, encode, decode, print_ascii_logo, print_operations, dbl_log, validate
 
 
 class DBL:
@@ -46,21 +46,13 @@ class DBL:
         self.bytes_indexed = 0
 
     @dbl_log
-    def validate(self, key, value):
-        assert KEY_VALUE_SEPARATOR not in key, \
-        f"Key cannot contain separator ({KEY_VALUE_SEPARATOR})"
-
-        assert END_RECORD not in value, \
-        f"Value cannot contain character ({END_RECORD})"
-
-    @dbl_log
-    def set(self, key, value, filename=DATABASE_FILENAME):
-        self.validate(key, value)
+    def set(self, key, value, filename=conf.DATABASE_FILENAME):
+        validate(key, value)
 
         key_b = encode(key)
-        separator_b = encode(KEY_VALUE_SEPARATOR)
+        separator_b = encode(conf.KEY_VALUE_SEPARATOR)
         value_b = encode(value)
-        end_b = encode(END_RECORD)
+        end_b = encode(conf.END_RECORD)
 
         content = key_b + separator_b + value_b + end_b
 
@@ -75,7 +67,7 @@ class DBL:
         print_debug("Record written.")
 
     @dbl_log
-    def build_index(self, filename=DATABASE_FILENAME):
+    def build_index(self, filename=conf.DATABASE_FILENAME):
         with open(filename, 'rb') as file:
             filename_size = os.path.getsize(filename)
             if self.index:
@@ -88,11 +80,11 @@ class DBL:
             key = current = b""
             start, end = file.tell(), file.tell()
             while (c:= file.read(1)):
-                if decode(c) == KEY_VALUE_SEPARATOR:
+                if decode(c) == conf.KEY_VALUE_SEPARATOR:
                     key = current
                     current = b""
                     start = file.tell()
-                elif decode(c) == END_RECORD:
+                elif decode(c) == conf.END_RECORD:
                     current = b""
                     end = file.tell()
                     self.index[decode(key)] = (start, end - start - 1)
@@ -104,7 +96,7 @@ class DBL:
         return self.index
 
     @dbl_log
-    def get(self, key, filename=DATABASE_FILENAME):
+    def get(self, key, filename=conf.DATABASE_FILENAME):
         self.build_index()
 
         try:
@@ -122,15 +114,15 @@ class DBL:
 
     @dbl_log
     def _cleanup_compact(self):
-        print_debug(f"Cleaning up {COMPACT_TEMP_FILENAME}...")
-        file = open(COMPACT_TEMP_FILENAME, "w")
+        print_debug(f"Cleaning up {conf.COMPACT_TEMP_FILENAME}...")
+        file = open(conf.COMPACT_TEMP_FILENAME, "w")
         file.close()
 
     @dbl_log
     def _compact(self):
         for key in self.index.copy():
             value = self.get(key)
-            self.set(key, value, filename=COMPACT_TEMP_FILENAME)
+            self.set(key, value, filename=conf.COMPACT_TEMP_FILENAME)
 
     @dbl_log
     def compact(self):
@@ -140,12 +132,12 @@ class DBL:
 
     @dbl_log
     def _copy_from_compact(self):
-        shutil.copyfile(COMPACT_TEMP_FILENAME, DATABASE_FILENAME)
+        shutil.copyfile(conf.COMPACT_TEMP_FILENAME, conf.DATABASE_FILENAME)
 
     @dbl_log
     def _remove_compact(self):
-        if os.path.exists(COMPACT_TEMP_FILENAME):
-            os.remove(COMPACT_TEMP_FILENAME)
+        if os.path.exists(conf.COMPACT_TEMP_FILENAME):
+            os.remove(conf.COMPACT_TEMP_FILENAME)
 
     @dbl_log
     def replace_from_compact(self):
@@ -160,12 +152,12 @@ class DBL:
 
     @dbl_log
     def clean_database(self):
-        self._remove_file(DATABASE_FILENAME)
+        self._remove_file(conf.DATABASE_FILENAME)
         self._clean_index()
 
     @dbl_log
     def clean_compact(self):
-        self._remove_file(COMPACT_TEMP_FILENAME)
+        self._remove_file(conf.COMPACT_TEMP_FILENAME)
 
     @dbl_log
     def _clean_index(self):
@@ -185,7 +177,7 @@ class DBL:
 
 if __name__ == "__main__":
     dbl = DBL()
-    if "--debug" in sys.argv: DEBUG = True
+    if "--debug" in sys.argv: conf.DEBUG = True
     if "--prebuild-index" in sys.argv: dbl.build_index()
     print_ascii_logo()
     while True:
@@ -208,7 +200,7 @@ if __name__ == "__main__":
             elif operator == "build_index":
                 print(dbl.build_index())
             elif operator == "toggle_debug":
-                DEBUG ^= True
+                conf.DEBUG ^= True
             elif operator == "clean_database":
                 dbl.clean_database()
             elif operator == "clean_compact":
@@ -218,11 +210,10 @@ if __name__ == "__main__":
             elif operator == "clean_all":
                 dbl.clean_all()
             elif operator == "check_debug":
-                print(DEBUG)
+                print(conf.DEBUG)
             elif operator == "bytes_indexed":
                 print(dbl.bytes_indexed)
             else:
                 print("Unknown command.")
-
         except Exception as e:
             print(str(e))

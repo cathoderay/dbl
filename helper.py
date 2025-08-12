@@ -1,25 +1,33 @@
-from conf import ENCODING, DEBUG
-
+import conf
 
 def print_debug(*args):
-    if DEBUG: print("DEBUG: ", *args)
+    if conf.DEBUG: print("DEBUG: ", *args)
 
 
 def encode(data):
-    return data.encode(ENCODING, errors="ignore")
+    return data.encode(conf.ENCODING, errors="ignore")
 
 
 def decode(data):
-    return data.decode(ENCODING, errors="ignore")
+    return data.decode(conf.ENCODING, errors="ignore")
 
 
 def dbl_log(func):
     def wrapper(*args, **kwargs):
-        if DEBUG: print("DEBUG: ", "Inside", str(func.__name__), *args[1:], f"{kwargs}")
+        if conf.DEBUG: print("DEBUG: ", "Inside", str(func.__name__), f"{args}", f"{kwargs}")
         result = func(*args, **kwargs)
-        if DEBUG: print("DEBUG: ", "Exiting", str(func.__name__))
+        if conf.DEBUG: print("DEBUG: ", "Exiting", str(func.__name__))
         return result
     return wrapper
+
+
+@dbl_log
+def validate(key, value):
+    assert conf.KEY_VALUE_SEPARATOR not in key, \
+    f"Key cannot contain separator ({conf.KEY_VALUE_SEPARATOR})"
+
+    assert conf.END_RECORD not in value, \
+    f"Value cannot contain character ({conf.END_RECORD})"
 
 
 
