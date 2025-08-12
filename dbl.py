@@ -93,7 +93,7 @@ class DBL:
 
     @dbl_log
     def build_index(self, filename=conf.DATABASE_FILENAME):
-        return str(self._build_index(filename))
+        return self._build_index(filename)
 
     @dbl_log
     def get(self, key, filename=conf.DATABASE_FILENAME):
@@ -105,7 +105,7 @@ class DBL:
         try:
             offset, size = self.index[key]
         except KeyError:
-            return None
+            raise ValueError("Key not found")
 
         try:
             with open(filename, 'rb') as file:
@@ -192,8 +192,7 @@ class DBL:
 
     @dbl_log
     def get_index_metadata(self):
-        for line in self._get_index_metadata():
-            print(line)
+        return "\n".join(["-"*50] + self._get_index_metadata() + ["-"*50])
 
 class REPL:
     @dbl_log
@@ -249,8 +248,7 @@ class REPL:
     @dbl_log
     def help(self):
         operations = self.operations.keys()
-        print("Operations available:")
-        print("\n".join(map(lambda item: " * " + item, operations)))
+        return "Operations available:\n" + "\n".join(map(lambda item: " * " + item, operations))
 
     @dbl_log
     def toggle_debug(self):
@@ -261,7 +259,7 @@ class REPL:
     def run(self, operator, operands):
         try:
             result = self.operations[operator](operands)
-            print("✅ " + result if result else "")
+            print("✅ " + (result if isinstance(result, str) else "Done."))
         except KeyError:
             print("Unknown operation.")
 
