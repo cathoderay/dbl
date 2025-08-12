@@ -19,10 +19,10 @@
 # Problem 7: when new key/value is added by another process, local index is not updated
 # Solution 1: add how many bytes were read, and build index from there [done]
 
-[todo]
-
 # Problem 4: compact operation is slow
-# Solution 1: offer a compact operation that writes bytes in bulk [todo]
+# Solution 1: offer a compact operation that writes bytes in bulk [done]
+
+[todo]
 
 # Problem 6: is it really faster with index? how much?
 # Solution 1: benchmark it [todo]

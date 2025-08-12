@@ -29,34 +29,64 @@ class DBL:
         self.bytes_indexed = 0
 
     @dbl_log
+    def get_encoded_data(self, key, value):
+        return (
+            encode(key),
+            encode(conf.KEY_VALUE_SEPARATOR),
+            encode(value),
+            encode(conf.END_RECORD)
+        )
+
+    @dbl_log
     def _set(self, key, value, is_compact=False):
         validate(key, value)
 
-        if is_compact:
-            filename = conf.COMPACT_TEMP_FILENAME
-        else:
-            filename = conf.DATABASE_FILENAME
-
-        key_b = encode(key)
-        separator_b = encode(conf.KEY_VALUE_SEPARATOR)
-        value_b = encode(value)
-        end_b = encode(conf.END_RECORD)
-
-        content = key_b + separator_b + value_b + end_b
+        filename = self.get_filename(is_compact)
+        key_b, sep_b, value_b, end_b = self.get_encoded_data(key, value)
+        content = key_b + sep_b + value_b + end_b
 
         with open(filename, "ab") as file:
-            END = os.path.getsize(filename)
-            value_start = END + len(key_b) + len(separator_b)
-            file.seek(END, 0)
+            file.seek(0, os.SEEK_END)
+            value_start = file.tell() + len(key_b) + len(sep_b)
             file.write(content)
             if not is_compact:
                 self.bytes_indexed = file.tell()
                 self._update_index(key, IndexValue(value_start, len(value_b)))
 
     @dbl_log
+    def get_filename(self, is_compact):
+        if is_compact:
+            return conf.COMPACT_FILENAME
+        return conf.DATABASE_FILENAME
+
+    @dbl_log
+    def _set_bulk(self, items, is_compact=False):
+        for key, value in items:
+            validate(key, value)
+
+        filename = self.get_filename(is_compact)
+
+        with open(filename, "ab") as file:
+            file.seek(0, os.SEEK_END)
+            for key, value in items:
+                key_b, sep_b, value_b, end_b = self.get_encoded_data(key, value)
+                content = key_b + sep_b + value_b + end_b
+
+                value_start = file.tell() + len(key_b) + len(sep_b)
+                file.write(content)
+
+                if not is_compact:
+                    self.bytes_indexed = file.tell()
+                    self._update_index(key, IndexValue(value_start, len(value_b)))
+
+    @dbl_log
     def set(self, key, value, is_compact=False):
         self._set(key, value, is_compact)
         return f"{key} => {value}"
+
+    @dbl_log
+    def set_bulk(self, items):
+        self._set_bulk(items)
 
     @dbl_log
     def _update_index(self, index_key, index_value):
@@ -72,7 +102,7 @@ class DBL:
                     return self.bytes_indexed
                 elif self.bytes_indexed < filename_size:
                     print_debug("Resuming from last point...")
-                    file.seek(self.bytes_indexed, 0)
+                    file.seek(self.bytes_indexed, os.SEEK_SET)
                     return self.bytes_indexed
             key = current = b""
             start, end = file.tell(), file.tell()
@@ -117,15 +147,17 @@ class DBL:
 
     @dbl_log
     def _cleanup_compact(self):
-        print_debug(f"Cleaning up {conf.COMPACT_TEMP_FILENAME}...")
-        file = open(conf.COMPACT_TEMP_FILENAME, "w")
+        print_debug(f"Cleaning up {conf.COMPACT_FILENAME}...")
+        file = open(conf.COMPACT_FILENAME, "w")
         file.close()
 
     @dbl_log
     def _compact(self):
+        items = []
         for key in self.index:
             value = self.get(key)
-            self._set(key, value, is_compact=True)
+            items.append((key, value))
+        self._set_bulk(items, is_compact=True)
 
     @dbl_log
     def compact(self):
@@ -135,12 +167,12 @@ class DBL:
 
     @dbl_log
     def _copy_from_compact(self):
-        shutil.copyfile(conf.COMPACT_TEMP_FILENAME, conf.DATABASE_FILENAME)
+        shutil.copyfile(conf.COMPACT_FILENAME, conf.DATABASE_FILENAME)
 
     @dbl_log
     def _remove_compact(self):
-        if os.path.exists(conf.COMPACT_TEMP_FILENAME):
-            os.remove(conf.COMPACT_TEMP_FILENAME)
+        if os.path.exists(conf.COMPACT_FILENAME):
+            os.remove(conf.COMPACT_FILENAME)
 
     @dbl_log
     def replace_from_compact(self):
@@ -165,7 +197,7 @@ class DBL:
 
     @dbl_log
     def clean_compact(self):
-        self._remove_file(conf.COMPACT_TEMP_FILENAME)
+        self._remove_file(conf.COMPACT_FILENAME)
 
     @dbl_log
     def _clean_index(self):

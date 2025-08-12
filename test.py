@@ -35,6 +35,14 @@ class LoggyTest(unittest.TestCase):
         dbl.set("emoji", "😀")
         assert(dbl.get("emoji") == "😀")
 
+    def test_set_in_bulk(self):
+        dbl = DBL()
+        dbl.set_bulk([("name1", "Paul"), ("name2", "John"), ("name3", "Ringo"), ("name4", "George")])
+        assert(dbl.get("name1") == "Paul")
+        assert(dbl.get("name2") == "John")
+        assert(dbl.get("name3") == "Ringo")
+        assert(dbl.get("name4") == "George")
+
 
 if __name__ == "__main__":
     unittest.main()
