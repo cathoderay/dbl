@@ -1,6 +1,6 @@
 # dbl
 
-Naive implementation of a key-value log structured database inspired by "Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems" book by Martin Kleppmann.
+Naive implementation of a key-value log structured database inspired by the book "Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems" by Martin Kleppmann.
 
 ## Usage example (REPL)
 

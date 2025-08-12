@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 
-# Goal: naive experiment to understand log-structured database
-# Author: Ronald Kaiser
+"""
+    This is a naive implementation of a key-value log structured database
+    inspired by the book "Designing Data-Intensive Applications: The Big Ideas
+    Behind Reliable, Scalable, and Maintainable Systems" by Martin Kleppmann.
+"""
+
+__author__ = "Ronald Kaiser"
 
 
 import os
