@@ -29,7 +29,7 @@ class DBL:
         self.bytes_indexed = 0
 
     @dbl_log
-    def set(self, key, value, is_compact=False):
+    def _set(self, key, value, is_compact=False):
         validate(key, value)
 
         if is_compact:
@@ -52,23 +52,28 @@ class DBL:
             if not is_compact:
                 self.bytes_indexed = file.tell()
                 self.update_index(key, IndexValue(value_start, len(value_b)))
-        print_debug("Record written.")
+
+    @dbl_log
+    def set(self, key, value, is_compact=False):
+        self._set(key, value, is_compact)
+        return f"{key} => {value}"
 
     @dbl_log
     def update_index(self, index_key, index_value):
         self.index[index_key] = index_value
 
     @dbl_log
-    def build_index(self, filename=conf.DATABASE_FILENAME):
+    def _build_index(self, filename=conf.DATABASE_FILENAME):
         with open(filename, 'rb') as file:
             filename_size = os.path.getsize(filename)
             if self.index:
                 if self.bytes_indexed == filename_size:
                     print_debug("Index already built. Skipping.")
-                    return
+                    return self.bytes_indexed
                 elif self.bytes_indexed < filename_size:
                     print_debug("Resuming from last point...")
                     file.seek(self.bytes_indexed, 0)
+                    return self.bytes_indexed
             key = current = b""
             start, end = file.tell(), file.tell()
             while (c:= file.read(1)):
@@ -84,15 +89,18 @@ class DBL:
                 else:
                     current += c
             self.bytes_indexed = file.tell()
-        print_debug("Index built.")
-        return self.index
+        return self.bytes_indexed
+
+    @dbl_log
+    def build_index(self, filename=conf.DATABASE_FILENAME):
+        return str(self._build_index(filename))
 
     @dbl_log
     def get(self, key, filename=conf.DATABASE_FILENAME):
         if not os.path.exists(filename):
             print("Empty db. Use command 'set' to insert a new entry.")
             return
-        self.build_index()
+        self._build_index()
 
         try:
             offset, size = self.index[key]
@@ -117,11 +125,11 @@ class DBL:
     def _compact(self):
         for key in self.index:
             value = self.get(key)
-            self.set(key, value, is_compact=True)
+            self._set(key, value, is_compact=True)
 
     @dbl_log
     def compact(self):
-        self.build_index()
+        self._build_index()
         self._cleanup_compact()
         self._compact()
 
@@ -138,7 +146,7 @@ class DBL:
     def replace_from_compact(self):
         self._copy_from_compact()
         self._remove_compact()
-        self.build_index()
+        self._build_index()
 
     @dbl_log
     def compact_and_replace(self):
@@ -250,14 +258,10 @@ class REPL:
         return conf.DEBUG
 
     @dbl_log
-    def should_print(self, operator):
-        return operator in "get check_debug_flag bytes_indexed toggle_debug_flag".split()
-
-    @dbl_log
     def run(self, operator, operands):
         try:
             result = self.operations[operator](operands)
-            if self.should_print(operator): print(result)
+            print("✅ " + result if result else "")
         except KeyError:
             print("Unknown operation.")
 
