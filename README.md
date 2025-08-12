@@ -5,7 +5,7 @@ Naive implementation of a key-value log structured database inspired by the book
 ## Usage example (REPL)
 
 ```
-➜  dbl git:(main) dbl
+➜  dbl git:(main) ✗ dbl
 
     Welcome to
           _____                    _____                    _____
@@ -52,48 +52,52 @@ Operations available:
  * clean_all
  * index_metadata
 
+
 => set
 DBL.set() missing 2 required positional arguments: 'key' and 'value'
 
 => set food broccoli
+✅ food => broccoli
 
 => get
 DBL.get() missing 1 required positional argument: 'key'
 
 => get food
-broccoli
+✅ broccoli
 
 => index_metadata
 Number of keys: 1
 Bytes indexed: 14
 Size of index object in bytes: 184
 
+
 => get drink
-None
+
 
 => set drink water
+✅ drink => water
 
 => index_metadata
 Number of keys: 2
 Bytes indexed: 26
 Size of index object in bytes: 184
 
+
 => get drink
-water
+✅ water
 
 => ^C
 Thanks for using dbl!
 Don't forget to eat your veggies! 🥦
-````
+```
 
 ## Usage example (Python)
 ```
     >>> from dbl import DBL
     >>> dbl = DBL()
     >>> dbl.set("food", "broccoli")
+    'food => broccoli'
     >>> dbl.get("food")
     'broccoli'
     >>> dbl.set("happy-emoji", "😊")
-    >>> dbl.get("happy-emoji")
-    '😊'
-```
+    'happy-emoji => 😊'```
