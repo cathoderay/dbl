@@ -5,7 +5,7 @@ Naive implementation of a key-value log structured database inspired by the book
 ## Usage example (REPL)
 
 ```
-➜  dbl git:(main) ✗ dbl
+➜  dbl git:(main) dbl
 
     Welcome to
           _____                    _____                    _____
@@ -90,6 +90,60 @@ Size of index object in bytes: 184
 => ^C
 Thanks for using dbl!
 Don't forget to eat your veggies! 🥦
+```
+
+## Usage example (REPL in debug mode)
+Start your REPL with --debug flag
+```
+➜  dbl git:(main) dbl --debug
+[DEBUG [2025-08-12 16:44:33.043721  ▶️ Entering __init__ (<__main__.REPL object at 0x106bdfb60>,) {}
+[DEBUG [2025-08-12 16:44:33.043783  ▶️ Entering __init__ (<__main__.DBL object at 0x106bdfcb0>,) {}
+[DEBUG [2025-08-12 16:44:33.043797  ⬅️ Exiting __init__
+[DEBUG [2025-08-12 16:44:33.043810  ⬅️ Exiting __init__
+[DEBUG [2025-08-12 16:44:33.043823  ▶️ Entering start (<__main__.REPL object at 0x106bdfb60>,) {}
+
+    Welcome to
+          _____                    _____                    _____
+         /\    \                  /\    \                  /\    \
+        /::\    \                /::\    \                /::\____\
+       /::::\    \              /::::\    \              /:::/    /
+      /::::::\    \            /::::::\    \            /:::/    /
+     /:::/\:::\    \          /:::/\:::\    \          /:::/    /
+    /:::/  \:::\    \        /:::/__\:::\    \        /:::/    /
+   /:::/    \:::\    \      /::::\   \:::\    \      /:::/    /
+  /:::/    / \:::\    \    /::::::\   \:::\    \    /:::/    /
+ /:::/    /   \:::\ ___\  /:::/\:::\   \:::\ ___\  /:::/    /
+/:::/____/     \:::|    |/:::/__\:::\   \:::|    |/:::/____/
+\:::\    \     /:::|____|\:::\   \:::\  /:::|____|\:::\    \
+ \:::\    \   /:::/    /  \:::\   \:::\/:::/    /  \:::\    \
+  \:::\    \ /:::/    /    \:::\   \::::::/    /    \:::\    \
+   \:::\    /:::/    /      \:::\   \::::/    /      \:::\    \
+    \:::\  /:::/    /        \:::\  /:::/    /        \:::\    \
+     \:::\/:::/    /          \:::\/:::/    /          \:::\    \
+      \::::::/    /            \::::::/    /            \:::\    \
+       \::::/    /              \::::/    /              \:::\____\
+        \::/____/                \::/____/                \::/    /
+         ~~                       ~~                       \/____/
+
+    version 0.1
+    by Ronald Kaiser
+
+Type help to list available commands.
+[DEBUG [2025-08-12 16:44:33.043955  ▶️ Entering loop (<__main__.REPL object at 0x106bdfb60>,) {}
+[DEBUG [2025-08-12 16:44:33.043973  ▶️ Entering _loop (<__main__.REPL object at 0x106bdfb60>,) {}
+
+=> get food
+[DEBUG [2025-08-12 16:44:37.028291  ▶️ Entering run (<__main__.REPL object at 0x106bdfb60>, 'get', ['food']) {}
+[DEBUG [2025-08-12 16:44:37.028334  ▶️ Entering get (<__main__.DBL object at 0x106bdfcb0>, 'food') {}
+[DEBUG [2025-08-12 16:44:37.028378  ▶️ Entering _build_index (<__main__.DBL object at 0x106bdfcb0>,) {}
+[DEBUG [2025-08-12 16:44:37.028532  ▶️ Entering update_index (<__main__.DBL object at 0x106bdfcb0>, 'food', IndexValue(start=5, size=8)) {}
+[DEBUG [2025-08-12 16:44:37.028554  ⬅️ Exiting update_index
+[DEBUG [2025-08-12 16:44:37.028583  ▶️ Entering update_index (<__main__.DBL object at 0x106bdfcb0>, 'drink', IndexValue(start=20, size=5)) {}
+[DEBUG [2025-08-12 16:44:37.028594  ⬅️ Exiting update_index
+[DEBUG [2025-08-12 16:44:37.028621  ⬅️ Exiting _build_index
+[DEBUG [2025-08-12 16:44:37.028680  ⬅️ Exiting get
+✅ broccoli
+[DEBUG [2025-08-12 16:44:37.028700  ⬅️ Exiting run
 ```
 
 ## Usage example (Python)
