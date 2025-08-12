@@ -28,9 +28,9 @@ def decode(data):
 
 def dbl_log(func):
     def wrapper(*args, **kwargs):
-        print_debug(f"Entering {str(func.__name__)} {args} {kwargs}")
+        print_debug(f" ▶️ Entering {str(func.__name__)} {args} {kwargs}")
         result = func(*args, **kwargs)
-        print_debug(f"Exiting {str(func.__name__)}")
+        print_debug(f" ⬅️ Exiting {str(func.__name__)}")
         return result
     return wrapper
 

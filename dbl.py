@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Goal: naive experiment to study log-structured database
+# Goal: naive experiment to understand log-structured database
 # Author: Ronald Kaiser
 
 
@@ -50,7 +50,7 @@ class DBL:
             filename_size = os.path.getsize(filename)
             if self.index:
                 if self.bytes_indexed == filename_size:
-                    print_debug("Index already built.")
+                    print_debug("Index already built. Skipping.")
                     return
                 elif self.bytes_indexed < filename_size:
                     print_debug("Resuming from last point...")
@@ -77,6 +77,9 @@ class DBL:
 
     @dbl_log
     def get(self, key, filename=conf.DATABASE_FILENAME):
+        if not os.path.exists(filename):
+            print("Empty db. Use command 'set' to insert a new entry.")
+            return
         self.build_index()
 
         try:
@@ -174,8 +177,8 @@ class DBL:
 
 class REPL:
     @dbl_log
-    def __init__(self, dbl=None):
-        self.dbl = dbl
+    def __init__(self):
+        self.dbl = DBL()
         self.operations = {
             "help": lambda operands: self.help(),
             "set": lambda operands: self.dbl.set(*operands),
@@ -193,16 +196,31 @@ class REPL:
             "index_metadata": lambda operands: self.dbl.get_index_metadata(),
         }
 
+    @dbl_log
+    def start(self):
         print_ascii_logo()
+        self.print_instructions()
+        self.loop()
 
-        self.dbl = DBL()
-        while True:
-            print("=>", end=" ")
-            try:
-                operator, *operands = input().split()
-                self.run(operator, operands)
-            except Exception as e:
-                print(str(e))
+    @dbl_log
+    def loop(self):
+        try:
+            while True:
+                print("=>", end=" ")
+                try:
+                    operator, *operands = input().split()
+                    self.run(operator, operands)
+                except Exception as e:
+                    print(str(e))
+        except KeyboardInterrupt:
+            self.print_goodbye_message()
+
+    def print_goodbye_message(self):
+        print("\nThanks for using dbl!")
+        print("Don't forget to eat your veggies! 🥦")
+
+    def print_instructions(self):
+        print("Type help to list available commands.")
 
     @dbl_log
     def help(self):
@@ -230,3 +248,4 @@ class REPL:
 if __name__ == "__main__":
     if "--debug" in sys.argv: conf.DEBUG = True
     repl = REPL()
+    repl.start()
