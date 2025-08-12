@@ -36,7 +36,7 @@ Naive implementation of a key-value log structured database inspired by the book
 Type help to list available commands.
 
 => help
-Operations available:
+✅ Operations available:
  * help
  * set
  * get
@@ -52,7 +52,6 @@ Operations available:
  * clean_all
  * index_metadata
 
-
 => set
 DBL.set() missing 2 required positional arguments: 'key' and 'value'
 
@@ -66,22 +65,24 @@ DBL.get() missing 1 required positional argument: 'key'
 ✅ broccoli
 
 => index_metadata
+✅ --------------------------------------------------
 Number of keys: 1
 Bytes indexed: 14
 Size of index object in bytes: 184
-
+--------------------------------------------------
 
 => get drink
-
+Key not found
 
 => set drink water
 ✅ drink => water
 
 => index_metadata
+✅ --------------------------------------------------
 Number of keys: 2
 Bytes indexed: 26
 Size of index object in bytes: 184
-
+--------------------------------------------------
 
 => get drink
 ✅ water
