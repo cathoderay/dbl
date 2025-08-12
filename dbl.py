@@ -9,28 +9,33 @@
 __author__ = "Ronald Kaiser"
 
 
+from collections import namedtuple
 import os
 import sys
 import shutil
+from typing import Dict
 
 import conf
 from helper import print_debug, encode, decode, print_ascii_logo, dbl_log, validate
 
 
+IndexValue = namedtuple("IndexValue", "start size")
+
+
 class DBL:
     @dbl_log
     def __init__(self):
-        self.index = {}
+        self.index: Dict[str, IndexValue] = {}
         self.bytes_indexed = 0
 
     @dbl_log
     def set(self, key, value, is_compact=False):
+        validate(key, value)
+
         if is_compact:
             filename = conf.COMPACT_TEMP_FILENAME
         else:
             filename = conf.DATABASE_FILENAME
-
-        validate(key, value)
 
         key_b = encode(key)
         separator_b = encode(conf.KEY_VALUE_SEPARATOR)
@@ -46,7 +51,7 @@ class DBL:
             file.write(content)
             self.bytes_indexed = file.tell()
             if not is_compact:
-                self.index[key] = (value_start, len(value_b))
+                self.update_index(key, IndexValue(value_start, len(value_b)))
         print_debug("Record written.")
 
     @dbl_log
@@ -74,7 +79,7 @@ class DBL:
                 elif decode(c) == conf.END_RECORD:
                     current = b""
                     end = file.tell()
-                    self.update_index(decode(key), (start, end - start - 1))
+                    self.update_index(decode(key), IndexValue(start, end - start - 1))
                     start, end = end, end
                 else:
                     current += c
@@ -210,15 +215,19 @@ class REPL:
         self.loop()
 
     @dbl_log
+    def _loop(self):
+        while True:
+            print("\n=>", end=" ")
+            try:
+                operator, *operands = input().split()
+                self.run(operator, operands)
+            except Exception as e:
+                print(str(e))
+
+    @dbl_log
     def loop(self):
         try:
-            while True:
-                print("\n=>", end=" ")
-                try:
-                    operator, *operands = input().split()
-                    self.run(operator, operands)
-                except Exception as e:
-                    print(str(e))
+            self._loop()
         except KeyboardInterrupt:
             self.print_goodbye_message()
 
@@ -250,7 +259,7 @@ class REPL:
             result = self.operations[operator](operands)
             if self.should_print(operator): print(result)
         except KeyError:
-            print("Unknown command.")
+            print("Unknown operation.")
 
 
 if __name__ == "__main__":
