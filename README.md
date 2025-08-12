@@ -28,6 +28,7 @@
     by Ronald Kaiser
 
 Type help to list available commands.
+
 => help
 Operations available:
  * help
@@ -44,27 +45,36 @@ Operations available:
  * clean_index
  * clean_all
  * index_metadata
+
 => set
 DBL.set() missing 2 required positional arguments: 'key' and 'value'
+
 => set food broccoli
+
 => get
 DBL.get() missing 1 required positional argument: 'key'
+
 => get food
 broccoli
+
 => index_metadata
 Number of keys: 1
-Bytes indexed: 72
+Bytes indexed: 14
 Size of index object in bytes: 184
+
 => get drink
 None
+
 => set drink water
+
 => index_metadata
 Number of keys: 2
-Bytes indexed: 84
+Bytes indexed: 26
 Size of index object in bytes: 184
+
 => get drink
 water
+
 => ^C
 Thanks for using dbl!
 Don't forget to eat your veggies! 🥦
-```
