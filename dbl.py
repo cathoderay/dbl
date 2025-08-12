@@ -102,9 +102,9 @@ class DBL:
                 elif self.bytes_indexed < filename_size:
                     print_debug("Resuming from last point...")
                     file.seek(self.bytes_indexed, os.SEEK_SET)
-                    return self.bytes_indexed
             key = current = b""
             start, end = file.tell(), file.tell()
+            new_entries = 0
             while (c:= file.read(1)):
                 if decode(c) == conf.KEY_VALUE_SEPARATOR:
                     key = current
@@ -114,10 +114,12 @@ class DBL:
                     current = b""
                     end = file.tell()
                     self._update_index(decode(key), IndexValue(start, end - start - 1))
+                    new_entries += 1
                     start, end = end, end
                 else:
                     current += c
             self.bytes_indexed = file.tell()
+            print_debug(f"Found {new_entries} new entries.")
         return self.bytes_indexed
 
     @dbl_log
