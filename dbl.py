@@ -4,39 +4,12 @@
 # Author: Ronald Kaiser
 
 
-# Log of problems / solutions:
-    # Problem 1: search is slow, have to go through the whole file to find last key/value.
-    # Solution: build index in memory pointing to byte position of value. [done]
-
-    # Problem 2: the client looses its index once the command is run.
-    # Solution 1: have an index loaded in a instance always available.
-    # Solution 2: add repl to interact with the db. [done]
-
-    # Problem 3: many lines for the same key can make the file size greater than it should be
-    # Solution 1: offer an operation to compact it [done]
-
-    # Problem 4: compact operation is slow
-    # Solution 1: offer a compact operation that writes bytes in bulk [todo]
-
-    # Problem 5: compaction does not replace current data
-    # Solution 1: offer an option to update it [done]
-
-    # Problem 6: is it really faster with index? how much?
-    # Solution 1: benchmark it [todo]
-
-    # Problem 7: when new key/value is added by another process, local index is not updated
-    # Solution 1: add how many bytes were read, and build index from there [done]
-
-    # Problem 8: multiple processes can write at the same time and mess with data in disk
-    # Solution 1: add lock for writes (allow many to read) [todo]
-
-
 import os
 import sys
 import shutil
 
 import conf
-from helper import print_debug, encode, decode, print_ascii_logo, print_operations, dbl_log, validate
+from helper import print_debug, encode, decode, print_ascii_logo, dbl_log, validate
 
 
 class DBL:
@@ -146,6 +119,11 @@ class DBL:
         self.build_index()
 
     @dbl_log
+    def compact_and_replace(self):
+        self.compact()
+        self.replace_from_compact()
+
+    @dbl_log
     def _remove_file(self, filename):
         if os.path.exists(filename):
             os.remove(filename)
@@ -175,45 +153,59 @@ class DBL:
         self.clean_compact()
 
 
+class REPL:
+    @dbl_log
+    def __init__(self, dbl=None):
+        self.dbl = dbl
+        self.operations = {
+            "help": lambda operands: self.help(),
+            "set": lambda operands: self.dbl.set(*operands),
+            "get": lambda operands: self.dbl.get(*operands),
+            "compact": lambda operands: self.dbl.compact(),
+            "compact_and_replace": lambda operands: dbl.compact_and_replace(),
+            "replace_from_compact": lambda operands: self.dbl.replace_from_compact(),
+            "build_index": lambda operands: self.dbl.build_index(),
+            "toggle_debug": lambda operands: self.toggle_debug(),
+            "check_debug": lambda operands: conf.DEBUG,
+            "clean_database": lambda operands: self.dbl.clean_database(),
+            "clean_compact": lambda operands: self.dbl.clean_compact(),
+            "clean_index": lambda operands: self.dbl.clean_index(),
+            "clean_all": lambda operands: self.dbl.clean_all(),
+            "bytes_indexed": lambda operands: self.dbl.bytes_indexed
+        }
+        print_ascii_logo()
+
+    @dbl_log
+    def help(self):
+        operations = self.operations.keys()
+        print("Operations available:")
+        print("\n".join(map(lambda item: " * " + item, operations)))
+
+    @dbl_log
+    def toggle_debug(self):
+        conf.DEBUG ^= True
+        return conf.DEBUG
+
+    @dbl_log
+    def run(self, operator, operands):
+        to_print = "get check_debug bytes_indexed toggle_debug".split()
+        try:
+            if operator in to_print:
+                print(self.operations[operator](operands))
+            else:
+                self.operations[operator](operands)
+        except KeyError:
+            print("Unknown command.")
+
+
 if __name__ == "__main__":
-    dbl = DBL()
     if "--debug" in sys.argv: conf.DEBUG = True
-    if "--prebuild-index" in sys.argv: dbl.build_index()
-    print_ascii_logo()
+    repl = REPL()
+    repl.dbl = DBL()
     while True:
         print("=>", end=" ")
         try:
             operator, *operands = input().split()
-            if operator == "help":
-                print_operations()
-            elif operator == "set":
-                dbl.set(*operands)
-            elif operator == "get":
-                print(dbl.get(*operands))
-            elif operator == "compact":
-                dbl.compact()
-            elif operator == "compact_and_replace":
-                dbl.compact()
-                dbl.replace_from_compact()
-            elif operator == "replace_from_compact":
-                dbl.replace_from_compact()
-            elif operator == "build_index":
-                print(dbl.build_index())
-            elif operator == "toggle_debug":
-                conf.DEBUG ^= True
-            elif operator == "clean_database":
-                dbl.clean_database()
-            elif operator == "clean_compact":
-                dbl.clean_compact()
-            elif operator == "clean_index":
-                dbl.clean_index()
-            elif operator == "clean_all":
-                dbl.clean_all()
-            elif operator == "check_debug":
-                print(conf.DEBUG)
-            elif operator == "bytes_indexed":
-                print(dbl.bytes_indexed)
-            else:
-                print("Unknown command.")
+            repl.run(operator, operands)
         except Exception as e:
             print(str(e))

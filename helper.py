@@ -1,5 +1,6 @@
 import conf
 
+
 def print_debug(*args):
     if conf.DEBUG: print("DEBUG: ", *args)
 
@@ -14,7 +15,7 @@ def decode(data):
 
 def dbl_log(func):
     def wrapper(*args, **kwargs):
-        if conf.DEBUG: print("DEBUG: ", "Inside", str(func.__name__), f"{args}", f"{kwargs}")
+        if conf.DEBUG: print("DEBUG: ", "Entering", str(func.__name__), f"{args}", f"{kwargs}")
         result = func(*args, **kwargs)
         if conf.DEBUG: print("DEBUG: ", "Exiting", str(func.__name__))
         return result
@@ -60,8 +61,3 @@ def print_ascii_logo():
     by Ronald Kaiser
     """)
 
-
-def print_operations():
-    operations = "help,set,get,compact,compact_and_replace,replace_from_compact,build_index,toggle_debug,check_debug,clean_database,clean_compact,clean_index,clean_all,bytes_indexed"
-    print("Operations available:")
-    print("\n".join(map(lambda item: " * " + item, operations.split(","))))

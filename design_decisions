@@ -1,0 +1,31 @@
+
+# Log of decisions (problems / solutions):
+
+[done]
+
+# Problem 1: search is slow, have to go through the whole file to find last key/value.
+# Solution: build index in memory pointing to byte position of value. [done]
+
+# Problem 2: the client looses its index once the command is run.
+# Solution 1: have an index loaded in a instance always available.
+# Solution 2: add repl to interact with the db. [done]
+
+# Problem 3: many lines for the same key can make the file size greater than it should be
+# Solution 1: offer an operation to compact it [done]
+
+# Problem 5: compaction does not replace current data
+# Solution 1: offer an option to update it [done]
+
+# Problem 7: when new key/value is added by another process, local index is not updated
+# Solution 1: add how many bytes were read, and build index from there [done]
+
+[todo]
+
+# Problem 4: compact operation is slow
+# Solution 1: offer a compact operation that writes bytes in bulk [todo]
+
+# Problem 6: is it really faster with index? how much?
+# Solution 1: benchmark it [todo]
+
+# Problem 8: multiple processes can write at the same time and mess with data in disk
+# Solution 1: add lock for writes (allow many to read) [todo]
