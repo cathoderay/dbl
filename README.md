@@ -1,3 +1,9 @@
+# dbl
+
+Naive implementation of a log structured database inspired by "Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems" book from Martin Kleppmann.
+
+## Usage example (REPL)
+
 ```
 ➜  dbl git:(main) dbl
 
