@@ -1,6 +1,8 @@
 dbl
 ===
-This is a naive implementation of a key-value log structured database inspired by the book "Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems" by Martin Kleppmann.
+This is a naive implementation of a key-value database (log structured).
+
+This is inspired by the book "Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems" by Martin Kleppmann.
 
 Features
 --------
