@@ -211,7 +211,8 @@ Type help to list available operations.
 [DEBUG (2025-08-13 09:22:51.918361)]  ⬅️ Exiting _build_index
 [DEBUG (2025-08-13 09:22:51.918449)]  ⬅️ Exiting get
 ✅ broccoli
-[DEBUG (2025-08-13 09:22:51.918474)]  ⬅️ Exiting run```
+[DEBUG (2025-08-13 09:22:51.918474)]  ⬅️ Exiting run
+```
 
 Usage example (Python)
 ----------------------
