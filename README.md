@@ -1,8 +1,10 @@
-# dbl
-
+dbl
+===
 Naive implementation of a key-value log structured database inspired by the book "Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems" by Martin Kleppmann.
 
-## Features
+Features
+--------
+
 - Written in pure Python
 - No third-party dependency
 - Suited for key-value data
@@ -22,7 +24,9 @@ Naive implementation of a key-value log structured database inspired by the book
 - It's a work in progress
 - It's not suited for production environment yet
 
-## How to run
+How to run
+----------
+
 You can run it like:
 ```
     $ python3 dbl.py
@@ -37,7 +41,8 @@ and then run it like:
   $ dbl
 ```
 
-## Usage example (REPL)
+Usage example (REPL)
+--------------------
 
 ```
 ➜  dbl git:(main) dbl
@@ -127,7 +132,9 @@ Thanks for using dbl!
 Don't forget to eat your veggies! 🥦
 ```
 
-## Usage example (REPL in debug mode)
+Usage example (REPL in debug mode)
+----------------------------------
+
 Start your REPL with --debug flag
 ```
 ➜  dbl git:(main) dbl --debug
@@ -181,7 +188,9 @@ Type help to list available commands.
 [DEBUG [2025-08-12 16:44:37.028700  ⬅️ Exiting run
 ```
 
-## Usage example (Python)
+Usage example (Python)
+----------------------
+
 ```
     >>> from dbl import DBL
     >>> dbl = DBL()
@@ -193,11 +202,15 @@ Type help to list available commands.
     'happy-emoji => 😊'
 ```
 
-## Where is the data stored?
-The data is stored and retrieved from `DATABASE_PATH` variable located at `conf.py`.
+Where is the data stored?
+-------------------------
+
+The data is stored and retrieved from the path described in `DATABASE_PATH` located at `conf.py`.
 
 
-## Running tests
+Running tests
+-------------
+
 ```
 ➜  dbl git:(main) python3 test.py
 .......
