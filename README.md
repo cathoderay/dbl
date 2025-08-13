@@ -27,19 +27,19 @@ Features
 How to run
 ----------
 
-You can run it like:
-```
-    $ python3 dbl.py
-```
-or alternatively you can add an alias to your .zshrc or .bashrc to the dbl.py, like 
-```
-export PATH=$HOME/code/dbl:$PATH
-alias dbl="dbl.py"
-```
-and then run it like:
-```
-  $ dbl
-```
+1. You can run it like:
+  ```
+      $ python3 dbl.py
+  ```
+2. or alternatively you can add an alias to your .zshrc or .bashrc to the dbl.py, like 
+  ```
+  export PATH=$HOME/code/dbl:$PATH
+  alias dbl="dbl.py"
+  ```
+  and then run it like:
+  ```
+    $ dbl
+  ```
 
 Usage example (REPL)
 --------------------
