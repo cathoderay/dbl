@@ -15,7 +15,7 @@ def print_debug(data):
 
 
 def _print_debug(line):
-    print(f"\033[37m[DEBUG [{datetime.now()}", line, "\033[0m")
+    print(f"\033[37m[DEBUG [{datetime.now()}]", line, "\033[0m")
 
 
 def encode(data):
