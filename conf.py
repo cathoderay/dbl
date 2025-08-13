@@ -1,5 +1,5 @@
-DATABASE_FILENAME = "dbl.data"
-COMPACT_FILENAME = "dbl.compact"
+DATABASE_PATH = "/tmp/dbl.data"
+COMPACT_PATH = "/tmp/dbl.compact"
 END_RECORD = "\n"
 KEY_VALUE_SEPARATOR = ","
 DEBUG = False

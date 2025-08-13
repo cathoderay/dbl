@@ -56,8 +56,8 @@ class DBL:
     @dbl_log
     def get_filename(self, is_compact):
         if is_compact:
-            return conf.COMPACT_FILENAME
-        return conf.DATABASE_FILENAME
+            return conf.COMPACT_PATH
+        return conf.DATABASE_PATH
 
     @dbl_log
     def _set_bulk(self, items, is_compact=False):
@@ -92,7 +92,7 @@ class DBL:
         self.index[index_key] = index_value
 
     @dbl_log
-    def _build_index(self, filename=conf.DATABASE_FILENAME):
+    def _build_index(self, filename=conf.DATABASE_PATH):
         with open(filename, 'rb') as file:
             file_size = os.path.getsize(filename)
             if self.index:
@@ -123,11 +123,11 @@ class DBL:
         return self.bytes_indexed
 
     @dbl_log
-    def build_index(self, filename=conf.DATABASE_FILENAME):
+    def build_index(self, filename=conf.DATABASE_PATH):
         return self._build_index(filename)
 
     @dbl_log
-    def get(self, key, filename=conf.DATABASE_FILENAME):
+    def get(self, key, filename=conf.DATABASE_PATH):
         if not os.path.exists(filename):
             print("Empty db. Use operation 'set' to insert a new entry.")
             return
@@ -148,8 +148,8 @@ class DBL:
 
     @dbl_log
     def _cleanup_compact(self):
-        print_debug(f"Cleaning up {conf.COMPACT_FILENAME}...")
-        file = open(conf.COMPACT_FILENAME, "w")
+        print_debug(f"Cleaning up {conf.COMPACT_PATH}...")
+        file = open(conf.COMPACT_PATH, "w")
         file.close()
 
     @dbl_log
@@ -168,12 +168,12 @@ class DBL:
 
     @dbl_log
     def _copy_from_compact(self):
-        shutil.copyfile(conf.COMPACT_FILENAME, conf.DATABASE_FILENAME)
+        shutil.copyfile(conf.COMPACT_PATH, conf.DATABASE_PATH)
 
     @dbl_log
     def _remove_compact(self):
-        if os.path.exists(conf.COMPACT_FILENAME):
-            os.remove(conf.COMPACT_FILENAME)
+        if os.path.exists(conf.COMPACT_PATH):
+            os.remove(conf.COMPACT_PATH)
 
     @dbl_log
     def replace_from_compact(self):
@@ -193,12 +193,12 @@ class DBL:
 
     @dbl_log
     def clean_database(self):
-        self._remove_file(conf.DATABASE_FILENAME)
+        self._remove_file(conf.DATABASE_PATH)
         self._clean_index()
 
     @dbl_log
     def clean_compact(self):
-        self._remove_file(conf.COMPACT_FILENAME)
+        self._remove_file(conf.COMPACT_PATH)
 
     @dbl_log
     def _clean_index(self):
