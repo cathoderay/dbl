@@ -1,5 +1,28 @@
 dbl
 ===
+```
+          _____                    _____                    _____
+         /\    \                  /\    \                  /\    \
+        /::\    \                /::\    \                /::\____\
+       /::::\    \              /::::\    \              /:::/    /
+      /::::::\    \            /::::::\    \            /:::/    /
+     /:::/\:::\    \          /:::/\:::\    \          /:::/    /
+    /:::/  \:::\    \        /:::/__\:::\    \        /:::/    /
+   /:::/    \:::\    \      /::::\   \:::\    \      /:::/    /
+  /:::/    / \:::\    \    /::::::\   \:::\    \    /:::/    /
+ /:::/    /   \:::\ ___\  /:::/\:::\   \:::\ ___\  /:::/    /
+/:::/____/     \:::|    |/:::/__\:::\   \:::|    |/:::/____/
+\:::\    \     /:::|____|\:::\   \:::\  /:::|____|\:::\    \
+ \:::\    \   /:::/    /  \:::\   \:::\/:::/    /  \:::\    \
+  \:::\    \ /:::/    /    \:::\   \::::::/    /    \:::\    \
+   \:::\    /:::/    /      \:::\   \::::/    /      \:::\    \
+    \:::\  /:::/    /        \:::\  /:::/    /        \:::\    \
+     \:::\/:::/    /          \:::\/:::/    /          \:::\    \
+      \::::::/    /            \::::::/    /            \:::\    \
+       \::::/    /              \::::/    /              \:::\____\
+        \::/____/                \::/____/                \::/    /
+         ~~                       ~~                       \/____/
+```
 This is a naive implementation of a key-value database (log structured).
 
 This is inspired by the book "Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems" by Martin Kleppmann.
@@ -140,11 +163,11 @@ Usage example (REPL in debug mode)
 Start your REPL with --debug flag
 ```
 ➜  dbl git:(main) dbl --debug
-[DEBUG [2025-08-12 16:44:33.043721  ▶️ Entering __init__ (<__main__.REPL object at 0x106bdfb60>,) {}
-[DEBUG [2025-08-12 16:44:33.043783  ▶️ Entering __init__ (<__main__.DBL object at 0x106bdfcb0>,) {}
-[DEBUG [2025-08-12 16:44:33.043797  ⬅️ Exiting __init__
-[DEBUG [2025-08-12 16:44:33.043810  ⬅️ Exiting __init__
-[DEBUG [2025-08-12 16:44:33.043823  ▶️ Entering start (<__main__.REPL object at 0x106bdfb60>,) {}
+[DEBUG [2025-08-13 09:19:48.939608]  ▶️ Entering __init__ (<__main__.REPL object at 0x10174fb60>,) {}
+[DEBUG [2025-08-13 09:19:48.939667]  ▶️ Entering __init__ (<__main__.DBL object at 0x10174fcb0>,) {}
+[DEBUG [2025-08-13 09:19:48.939680]  ⬅️ Exiting __init__
+[DEBUG [2025-08-13 09:19:48.939696]  ⬅️ Exiting __init__
+[DEBUG [2025-08-13 09:19:48.939707]  ▶️ Entering start (<__main__.REPL object at 0x10174fb60>,) {}
 
     Welcome to
           _____                    _____                    _____
@@ -172,22 +195,23 @@ Start your REPL with --debug flag
     version 0.1
     by Ronald Kaiser
 
-Type help to list available commands.
-[DEBUG [2025-08-12 16:44:33.043955  ▶️ Entering loop (<__main__.REPL object at 0x106bdfb60>,) {}
-[DEBUG [2025-08-12 16:44:33.043973  ▶️ Entering _loop (<__main__.REPL object at 0x106bdfb60>,) {}
+Type help to list available operations.
+[DEBUG [2025-08-13 09:19:48.939832]  ▶️ Entering loop (<__main__.REPL object at 0x10174fb60>,) {}
+[DEBUG [2025-08-13 09:19:48.939845]  ▶️ Entering _loop (<__main__.REPL object at 0x10174fb60>,) {}
 
 => get food
-[DEBUG [2025-08-12 16:44:37.028291  ▶️ Entering run (<__main__.REPL object at 0x106bdfb60>, 'get', ['food']) {}
-[DEBUG [2025-08-12 16:44:37.028334  ▶️ Entering get (<__main__.DBL object at 0x106bdfcb0>, 'food') {}
-[DEBUG [2025-08-12 16:44:37.028378  ▶️ Entering _build_index (<__main__.DBL object at 0x106bdfcb0>,) {}
-[DEBUG [2025-08-12 16:44:37.028532  ▶️ Entering update_index (<__main__.DBL object at 0x106bdfcb0>, 'food', IndexValue(start=5, size=8)) {}
-[DEBUG [2025-08-12 16:44:37.028554  ⬅️ Exiting update_index
-[DEBUG [2025-08-12 16:44:37.028583  ▶️ Entering update_index (<__main__.DBL object at 0x106bdfcb0>, 'drink', IndexValue(start=20, size=5)) {}
-[DEBUG [2025-08-12 16:44:37.028594  ⬅️ Exiting update_index
-[DEBUG [2025-08-12 16:44:37.028621  ⬅️ Exiting _build_index
-[DEBUG [2025-08-12 16:44:37.028680  ⬅️ Exiting get
+[DEBUG [2025-08-13 09:19:52.842762]  ▶️ Entering run (<__main__.REPL object at 0x10174fb60>, 'get', ['food']) {}
+[DEBUG [2025-08-13 09:19:52.842830]  ▶️ Entering get (<__main__.DBL object at 0x10174fcb0>, 'food') {}
+[DEBUG [2025-08-13 09:19:52.842906]  ▶️ Entering _build_index (<__main__.DBL object at 0x10174fcb0>,) {}
+[DEBUG [2025-08-13 09:19:52.843082]  ▶️ Entering _update_index (<__main__.DBL object at 0x10174fcb0>, 'food', IndexValue(start=5, size=8)) {}
+[DEBUG [2025-08-13 09:19:52.843106]  ⬅️ Exiting _update_index
+[DEBUG [2025-08-13 09:19:52.843140]  ▶️ Entering _update_index (<__main__.DBL object at 0x10174fcb0>, 'drink', IndexValue(start=20, size=5)) {}
+[DEBUG [2025-08-13 09:19:52.843153]  ⬅️ Exiting _update_index
+[DEBUG [2025-08-13 09:19:52.843171] Found 2 new entries.
+[DEBUG [2025-08-13 09:19:52.843195]  ⬅️ Exiting _build_index
+[DEBUG [2025-08-13 09:19:52.843272]  ⬅️ Exiting get
 ✅ broccoli
-[DEBUG [2025-08-12 16:44:37.028700  ⬅️ Exiting run
+[DEBUG [2025-08-13 09:19:52.843324]  ⬅️ Exiting run
 ```
 
 Usage example (Python)
