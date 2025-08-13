@@ -2,6 +2,26 @@
 
 Naive implementation of a key-value log structured database inspired by the book "Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems" by Martin Kleppmann.
 
+## Features
+- Written in pure Python
+- No third-party dependency
+- Suited for key-value data
+- 2 main operations:
+  - set(key, value)
+  - get(key)
+- Keys and values are utf-8 strings
+- Designed for high write throughput
+  - It simply appends to a log file
+  - Compaction is available to shrink file size in disk
+- Search is done with an in memory hashmap
+- REPL (Read Eval Print Loop) available
+  - See usage example below
+- You can try it out via Python source code
+  - See usage example below
+- It's open source
+- It's a work in progress
+- It's not suited for production environment yet
+
 ## Usage example (REPL)
 
 ```
