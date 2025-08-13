@@ -194,7 +194,7 @@ Type help to list available commands.
 ```
 
 ## Where is the data stored?
-The data is stored and retrieved from `DATABASE_FILENAME` variable located at `conf.py`.
+The data is stored and retrieved from `DATABASE_PATH` variable located at `conf.py`.
 
 
 ## Running tests
