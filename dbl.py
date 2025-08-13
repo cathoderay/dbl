@@ -94,12 +94,12 @@ class DBL:
     @dbl_log
     def _build_index(self, filename=conf.DATABASE_FILENAME):
         with open(filename, 'rb') as file:
-            filename_size = os.path.getsize(filename)
+            file_size = os.path.getsize(filename)
             if self.index:
-                if self.bytes_indexed == filename_size:
+                if self.bytes_indexed == file_size:
                     print_debug("Index already built. Skipping.")
                     return self.bytes_indexed
-                elif self.bytes_indexed < filename_size:
+                elif self.bytes_indexed < file_size:
                     print_debug("Resuming from last point...")
                     file.seek(self.bytes_indexed, os.SEEK_SET)
             key = current = b""
