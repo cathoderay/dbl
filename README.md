@@ -12,7 +12,7 @@ Naive implementation of a key-value log structured database inspired by the book
 - Keys and values are utf-8 strings
 - Designed for high write throughput
   - It simply appends to a log file
-  - Compaction is available to shrink file size in disk
+  - Compaction of old and duplicate entries is available to shrink file size in disk
 - Search is done with an in memory hashmap
 - REPL (Read Eval Print Loop) available
   - See usage example below
