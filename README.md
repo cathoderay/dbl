@@ -70,7 +70,7 @@ Usage example (REPL)
 --------------------
 
 ```
-➜  dbl git:(main) dbl
+➜  dbl git:(main) ✗ dbl
 
     Welcome to
           _____                    _____                    _____
@@ -98,7 +98,7 @@ Usage example (REPL)
     version 0.1
     by Ronald Kaiser
 
-Type help to list available commands.
+Type help to list available operations.
 
 => help
 ✅ Operations available:
