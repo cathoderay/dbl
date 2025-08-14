@@ -35,3 +35,6 @@
 
 # Problem 10: building index step is slow
 # Solution 1: read the whole file once instead of reading byte per byte [todo]
+
+# Problem 11: tests use the same database as repl
+# Solution 1: update tests to use a new one for each execution [todo]
