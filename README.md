@@ -215,6 +215,15 @@ Type help to list available operations.
 [DEBUG (2025-08-14 09:34:55.820431)]  ⬅️ Exiting run
 ```
 
+REPL in test environment
+------------------------
+
+You can also use the REPL in test environment, so it will point to a new db defined in `conf_test.py`.
+To start it, you just need to prepend `dbl` command with the env variable `DBL_TEST_ENV` as below:
+```
+   ➜  dbl git:(main) DBL_TEST_ENV=1 dbl
+```
+
 Usage example (Python)
 ----------------------
 

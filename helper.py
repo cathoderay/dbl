@@ -9,6 +9,7 @@ if os.getenv("DBL_TEST_ENV") == "1":
     import conf_test as conf
 else:
     import conf
+
 print(f"[{__name__}] conf file loaded: [{conf.__name__}]")
 
 
