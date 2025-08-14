@@ -102,15 +102,13 @@ class DBL:
     @dbl_profile
     @dbl_log
     def _read_file(self, filename):
+        bytes_read, start = [], 0
+
+        if os.path.exists(filename) and os.path.getsize(filename) == self.bytes_indexed:
+            print_debug("Index already updated. Skipping.")
+
         with open(filename, 'rb') as file:
-            file_size = os.path.getsize(filename)
-            if self.index:
-                if self.bytes_indexed == file_size:
-                    print_debug("Index already built. Skipping.")
-                    return [], 0
-                elif self.bytes_indexed < file_size:
-                    print_debug("Resuming from last point...")
-                    file.seek(self.bytes_indexed, os.SEEK_SET)
+            file.seek(self.bytes_indexed, os.SEEK_SET)
             start = file.tell()
             bytes_read = file.read()
 
