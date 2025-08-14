@@ -100,22 +100,30 @@ class DBL:
         self.index[index_key] = index_value
 
     @dbl_profile
-    def _build_index(self, filename=None):
-        if not filename:
-            filename = self.get_filename(is_compact=False)
-
+    @dbl_log
+    def _read_file(self, filename):
         with open(filename, 'rb') as file:
             file_size = os.path.getsize(filename)
             if self.index:
                 if self.bytes_indexed == file_size:
                     print_debug("Index already built. Skipping.")
-                    return self.bytes_indexed
+                    return [], 0
                 elif self.bytes_indexed < file_size:
                     print_debug("Resuming from last point...")
                     file.seek(self.bytes_indexed, os.SEEK_SET)
             start = file.tell()
             bytes_read = file.read()
-        self._update_index_bulk(bytes_read, start)
+
+        return bytes_read, start
+
+    @dbl_profile
+    @dbl_log
+    def _build_index(self, filename=None):
+        if not filename:
+            filename = self.get_filename(is_compact=False)
+        bytes_read, start = self._read_file(filename)
+        if bytes_read:
+            self._update_index_bulk(bytes_read, start)
         return self.bytes_indexed
 
     @dbl_profile

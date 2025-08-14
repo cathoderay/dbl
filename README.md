@@ -239,7 +239,6 @@ Configuration files
 
 There are two main configuration files available. One for real usage (`conf.py`) and another one for tests (`conf_test.py`).
 
-
 Running unit tests
 ------------------
 
@@ -257,45 +256,75 @@ OK
 Running load tests
 ------------------
 ```
-➜  dbl git:(main) ✗ ./run_load_test.sh 100000
-Running load tests [100000] ...
+➜  dbl git:(main) ./run_load_test.sh 100000
 [dbl] conf file loaded: [conf_test]
 [helper] conf file loaded: [conf_test]
-Using /tmp/dbl.data-test-session-1755190258.890673
+
+ 🏁 LOAD TEST REPORT 🏁 --------------------------------------------------
+
+Using /tmp/dbl.data-test-session-1755194605.5158122
+--------------------------------------------------
 Starting clean.
 --------------------------------------------------
-Setting 100000 distinct keys in bulk without updating the index...
-[PROFILE (2025-08-14 13:50:59.466223)] Spent 0.450732946395874 in _set_bulk
+Number of keys: 0
+Bytes indexed: 0
+Size of index object in bytes: 64
+--------------------------------------------------
+🏃‍➡️ Setting 100000 distinct keys in bulk without updating the index...
+[PROFILE (2025-08-14 15:03:26.057425)] Spent 0.415132999420166 in _set_bulk
 ✅ Done.
 --------------------------------------------------
-Setting 100000 new entries with the same key=key-50314 in bulk without updating the index...
-[PROFILE (2025-08-14 13:50:59.985581)] Spent 0.4126310348510742 in _set_bulk
+Number of keys: 0
+Bytes indexed: 0
+Size of index object in bytes: 64
+--------------------------------------------------
+🏃‍➡️ Setting 100000 new entries with the same key=key-17597 in bulk without updating the index...
+[PROFILE (2025-08-14 15:03:26.586609)] Spent 0.42960095405578613 in _set_bulk
 ✅ Done.
+--------------------------------------------------
+Number of keys: 0
+Bytes indexed: 0
+Size of index object in bytes: 64
 --------------------------------------------------
 Cleaned database.
 ✅ Done.
 --------------------------------------------------
-Setting 100000 distinct keys in bulk updating the index...
-[PROFILE (2025-08-14 13:51:00.517855)] Spent 0.4062690734863281 in _set_bulk
-[PROFILE (2025-08-14 13:51:00.985152)] Spent 0.46726107597351074 in _build_index
+Number of keys: 0
+Bytes indexed: 0
+Size of index object in bytes: 64
+--------------------------------------------------
+🏃‍➡️ Setting 100000 distinct keys in bulk updating the index...
+[PROFILE (2025-08-14 15:03:27.126908)] Spent 0.4144859313964844 in _set_bulk
+[PROFILE (2025-08-14 15:03:27.127916)] Spent 0.0009601116180419922 in _read_file
+[PROFILE (2025-08-14 15:03:27.632928)] Spent 0.5049839019775391 in _update_index_bulk
+[PROFILE (2025-08-14 15:03:27.633149)] Spent 0.5062050819396973 in _build_index
+✅ Done.
 --------------------------------------------------
 Number of keys: 100000
 Bytes indexed: 2177790
 Size of index object in bytes: 3844864
 --------------------------------------------------
-✅ Done.
---------------------------------------------------
 Cleaned database.
 ✅ Done.
 --------------------------------------------------
-Setting 100000 new entries for key=key-46253 in bulk updating the index...
-[PROFILE (2025-08-14 13:51:01.490154)] Spent 0.3960251808166504 in _set_bulk
-[PROFILE (2025-08-14 13:51:01.913191)] Spent 0.42299890518188477 in _build_index
+Number of keys: 0
+Bytes indexed: 0
+Size of index object in bytes: 64
+--------------------------------------------------
+🏃‍➡️ Setting 100000 new entries for key=key-70980 in bulk updating the index...
+[PROFILE (2025-08-14 15:03:28.153725)] Spent 0.41028594970703125 in _set_bulk
+[PROFILE (2025-08-14 15:03:28.154700)] Spent 0.0009069442749023438 in _read_file
+[PROFILE (2025-08-14 15:03:28.618408)] Spent 0.4636669158935547 in _update_index_bulk
+[PROFILE (2025-08-14 15:03:28.618443)] Spent 0.4646720886230469 in _build_index
 --------------------------------------------------
 Number of keys: 1
 Bytes indexed: 2188895
 Size of index object in bytes: 184
 --------------------------------------------------
 ✅ Done.
+--------------------------------------------------
+Number of keys: 1
+Bytes indexed: 2188895
+Size of index object in bytes: 184
 --------------------------------------------------
 ```
