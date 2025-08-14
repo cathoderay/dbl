@@ -78,6 +78,11 @@ class DBL:
             for key, value in items)
         )
 
+        self._write_file(content, filename)
+
+    @dbl_profile
+    @dbl_log
+    def _write_file(self, content, filename):
         with open(filename, "ab") as file:
             file.seek(0, os.SEEK_END)
             file.write(content)
@@ -106,11 +111,11 @@ class DBL:
 
         if os.path.exists(filename) and os.path.getsize(filename) == self.bytes_indexed:
             print_debug("Index already updated. Skipping.")
-
-        with open(filename, 'rb') as file:
-            file.seek(self.bytes_indexed, os.SEEK_SET)
-            start = file.tell()
-            bytes_read = file.read()
+        else:
+            with open(filename, 'rb') as file:
+                file.seek(self.bytes_indexed, os.SEEK_SET)
+                start = file.tell()
+                bytes_read = file.read()
 
         return bytes_read, start
 
@@ -127,25 +132,21 @@ class DBL:
     @dbl_profile
     @dbl_log
     def _update_index_bulk(self, bytes_read, start):
-        END_RECORD_N = ord(conf.END_RECORD)
-        KEY_VALUE_SEPARATOR_N = ord(conf.KEY_VALUE_SEPARATOR)
+        KEY_VALUE_SEPARATOR_B = encode(conf.KEY_VALUE_SEPARATOR)
+        END_RECORD_B = encode(conf.END_RECORD)
 
-        key = current = []
         new_entries = 0
-        for i, b in enumerate(bytes_read):
-            if b == KEY_VALUE_SEPARATOR_N:
-                key = current
-                current = []
-                start = i + 1
-            elif b == END_RECORD_N:
-                current = []
-                end = i + 1
-                self._update_index(decode(bytes(key)), IndexValue(start, end - start - 1))
-                new_entries += 1
-                start = end
-            else:
-                current.append(b)
-        self.bytes_indexed = end
+
+        for item in bytes_read.split(END_RECORD_B):
+            if not item:
+                break
+            key, value = item.split(KEY_VALUE_SEPARATOR_B)
+            start += len(key) + 1 # len(KEY_VALUE_SEPARATOR_B)
+            self._update_index(decode(key), IndexValue(start, len(value)))
+            new_entries += 1
+            start += len(value) + len(END_RECORD_B)
+
+        self.bytes_indexed = start + len(bytes_read)
         print_debug(f"Found {new_entries} new entries.")
 
     @dbl_log
