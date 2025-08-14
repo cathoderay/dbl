@@ -7,5 +7,5 @@ COMPACT_PATH = f"/tmp/dbl.compact-test-session-{session}"
 END_RECORD = "\n"
 KEY_VALUE_SEPARATOR = ","
 DEBUG = False
-PROFILE = False
+PROFILE = True
 ENCODING = "utf-8"

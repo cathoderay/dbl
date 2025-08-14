@@ -1,0 +1,1 @@
+DBL_TEST_ENV=1 python3 load_test.py 1000

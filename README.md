@@ -235,12 +235,13 @@ Where is the data stored?
 The data is stored and retrieved from the path described in `DATABASE_PATH` located at `conf.py`.
 
 Configuration files
-----
+-------------------
 
 There are two main configuration files available. One for real usage (`conf.py`) and another one for tests (`conf_test.py`).
 
-Running tests
--------------
+
+Running unit tests
+------------------
 
 ```
 ➜  dbl git:(main) ./run_tests.sh
@@ -251,4 +252,15 @@ Running tests
 Ran 8 tests in 0.003s
 
 OK
+```
+
+Running load tests
+------------------
+You can run the load_test.sh passing how many distinct keys you want.
+```
+➜  dbl git:(main) ./run_load_test.sh 1000
+[dbl] conf file loaded: [conf_test]
+[helper] conf file loaded: [conf_test]
+[PROFILE (2025-08-14 10:40:27.462775)] Spent 0.005004167556762695 in _set_bulk
+[PROFILE (2025-08-14 10:40:27.469041)] Spent 0.005269050598144531 in _set_bulk
 ```
