@@ -257,13 +257,32 @@ OK
 Running load tests
 ------------------
 ```
-➜  dbl git:(main) ./run_load_test.sh 1000
-Running load tests [1000] ...
+➜  dbl git:(main) ./run_load_test.sh 100000
+Running load tests [100000] ...
 [dbl] conf file loaded: [conf_test]
 [helper] conf file loaded: [conf_test]
-Using /tmp/dbl.data-test-session-1755181005.2816792
-[PROFILE (2025-08-14 11:16:45.289500)] Spent 0.00506281852722168 in _set_bulk
-Set 1000 distinct keys in bulk.
-[PROFILE (2025-08-14 11:16:45.295191)] Spent 0.004884004592895508 in _set_bulk
-Set 1000 new entries for key=key-382 in bulk.
+Using /tmp/dbl.data-test-session-1755182460.2346182
+Starting clean.
+--------------------------------------------------
+Setting 100000 distinct keys in bulk without updating the index...
+[PROFILE (2025-08-14 11:41:00.768202)] Spent 0.41121602058410645 in _set_bulk
+✅ Done.
+--------------------------------------------------
+Setting 100000 new entries with the same key=key-23919 in bulk without updating the index...
+[PROFILE (2025-08-14 11:41:01.268699)] Spent 0.4014768600463867 in _set_bulk
+✅ Done.
+--------------------------------------------------
+Cleaned database.
+✅ Done.
+--------------------------------------------------
+Setting 100000 distinct keys in bulk updating the index...
+[PROFILE (2025-08-14 11:41:01.802758)] Spent 0.4106152057647705 in _set_bulk
+[PROFILE (2025-08-14 11:41:03.110791)] Spent 1.307974100112915 in _build_index
+✅ Done.
+--------------------------------------------------
+Setting 100000 new entries for key=key-44199 in bulk updating the index...
+[PROFILE (2025-08-14 11:41:03.608443)] Spent 0.3980529308319092 in _set_bulk
+[PROFILE (2025-08-14 11:41:04.837367)] Spent 1.2288787364959717 in _build_index
+✅ Done.
+--------------------------------------------------
 ```
