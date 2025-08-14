@@ -4,8 +4,6 @@ import functools
 import time
 
 
-
-
 def print_debug(data):
     if not conf.DEBUG:
         return
@@ -23,15 +21,19 @@ def print_profile(data):
         return
 
     if isinstance(data, str):
-        _print_debug(data)
+        _print_profile(data)
 
     if isinstance(data, list):
         for datum in data:
-            _print_debug(datum)
+            _print_profile(datum)
 
 
 def _print_debug(line):
     print(f"\033[37m[DEBUG ({datetime.now()})]", line, "\033[0m")
+
+
+def _print_profile(line):
+    print(f"\033[37m[PROFILE ({datetime.now()})]", line, "\033[0m")
 
 
 def encode(data):
