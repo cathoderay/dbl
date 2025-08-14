@@ -256,11 +256,14 @@ OK
 
 Running load tests
 ------------------
-You can run the load_test.sh passing how many distinct keys you want.
 ```
 ➜  dbl git:(main) ./run_load_test.sh 1000
+Running load tests [1000] ...
 [dbl] conf file loaded: [conf_test]
 [helper] conf file loaded: [conf_test]
-[PROFILE (2025-08-14 10:40:27.462775)] Spent 0.005004167556762695 in _set_bulk
-[PROFILE (2025-08-14 10:40:27.469041)] Spent 0.005269050598144531 in _set_bulk
+Using /tmp/dbl.data-test-session-1755181005.2816792
+[PROFILE (2025-08-14 11:16:45.289500)] Spent 0.00506281852722168 in _set_bulk
+Set 1000 distinct keys in bulk.
+[PROFILE (2025-08-14 11:16:45.295191)] Spent 0.004884004592895508 in _set_bulk
+Set 1000 new entries for key=key-382 in bulk.
 ```

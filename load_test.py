@@ -1,4 +1,5 @@
 import os
+import random
 import sys
 
 
@@ -13,7 +14,10 @@ from dbl import DBL
 N = 10 if not sys.argv[-1][-1].isdigit() else int(sys.argv[-1])
 dbl = DBL()
 
-dbl.set_bulk(tuple((f"key-{i}", f"value-{i}") for i in range(N + 1)), update_index=False)
+dbl.set_bulk(tuple((f"key-{i}", f"value-{i}") for i in range(1, N + 1)), update_index=False)
+print(f"Set {N} distinct keys in bulk.")
 
 # duplicates to test compaction
-dbl.set_bulk(tuple((f"key-{0}", f"value-{i}") for i in range(N + 1)), update_index=False)
+random_key = f"key-{random.randint(1, N)}"
+dbl.set_bulk(tuple((f"{random_key}", f"value-{i}") for i in range(1, N + 1)), update_index=False)
+print(f"Set {N} new entries for key={random_key} in bulk.")

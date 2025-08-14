@@ -34,7 +34,7 @@ class DBL:
     def __init__(self):
         self.index: Dict[str, IndexValue] = {}
         self.bytes_indexed = 0
-        print_debug(f"Using {conf.DATABASE_PATH}")
+        print(f"Using {conf.DATABASE_PATH}")
 
     @dbl_log
     def get_encoded_data(self, key, value):
