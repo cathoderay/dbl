@@ -1,9 +1,7 @@
 DATABASE_PATH = "/tmp/dbl.data"
 COMPACT_PATH = "/tmp/dbl.compact"
 END_RECORD = "\n"
-END_RECORD_B = b"\n"
 KEY_VALUE_SEPARATOR = ","
-KEY_VALUE_SEPARATOR_B = b","
 DEBUG = False
 PROFILE = False
 ENCODING = "utf-8"

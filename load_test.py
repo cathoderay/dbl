@@ -37,12 +37,20 @@ print("-"* 50)
 
 print(f"Setting {N} distinct keys in bulk updating the index...")
 dbl.set_bulk(tuple((f"key-{i}", f"value-{i}") for i in range(1, N + 1)), update_index=True)
+print(dbl.get_index_metadata())
 print("✅ Done.")
 print("-"* 50)
+
+print("Cleaned database.")
+dbl.clean_all()
+print("✅ Done.")
+print("-"* 50)
+dbl.clean_all()
 
 # duplicates to test compaction
 random_key = f"key-{random.randint(1, N)}"
 print(f"Setting {N} new entries for key={random_key} in bulk updating the index...")
 dbl.set_bulk(tuple((f"{random_key}", f"value-{i}") for i in range(1, N + 1)), update_index=True)
+print(dbl.get_index_metadata())
 print("✅ Done.")
 print("-"* 50)

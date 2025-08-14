@@ -104,6 +104,8 @@ class DBL:
         if not filename:
             filename = self.get_filename(is_compact=False)
 
+        END_RECORD_N = ord(conf.END_RECORD)
+        KEY_VALUE_SEPARATOR_N = ord(conf.KEY_VALUE_SEPARATOR)
         with open(filename, 'rb') as file:
             file_size = os.path.getsize(filename)
             if self.index:
@@ -113,22 +115,23 @@ class DBL:
                 elif self.bytes_indexed < file_size:
                     print_debug("Resuming from last point...")
                     file.seek(self.bytes_indexed, os.SEEK_SET)
-            key = current = b""
+            key = current = []
             start = end = file.tell()
             new_entries = 0
-            while (c:= file.read(1)):
-                if c == conf.KEY_VALUE_SEPARATOR_B:
+            bytes_sequence = file.read()
+            for i, b in enumerate(bytes_sequence):
+                if b == KEY_VALUE_SEPARATOR_N:
                     key = current
-                    current = b""
-                    start = file.tell()
-                elif c == conf.END_RECORD_B:
-                    current = b""
-                    end = file.tell()
-                    self._update_index(decode(key), IndexValue(start, end - start - 1))
+                    current = []
+                    start = i + 1
+                elif b == END_RECORD_N:
+                    current = []
+                    end = i + 1
+                    self._update_index(decode(bytes(key)), IndexValue(start, end - start - 1))
                     new_entries += 1
-                    start, end = end, end
+                    start = end
                 else:
-                    current += c
+                    current.append(b)
             self.bytes_indexed = file.tell()
             print_debug(f"Found {new_entries} new entries.")
         return self.bytes_indexed
