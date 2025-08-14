@@ -104,8 +104,6 @@ class DBL:
         if not filename:
             filename = self.get_filename(is_compact=False)
 
-        END_RECORD_N = ord(conf.END_RECORD)
-        KEY_VALUE_SEPARATOR_N = ord(conf.KEY_VALUE_SEPARATOR)
         with open(filename, 'rb') as file:
             file_size = os.path.getsize(filename)
             if self.index:
@@ -115,26 +113,34 @@ class DBL:
                 elif self.bytes_indexed < file_size:
                     print_debug("Resuming from last point...")
                     file.seek(self.bytes_indexed, os.SEEK_SET)
-            key = current = []
-            start = end = file.tell()
-            new_entries = 0
-            bytes_sequence = file.read()
-            for i, b in enumerate(bytes_sequence):
-                if b == KEY_VALUE_SEPARATOR_N:
-                    key = current
-                    current = []
-                    start = i + 1
-                elif b == END_RECORD_N:
-                    current = []
-                    end = i + 1
-                    self._update_index(decode(bytes(key)), IndexValue(start, end - start - 1))
-                    new_entries += 1
-                    start = end
-                else:
-                    current.append(b)
-            self.bytes_indexed = file.tell()
-            print_debug(f"Found {new_entries} new entries.")
+            start = file.tell()
+            bytes_read = file.read()
+        self._update_index_bulk(bytes_read, start)
         return self.bytes_indexed
+
+    @dbl_profile
+    @dbl_log
+    def _update_index_bulk(self, bytes_read, start):
+        END_RECORD_N = ord(conf.END_RECORD)
+        KEY_VALUE_SEPARATOR_N = ord(conf.KEY_VALUE_SEPARATOR)
+
+        key = current = []
+        new_entries = 0
+        for i, b in enumerate(bytes_read):
+            if b == KEY_VALUE_SEPARATOR_N:
+                key = current
+                current = []
+                start = i + 1
+            elif b == END_RECORD_N:
+                current = []
+                end = i + 1
+                self._update_index(decode(bytes(key)), IndexValue(start, end - start - 1))
+                new_entries += 1
+                start = end
+            else:
+                current.append(b)
+        self.bytes_indexed = end
+        print_debug(f"Found {new_entries} new entries.")
 
     @dbl_log
     def build_index(self, filename=None):
