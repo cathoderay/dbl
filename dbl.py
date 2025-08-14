@@ -270,7 +270,7 @@ class REPL:
             "clean_compact": lambda operands: self.dbl.clean_compact(),
             "clean_index": lambda operands: self.dbl.clean_index(),
             "clean_all": lambda operands: self.dbl.clean_all(),
-            "index_metadata": lambda operands: self.dbl.get_index_metadata(),
+            "index": lambda operands: self.dbl.get_index_metadata(),
         }
 
     @dbl_log
