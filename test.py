@@ -1,6 +1,12 @@
+import os
 import unittest
 
 from dbl import DBL
+
+
+if not os.getenv("DBL_TEST_ENV", 0) == "1":
+    print("You should set DBL_TEST_ENV to run tests.")
+    exit(-1)
 
 
 class LoggyTest(unittest.TestCase):

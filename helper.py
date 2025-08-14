@@ -1,7 +1,15 @@
-import conf
+import os
+
 from datetime import datetime
 import functools
 import time
+
+
+if os.getenv("DBL_TEST_ENV") == "1":
+    import conf_test as conf
+else:
+    import conf
+print(f"[{__name__}] conf file loaded: [{conf.__name__}]")
 
 
 def print_debug(data):

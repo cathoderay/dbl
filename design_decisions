@@ -22,6 +22,10 @@
 # Problem 4: compact operation is slow
 # Solution 1: offer a compact operation that writes bytes in bulk [done]
 
+# Problem 11: tests use the same database as repl
+# Solution 1: update tests to use a new one for each execution [done]
+# Note: now repl can use test database as well
+
 [todo]
 
 # Problem 6: is it really faster with index? how much?
@@ -35,6 +39,3 @@
 
 # Problem 10: building index step is slow
 # Solution 1: read the whole file once instead of reading byte per byte [todo]
-
-# Problem 11: tests use the same database as repl
-# Solution 1: update tests to use a new one for each execution [todo]

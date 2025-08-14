@@ -15,7 +15,14 @@ import sys
 import shutil
 from typing import Dict
 
-import conf
+
+if os.getenv("DBL_TEST_ENV") == "1":
+    import conf_test as conf
+else:
+    import conf
+print(f"[{__name__}] conf file loaded: [{conf.__name__}]")
+
+
 from helper import print_debug, encode, decode, print_ascii_logo, dbl_log, dbl_profile, validate
 
 
@@ -27,6 +34,7 @@ class DBL:
     def __init__(self):
         self.index: Dict[str, IndexValue] = {}
         self.bytes_indexed = 0
+        print_debug(f"Using {conf.DATABASE_PATH}")
 
     @dbl_log
     def get_encoded_data(self, key, value):
@@ -301,5 +309,6 @@ class REPL:
 
 if __name__ == "__main__":
     if "--debug" in sys.argv: conf.DEBUG = True
+    if "--profile" in sys.argv: conf.PROFILE = True
     repl = REPL()
     repl.start()

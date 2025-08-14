@@ -56,7 +56,7 @@ How to run
   ```
       $ python3 dbl.py
   ```
-2. or alternatively you can add an alias to your .zshrc or .bashrc to the dbl.py, like 
+2. or alternatively you can add an alias to your .zshrc or .bashrc to the dbl.py, like
   ```
   export PATH=$HOME/code/dbl:$PATH
   alias dbl="dbl.py"
@@ -238,10 +238,11 @@ Running tests
 -------------
 
 ```
-➜  dbl git:(main) python3 test.py
-.......
+➜  dbl git:(main) ./run_tests.sh
+[dbl] conf file loaded: [conf_test]
+[helper] conf file loaded: [conf_test]
+........
 ----------------------------------------------------------------------
-Ran 7 tests in 0.003s
+Ran 8 tests in 0.003s
 
-OK
-```
+OK```
