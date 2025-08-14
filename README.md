@@ -70,7 +70,7 @@ Usage example (REPL)
 --------------------
 
 ```
-➜  dbl git:(main) ✗ dbl
+➜  dbl git:(main) dbl
 
     Welcome to
           _____                    _____                    _____
@@ -162,12 +162,15 @@ Usage example (REPL in debug mode)
 
 Start your REPL with --debug flag
 ```
-➜  dbl git:(main) dbl --debug
-[DEBUG (2025-08-13 09:22:41.962646)]  ▶️ Entering __init__ (<__main__.REPL object at 0x101c6fb60>,) {}
-[DEBUG (2025-08-13 09:22:41.962703)]  ▶️ Entering __init__ (<__main__.DBL object at 0x101c6fcb0>,) {}
-[DEBUG (2025-08-13 09:22:41.962717)]  ⬅️ Exiting __init__
-[DEBUG (2025-08-13 09:22:41.962731)]  ⬅️ Exiting __init__
-[DEBUG (2025-08-13 09:22:41.962742)]  ▶️ Entering start (<__main__.REPL object at 0x101c6fb60>,) {}
+➜  dbl git:(main) ✗ dbl --debug
+[__main__] conf file loaded: [conf]
+[helper] conf file loaded: [conf]
+[DEBUG (2025-08-14 09:34:48.283236)]  ▶️ Entering __init__ (<__main__.REPL object at 0x1035a7cb0>,) {}
+[DEBUG (2025-08-14 09:34:48.283483)]  ▶️ Entering __init__ (<__main__.DBL object at 0x1035a7e00>,) {}
+[DEBUG (2025-08-14 09:34:48.283497)] Using /tmp/dbl.data
+[DEBUG (2025-08-14 09:34:48.283506)]  ⬅️ Exiting __init__
+[DEBUG (2025-08-14 09:34:48.283521)]  ⬅️ Exiting __init__
+[DEBUG (2025-08-14 09:34:48.283533)]  ▶️ Entering start (<__main__.REPL object at 0x1035a7cb0>,) {}
 
     Welcome to
           _____                    _____                    _____
@@ -196,22 +199,20 @@ Start your REPL with --debug flag
     by Ronald Kaiser
 
 Type help to list available operations.
-[DEBUG (2025-08-13 09:22:41.962784)]  ▶️ Entering loop (<__main__.REPL object at 0x101c6fb60>,) {}
-[DEBUG (2025-08-13 09:22:41.962915)]  ▶️ Entering _loop (<__main__.REPL object at 0x101c6fb60>,) {}
+[DEBUG (2025-08-14 09:34:48.283648)]  ▶️ Entering loop (<__main__.REPL object at 0x1035a7cb0>,) {}
+[DEBUG (2025-08-14 09:34:48.283665)]  ▶️ Entering _loop (<__main__.REPL object at 0x1035a7cb0>,) {}
 
 => get food
-[DEBUG (2025-08-13 09:22:51.917120)]  ▶️ Entering run (<__main__.REPL object at 0x101c6fb60>, 'get', ['food']) {}
-[DEBUG (2025-08-13 09:22:51.917188)]  ▶️ Entering get (<__main__.DBL object at 0x101c6fcb0>, 'food') {}
-[DEBUG (2025-08-13 09:22:51.917262)]  ▶️ Entering _build_index (<__main__.DBL object at 0x101c6fcb0>,) {}
-[DEBUG (2025-08-13 09:22:51.918235)]  ▶️ Entering _update_index (<__main__.DBL object at 0x101c6fcb0>, 'food', IndexValue(start=5, size=8)) {}
-[DEBUG (2025-08-13 09:22:51.918267)]  ⬅️ Exiting _update_index
-[DEBUG (2025-08-13 09:22:51.918304)]  ▶️ Entering _update_index (<__main__.DBL object at 0x101c6fcb0>, 'drink', IndexValue(start=20, size=5)) {}
-[DEBUG (2025-08-13 09:22:51.918318)]  ⬅️ Exiting _update_index
-[DEBUG (2025-08-13 09:22:51.918337)] Found 2 new entries.
-[DEBUG (2025-08-13 09:22:51.918361)]  ⬅️ Exiting _build_index
-[DEBUG (2025-08-13 09:22:51.918449)]  ⬅️ Exiting get
+[DEBUG (2025-08-14 09:34:55.819046)]  ▶️ Entering run (<__main__.REPL object at 0x1035a7cb0>, 'get', ['food']) {}
+[DEBUG (2025-08-14 09:34:55.819118)]  ▶️ Entering get (<__main__.DBL object at 0x1035a7e00>, 'food') {}
+[DEBUG (2025-08-14 09:34:55.820164)]  ▶️ Entering _update_index (<__main__.DBL object at 0x1035a7e00>, 'food', IndexValue(start=5, size=8)) {}
+[DEBUG (2025-08-14 09:34:55.820196)]  ⬅️ Exiting _update_index
+[DEBUG (2025-08-14 09:34:55.820234)]  ▶️ Entering _update_index (<__main__.DBL object at 0x1035a7e00>, 'drink', IndexValue(start=20, size=5)) {}
+[DEBUG (2025-08-14 09:34:55.820248)]  ⬅️ Exiting _update_index
+[DEBUG (2025-08-14 09:34:55.820267)] Found 2 new entries.
+[DEBUG (2025-08-14 09:34:55.820405)]  ⬅️ Exiting get
 ✅ broccoli
-[DEBUG (2025-08-13 09:22:51.918474)]  ⬅️ Exiting run
+[DEBUG (2025-08-14 09:34:55.820431)]  ⬅️ Exiting run
 ```
 
 Usage example (Python)
