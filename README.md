@@ -162,7 +162,7 @@ Usage example (REPL in debug mode)
 
 Start your REPL with --debug flag
 ```
-➜  dbl git:(main) ✗ dbl --debug
+➜  dbl git:(main) dbl --debug
 [__main__] conf file loaded: [conf]
 [helper] conf file loaded: [conf]
 [DEBUG (2025-08-14 09:34:48.283236)]  ▶️ Entering __init__ (<__main__.REPL object at 0x1035a7cb0>,) {}
@@ -246,4 +246,5 @@ Running tests
 ----------------------------------------------------------------------
 Ran 8 tests in 0.003s
 
-OK```
+OK
+```
