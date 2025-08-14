@@ -100,7 +100,10 @@ class DBL:
         self.index[index_key] = index_value
 
     @dbl_profile
-    def _build_index(self, filename=conf.DATABASE_PATH):
+    def _build_index(self, filename=None):
+        if not filename:
+            filename = self.get_filename(is_compact=False)
+
         with open(filename, 'rb') as file:
             file_size = os.path.getsize(filename)
             if self.index:
@@ -114,11 +117,11 @@ class DBL:
             start = end = file.tell()
             new_entries = 0
             while (c:= file.read(1)):
-                if decode(c) == conf.KEY_VALUE_SEPARATOR:
+                if c == conf.KEY_VALUE_SEPARATOR_B:
                     key = current
                     current = b""
                     start = file.tell()
-                elif decode(c) == conf.END_RECORD:
+                elif c == conf.END_RECORD_B:
                     current = b""
                     end = file.tell()
                     self._update_index(decode(key), IndexValue(start, end - start - 1))
@@ -131,16 +134,19 @@ class DBL:
         return self.bytes_indexed
 
     @dbl_log
-    def build_index(self, filename=conf.DATABASE_PATH):
+    def build_index(self, filename=None):
+        if not filename:
+            filename = self.get_filename(is_compact=False)
         return self._build_index(filename)
 
     @dbl_log
     @dbl_profile
-    def get(self, key, filename=conf.DATABASE_PATH):
+    def get(self, key):
+        filename = self.get_filename(is_compact=False)
         if not os.path.exists(filename):
             print("Empty db. Use operation 'set' to insert a new entry.")
             return
-        self._build_index()
+        self._build_index(filename)
 
         try:
             offset, size = self.index[key]
@@ -310,5 +316,6 @@ class REPL:
 if __name__ == "__main__":
     if "--debug" in sys.argv: conf.DEBUG = True
     if "--profile" in sys.argv: conf.PROFILE = True
+    if "--db" in sys.argv: conf.DATABASE_PATH = sys.argv[-1] # todo: do proper parsing
     repl = REPL()
     repl.start()

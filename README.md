@@ -257,32 +257,31 @@ OK
 Running load tests
 ------------------
 ```
-➜  dbl git:(main) ./run_load_test.sh 100000
+➜  dbl git:(main) ✗ ./run_load_test.sh 100000
 Running load tests [100000] ...
 [dbl] conf file loaded: [conf_test]
 [helper] conf file loaded: [conf_test]
-Using /tmp/dbl.data-test-session-1755182460.2346182
+Using /tmp/dbl.data-test-session-1755185390.642337
 Starting clean.
 --------------------------------------------------
 Setting 100000 distinct keys in bulk without updating the index...
-[PROFILE (2025-08-14 11:41:00.768202)] Spent 0.41121602058410645 in _set_bulk
+[PROFILE (2025-08-14 12:29:51.171365)] Spent 0.4096097946166992 in _set_bulk
 ✅ Done.
 --------------------------------------------------
-Setting 100000 new entries with the same key=key-23919 in bulk without updating the index...
-[PROFILE (2025-08-14 11:41:01.268699)] Spent 0.4014768600463867 in _set_bulk
+Setting 100000 new entries with the same key=key-66782 in bulk without updating the index...
+[PROFILE (2025-08-14 12:29:51.680103)] Spent 0.41054487228393555 in _set_bulk
 ✅ Done.
 --------------------------------------------------
 Cleaned database.
 ✅ Done.
 --------------------------------------------------
 Setting 100000 distinct keys in bulk updating the index...
-[PROFILE (2025-08-14 11:41:01.802758)] Spent 0.4106152057647705 in _set_bulk
-[PROFILE (2025-08-14 11:41:03.110791)] Spent 1.307974100112915 in _build_index
+[PROFILE (2025-08-14 12:29:52.214282)] Spent 0.4064900875091553 in _set_bulk
+[PROFILE (2025-08-14 12:29:53.019061)] Spent 0.8047451972961426 in _build_index
 ✅ Done.
 --------------------------------------------------
-Setting 100000 new entries for key=key-44199 in bulk updating the index...
-[PROFILE (2025-08-14 11:41:03.608443)] Spent 0.3980529308319092 in _set_bulk
-[PROFILE (2025-08-14 11:41:04.837367)] Spent 1.2288787364959717 in _build_index
+Setting 100000 new entries for key=key-4634 in bulk updating the index...
+[PROFILE (2025-08-14 12:29:53.504592)] Spent 0.3973979949951172 in _set_bulk
+[PROFILE (2025-08-14 12:29:54.267477)] Spent 0.7628500461578369 in _build_index
 ✅ Done.
---------------------------------------------------
-```
+--------------------------------------------------```
