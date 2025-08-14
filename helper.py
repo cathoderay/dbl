@@ -1,9 +1,25 @@
 import conf
 from datetime import datetime
+import functools
+import time
+
+
 
 
 def print_debug(data):
     if not conf.DEBUG:
+        return
+
+    if isinstance(data, str):
+        _print_debug(data)
+
+    if isinstance(data, list):
+        for datum in data:
+            _print_debug(datum)
+
+
+def print_profile(data):
+    if not conf.PROFILE:
         return
 
     if isinstance(data, str):
@@ -27,10 +43,22 @@ def decode(data):
 
 
 def dbl_log(func):
+    @functools.wraps(func)
     def wrapper(*args, **kwargs):
         print_debug(f" ▶️ Entering {str(func.__name__)} {args} {kwargs}")
         result = func(*args, **kwargs)
         print_debug(f" ⬅️ Exiting {str(func.__name__)}")
+        return result
+    return wrapper
+
+
+def dbl_profile(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        print_profile(f"Spent {end - start} in {str(func.__name__)}")
         return result
     return wrapper
 

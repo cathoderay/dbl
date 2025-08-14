@@ -34,19 +34,40 @@ class LoggyTest(unittest.TestCase):
         dbl.set("emoji", "😀")
         assert(dbl.get("emoji") == "😀")
 
-    def test_set_in_bulk(self):
-        dbl = DBL()
-        dbl.set_bulk([("name1", "Paul"), ("name2", "John"), ("name3", "Ringo"), ("name4", "George")])
-        assert(dbl.get("name1") == "Paul")
-        assert(dbl.get("name2") == "John")
-        assert(dbl.get("name3") == "Ringo")
-        assert(dbl.get("name4") == "George")
-
     def test_get_encoded_data(self):
         dbl = DBL()
         encoded = dbl.get_encoded_data("key", "value✅")
         assert((b'key', b',', b'value\xe2\x9c\x85', b'\n') == encoded)
 
+    def test_set_bulk(self):
+        dbl = DBL()
+        bytes_indexed_before = dbl.bytes_indexed
+        data = [
+            ("name1", "Paul"),
+            ("name2", "John"),
+            ("name3", "Ringo"),
+            ("name4", "George")
+        ]
+        dbl.set_bulk(data, update_index=True)
+        bytes_indexed_after = dbl.bytes_indexed
+        assert(bytes_indexed_before < bytes_indexed_after)
+        assert(dbl.get("name1") == "Paul")
+        assert(dbl.get("name2") == "John")
+        assert(dbl.get("name3") == "Ringo")
+        assert(dbl.get("name4") == "George")
+
+    def test_set_bulk_without_updating_index(self):
+        dbl = DBL()
+        bytes_indexed_before = dbl.bytes_indexed
+        data = [
+            ("name1", "Paul"),
+            ("name2", "John"),
+            ("name3", "Ringo"),
+            ("name4", "George")
+        ]
+        dbl.set_bulk(data, update_index=False)
+        bytes_indexed_after = dbl.bytes_indexed
+        assert(bytes_indexed_before == bytes_indexed_after)
 
 if __name__ == "__main__":
     unittest.main()

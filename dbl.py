@@ -16,7 +16,7 @@ import shutil
 from typing import Dict
 
 import conf
-from helper import print_debug, encode, decode, print_ascii_logo, dbl_log, validate
+from helper import print_debug, encode, decode, print_ascii_logo, dbl_log, dbl_profile, validate
 
 
 IndexValue = namedtuple("IndexValue", "start size")
@@ -59,12 +59,11 @@ class DBL:
             return conf.COMPACT_PATH
         return conf.DATABASE_PATH
 
+    @dbl_profile
     @dbl_log
-    def _set_bulk(self, items, is_compact=False):
+    def _set_bulk(self, items, filename):
         for key, value in items:
             validate(key, value)
-
-        filename = self.get_filename(is_compact)
 
         content = b"".join(
             (b"".join(self.get_encoded_data(key, value))
@@ -75,23 +74,24 @@ class DBL:
             file.seek(0, os.SEEK_END)
             file.write(content)
 
-        if not is_compact:
-            self._build_index()
-
     @dbl_log
     def set(self, key, value, is_compact=False):
         self._set(key, value, is_compact)
         return f"{key} => {value}"
 
     @dbl_log
-    def set_bulk(self, items):
-        self._set_bulk(items)
+    def set_bulk(self, items, update_index, is_compact=False):
+        filename = self.get_filename(is_compact)
+        self._set_bulk(items, filename)
+
+        if not update_index: return
+        if not is_compact: self._build_index()
 
     @dbl_log
     def _update_index(self, index_key, index_value):
         self.index[index_key] = index_value
 
-    @dbl_log
+    @dbl_profile
     def _build_index(self, filename=conf.DATABASE_PATH):
         with open(filename, 'rb') as file:
             file_size = os.path.getsize(filename)
@@ -127,6 +127,7 @@ class DBL:
         return self._build_index(filename)
 
     @dbl_log
+    @dbl_profile
     def get(self, key, filename=conf.DATABASE_PATH):
         if not os.path.exists(filename):
             print("Empty db. Use operation 'set' to insert a new entry.")
@@ -158,7 +159,8 @@ class DBL:
         for key in self.index:
             value = self.get(key)
             items.append((key, value))
-        self._set_bulk(items, is_compact=True)
+        filename = self.get_filename(is_compact=True)
+        self._set_bulk(items, filename)
 
     @dbl_log
     def compact(self):
@@ -240,7 +242,7 @@ class REPL:
             "replace_from_compact": lambda operands: self.dbl.replace_from_compact(),
             "build_index": lambda operands: self.dbl.build_index(),
             "toggle_debug_flag": lambda operands: self.toggle_debug(),
-            "check_debug_flag": lambda operands: conf.DEBUG,
+            "check_debug_flag": lambda operands: str(conf.DEBUG),
             "clean_database": lambda operands: self.dbl.clean_database(),
             "clean_compact": lambda operands: self.dbl.clean_compact(),
             "clean_index": lambda operands: self.dbl.clean_index(),
