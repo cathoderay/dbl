@@ -234,6 +234,10 @@ Where is the data stored?
 
 The data is stored and retrieved from the path described in `DATABASE_PATH` located at `conf.py`.
 
+Configuration files
+----
+
+There are two main configuration files available. One for real usage (`conf.py`) and another one for tests (`conf_test.py`).
 
 Running tests
 -------------

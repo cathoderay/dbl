@@ -3,5 +3,5 @@ COMPACT_PATH = "/tmp/dbl.compact"
 END_RECORD = "\n"
 KEY_VALUE_SEPARATOR = ","
 DEBUG = False
-PROFILE = True
+PROFILE = False
 ENCODING = "utf-8"
