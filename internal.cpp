@@ -52,7 +52,6 @@ extern "C" {
         std::ofstream file(DATABASE_PATH, std::ios::app);
 
         if (!file.is_open()) {
-
             std::cerr << "Error opening file!" << DATABASE_PATH << std::endl;
             return;
         }

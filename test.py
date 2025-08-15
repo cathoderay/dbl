@@ -98,6 +98,8 @@ if os.getenv("DBL_CPP_EXPERIMENT") == "1":
             dbl = DBL()
             dbl.set("food", "lettuce")
             dbl.set("drink", "water")
+            assert dbl.get("food") == "lettuce"
+            assert dbl.get("drink") == "water"
             assert dbl.get("food") == decode(dbl_internal.get(b"food"))
             assert dbl.get("drink") == decode(dbl_internal.get(b"drink"))
             dbl_internal.clean_index()
