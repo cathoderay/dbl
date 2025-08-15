@@ -87,6 +87,11 @@ class DBLTest(unittest.TestCase):
         bytes_indexed_after = dbl.bytes_indexed
         assert(bytes_indexed_before == bytes_indexed_after)
 
+    def test_get_non_existent_key(self):
+        dbl = DBL()
+        assert dbl.bytes_indexed == 0
+        assert dbl.get("ooops") == None
+
 
 if os.getenv("DBL_CPP_EXPERIMENT") == "1":
     class DBLTestCPPExperiment(unittest.TestCase):
@@ -100,22 +105,28 @@ if os.getenv("DBL_CPP_EXPERIMENT") == "1":
             dbl.set("drink", "water")
             assert dbl.get("food") == "lettuce"
             assert dbl.get("drink") == "water"
-            assert dbl.get("food") == decode(dbl_internal.get(b"food"))
-            assert dbl.get("drink") == decode(dbl_internal.get(b"drink"))
+            assert dbl.get("food") == dbl.get("food", use_experiment=True)
+            assert dbl.get("drink") == dbl.get("drink", use_experiment=True)
             dbl_internal.clean_index()
 
         def test_set_and_get(self):
+            dbl = DBL()
             dbl_internal.set(b"food", b"broccoli")
-            assert decode(dbl_internal.get(b"food")) == "broccoli"
+            assert dbl.get("food", use_experiment=True) == "broccoli"
 
         def test_set_and_get_2(self):
+            dbl = DBL()
             dbl_internal.set(b"drink", b"water")
             dbl_internal.set(b"food", b"broccoli")
-            assert decode(dbl_internal.get(b"food")) == "broccoli"
+            assert dbl.get("food", use_experiment=True) == "broccoli"
 
             dbl_internal.set(b"food", b"lettuce")
-            assert decode(dbl_internal.get(b"drink")) == "water"
-            assert decode(dbl_internal.get(b"food")) == "lettuce"
+            assert dbl.get("drink", use_experiment=True) == "water"
+            assert dbl.get("food", use_experiment=True) == "lettuce"
+
+        def test_get_non_existent_key(self):
+            dbl = DBL()
+            assert dbl.get("ooops", use_experiment=True) == None
 
 
 if __name__ == "__main__":

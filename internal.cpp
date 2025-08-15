@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 extern "C" {
-    std::unordered_map<std::string, std::pair<int, int>> dbl_index;
+    std::unordered_map<std::string, std::vector<int>> dbl_index;
     int bytes_read = 0;
     std::string DATABASE_PATH;
     std::string KEY_VALUE_SEPARATOR;
@@ -41,7 +41,7 @@ extern "C" {
             separator_index = l.find(KEY_VALUE_SEPARATOR);
             value_size = line.length() - separator_index - 1;
             key = line.substr(0, separator_index);
-            dbl_index[key] = std::make_pair(current + separator_index + 1, value_size);
+            dbl_index[key] = {current + separator_index + 1, value_size};
             current += line.length() + 1;
             bytes_read = current;
         }
@@ -63,13 +63,14 @@ extern "C" {
     const char* get(const char* key) {
         build_index();
 
-        std::pair<int, int> value_pair = dbl_index[key];
-        int start = value_pair.first;
-        int size = value_pair.second;
+        std::vector<int> value_pair = dbl_index[key];
 
-        if (!start) {
+        if (value_pair.size() != 2) {
             return "";
         }
+
+        int start = value_pair[0];
+        int size = value_pair[1];
 
         std::ifstream file(DATABASE_PATH);
 

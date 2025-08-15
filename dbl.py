@@ -187,9 +187,10 @@ class DBL:
     @dbl_log
     @dbl_profile
     def get(self, key, use_experiment=False):
-        if use_experiment:
+        if os.getenv("DBL_CPP_EXPERIMENT") == "1" and use_experiment:
             print_debug("Using cpp experiment...")
-            return decode(dbl_internal.get(encode(key)))
+            value = decode(dbl_internal.get(encode(key)))
+            return value if len(value) > 0 else None
 
         filename = self.get_filename(is_compact=False)
         if not os.path.exists(filename):
@@ -200,7 +201,7 @@ class DBL:
         try:
             offset, size = self.index[key]
         except KeyError:
-            raise ValueError("Key not found")
+            return None
 
         try:
             with open(filename, 'rb') as file:
@@ -326,7 +327,9 @@ class REPL:
             print("\n=>", end=" ")
             try:
                 operator, *operands = input().split()
-                self.run(operator, operands)
+                result = self.run(operator, operands)
+                if result is None: print("☑️ None"); continue
+                print("✅ " + (result if isinstance(result, str) else "Done."))
             except Exception as e:
                 print(str(e))
 
@@ -357,8 +360,7 @@ class REPL:
     @dbl_log
     def run(self, operator, operands):
         try:
-            result = self.operations[operator](operands)
-            print("✅ " + (result if isinstance(result, str) else "Done."))
+            return self.operations[operator](operands)
         except KeyError:
             print("Unknown operation.")
 
