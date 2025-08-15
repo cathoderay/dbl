@@ -30,7 +30,7 @@ This is inspired by the book "Designing Data-Intensive Applications: The Big Ide
 Features
 --------
 
-- Written in pure Python
+- Written in pure Python (and a bit of C++)
 - No third-party dependency
 - Suited for key-value data
 - 2 main operations:
