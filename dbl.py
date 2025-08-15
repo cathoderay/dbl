@@ -28,6 +28,34 @@ from helper import print_debug, encode, decode, print_ascii_logo, dbl_log, dbl_p
 
 IndexValue = namedtuple("IndexValue", "start size")
 
+# CPP experiment -------------------------------------------------------------------------------------------------
+
+import ctypes
+import os
+
+dbl_internal = None
+if os.getenv("DBL_CPP_EXPERIMENT") == "1":
+    if os.name != 'posix':
+        print("Incompatible OS")
+        exit(-1)
+
+    internal = 'internal.so'
+
+    try:
+        dbl_internal = ctypes.CDLL(os.path.join(os.path.dirname(__file__), internal))
+    except OSError as e:
+        print(f"Error loading library: {e}")
+        print("Ensure {internal} (Linux/macOS)")
+        exit(-1)
+
+    dbl_internal.initialize.argtypes = [ctypes.c_char_p]*3
+    dbl_internal.get.argtypes = [ctypes.c_char_p]
+    dbl_internal.get.restype = ctypes.c_char_p
+    dbl_internal.set.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+    dbl_internal.initialize(encode(conf.DATABASE_PATH), encode(conf.KEY_VALUE_SEPARATOR), encode(conf.END_RECORD))
+
+# CPP experiment -------------------------------------------------------------------------------------------------
+
 
 class DBL:
     @dbl_log
@@ -92,6 +120,7 @@ class DBL:
         self._set(key, value, is_compact)
         return f"{key} => {value}"
 
+    @dbl_profile
     @dbl_log
     def set_bulk(self, items, update_index, is_compact=False):
         filename = self.get_filename(is_compact)
@@ -136,7 +165,7 @@ class DBL:
         END_RECORD_B = encode(conf.END_RECORD)
 
         new_entries = 0
-
+        start_before = start
         for item in bytes_read.split(END_RECORD_B):
             if not item:
                 break
@@ -146,7 +175,7 @@ class DBL:
             new_entries += 1
             start += len(value) + len(END_RECORD_B)
 
-        self.bytes_indexed = start + len(bytes_read)
+        self.bytes_indexed = start_before + len(bytes_read)
         print_debug(f"Found {new_entries} new entries.")
 
     @dbl_log
@@ -157,7 +186,11 @@ class DBL:
 
     @dbl_log
     @dbl_profile
-    def get(self, key):
+    def get(self, key, use_experiment=False):
+        if use_experiment:
+            print_debug("Using cpp experiment...")
+            return decode(dbl_internal.get(encode(key)))
+
         filename = self.get_filename(is_compact=False)
         if not os.path.exists(filename):
             print("Empty db. Use operation 'set' to insert a new entry.")
@@ -252,12 +285,13 @@ class DBL:
         metadata = []
         metadata.append(f"Number of keys: {len(self.index)}")
         metadata.append(f"Bytes indexed: {self.bytes_indexed}")
-        metadata.append(f"Size of index object in bytes: {sys.getsizeof(self.index)}")
+        metadata.append(f"Index size in bytes: {sys.getsizeof(self.index)}")
         return metadata
 
     @dbl_log
     def get_index_metadata(self):
         return "\n".join(["-"*50] + self._get_index_metadata() + ["-"*50])
+
 
 class REPL:
     @dbl_log

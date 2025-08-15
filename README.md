@@ -265,74 +265,95 @@ OK
 Running load tests
 ------------------
 ```
-➜  dbl git:(main) ./run_load_test.sh 100000
+➜  dbl git:(main) ✗ DBL_CPP_EXPERIMENT=1 ./run_load_test.sh 100000
 [dbl] conf file loaded: [conf_test]
 [helper] conf file loaded: [conf_test]
 
  🏁 LOAD TEST REPORT 🏁 --------------------------------------------------
 
-Using /tmp/dbl.data-test-session-1755214500.054416
+Using /tmp/dbl.data-test-session-1755284659.6353788
 --------------------------------------------------
 Starting clean.
 --------------------------------------------------
 Number of keys: 0
 Bytes indexed: 0
-Size of index object in bytes: 64
+Index size in bytes: 64
 --------------------------------------------------
 🏃‍➡️ Setting 100000 distinct keys in bulk without updating the index...
-[PROFILE (2025-08-14 20:35:00.589990)] Spent 0.010644912719726562 in _write_file
-[PROFILE (2025-08-14 20:35:00.590295)] Spent 0.41063976287841797 in _set_bulk
+[PROFILE (2025-08-15 16:04:20.188482)] Spent 0.01170492172241211 in _write_file
+[PROFILE (2025-08-15 16:04:20.188524)] Spent 0.42523193359375 in _set_bulk
+[PROFILE (2025-08-15 16:04:20.188537)] Spent 0.4760589599609375 in set_bulk
 ✅ Done.
 --------------------------------------------------
 Number of keys: 0
 Bytes indexed: 0
-Size of index object in bytes: 64
+Index size in bytes: 64
 --------------------------------------------------
-🏃‍➡️ Setting 100000 new entries with the same key=key-42232 in bulk without updating the index...
-[PROFILE (2025-08-14 20:35:01.104588)] Spent 0.011733055114746094 in _write_file
-[PROFILE (2025-08-14 20:35:01.104883)] Spent 0.42382311820983887 in _set_bulk
+🏃‍➡️ Setting 100000 new entries with the same key=key-52301 in bulk without updating the index...
+[PROFILE (2025-08-15 16:04:20.685854)] Spent 0.011066198348999023 in _write_file
+[PROFILE (2025-08-15 16:04:20.685896)] Spent 0.4045071601867676 in _set_bulk
+[PROFILE (2025-08-15 16:04:20.685909)] Spent 0.4532198905944824 in set_bulk
 ✅ Done.
 --------------------------------------------------
 Number of keys: 0
 Bytes indexed: 0
-Size of index object in bytes: 64
+Index size in bytes: 64
 --------------------------------------------------
 Cleaned database.
 ✅ Done.
 --------------------------------------------------
 Number of keys: 0
 Bytes indexed: 0
-Size of index object in bytes: 64
+Index size in bytes: 64
 --------------------------------------------------
-🏃‍➡️ Setting 100000 new entries for key=key-76701 in bulk updating the index...
-[PROFILE (2025-08-14 20:35:01.617498)] Spent 0.012431859970092773 in _write_file
-[PROFILE (2025-08-14 20:35:01.617746)] Spent 0.4172019958496094 in _set_bulk
-[PROFILE (2025-08-14 20:35:01.618914)] Spent 0.0011360645294189453 in _read_file
-[PROFILE (2025-08-14 20:35:01.919246)] Spent 0.3002927303314209 in _update_index_bulk
-[PROFILE (2025-08-14 20:35:01.919518)] Spent 0.3017549514770508 in _build_index
+🏃‍➡️ Setting 100000 new entries for key=key-44492 in bulk updating the index...
+[PROFILE (2025-08-15 16:04:21.156303)] Spent 0.010926008224487305 in _write_file
+[PROFILE (2025-08-15 16:04:21.156619)] Spent 0.38173818588256836 in _set_bulk
+[PROFILE (2025-08-15 16:04:21.157836)] Spent 0.0011301040649414062 in _read_file
+[PROFILE (2025-08-15 16:04:21.448647)] Spent 0.29077887535095215 in _update_index_bulk
+[PROFILE (2025-08-15 16:04:21.448955)] Spent 0.29227590560913086 in _build_index
+[PROFILE (2025-08-15 16:04:21.448972)] Spent 0.7198929786682129 in set_bulk
 ✅ Done.
 --------------------------------------------------
 Number of keys: 1
-Bytes indexed: 4377790
-Size of index object in bytes: 184
+Bytes indexed: 2188895
+Index size in bytes: 184
 --------------------------------------------------
 Cleaned database.
 ✅ Done.
 --------------------------------------------------
 Number of keys: 0
 Bytes indexed: 0
-Size of index object in bytes: 64
+Index size in bytes: 64
 --------------------------------------------------
 🏃‍➡️ Setting 100000 distinct keys in bulk updating the index...
-[PROFILE (2025-08-14 20:35:02.450259)] Spent 0.011439085006713867 in _write_file
-[PROFILE (2025-08-14 20:35:02.450458)] Spent 0.41594791412353516 in _set_bulk
-[PROFILE (2025-08-14 20:35:02.451558)] Spent 0.001068115234375 in _read_file
-[PROFILE (2025-08-14 20:35:02.782656)] Spent 0.33106207847595215 in _update_index_bulk
-[PROFILE (2025-08-14 20:35:02.782689)] Spent 0.3322160243988037 in _build_index
+[PROFILE (2025-08-15 16:04:21.964571)] Spent 0.011846065521240234 in _write_file
+[PROFILE (2025-08-15 16:04:21.964857)] Spent 0.40244412422180176 in _set_bulk
+[PROFILE (2025-08-15 16:04:21.965713)] Spent 0.0008261203765869141 in _read_file
+[PROFILE (2025-08-15 16:04:22.297138)] Spent 0.33139991760253906 in _update_index_bulk
+[PROFILE (2025-08-15 16:04:22.297359)] Spent 0.3324851989746094 in _build_index
+[PROFILE (2025-08-15 16:04:22.297374)] Spent 0.7806746959686279 in set_bulk
 ✅ Done.
 --------------------------------------------------
 Number of keys: 100000
-Bytes indexed: 4355580
-Size of index object in bytes: 3844864
+Bytes indexed: 2177790
+Index size in bytes: 3844864
 --------------------------------------------------
+
+ 🏁 LOAD TEST REPORT (CPP experiment) 🏁 --------------------------------------------------
+
+🏃‍➡️ Setting 100000 distinct keys in bulk without updating the index...
+[PROFILE (2025-08-15 16:04:22.827148)] Spent 0.01176309585571289 in _write_file
+[PROFILE (2025-08-15 16:04:22.827508)] Spent 0.4141271114349365 in _set_bulk
+[PROFILE (2025-08-15 16:04:22.827528)] Spent 0.4604308605194092 in set_bulk
+✅ Done.
+Performing a get with index being built in-memory via Python
+[PROFILE (2025-08-15 16:04:22.832897)] Spent 0.0004417896270751953 in _read_file
+[PROFILE (2025-08-15 16:04:23.151692)] Spent 0.3187723159790039 in _update_index_bulk
+[PROFILE (2025-08-15 16:04:23.151919)] Spent 0.3194692134857178 in _build_index
+[PROFILE (2025-08-15 16:04:23.152102)] Spent 0.31968116760253906 in get
+value-42
+Performing a get using index being built in-memory via C++ shared object
+[PROFILE (2025-08-15 16:04:23.312983)] Spent 0.1608130931854248 in get
+value-42
 ```

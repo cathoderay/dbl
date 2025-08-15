@@ -6,10 +6,11 @@ if not os.getenv("DBL_TEST_ENV", 0) == "1":
     exit(-1)
 
 
-from dbl import DBL
+from dbl import DBL, dbl_internal
+from helper import decode
 
 
-class LoggyTest(unittest.TestCase):
+class DBLTest(unittest.TestCase):
     def setUp(self):
         DBL().clean_all()
 
@@ -85,6 +86,35 @@ class LoggyTest(unittest.TestCase):
         dbl.set_bulk(data, update_index=False)
         bytes_indexed_after = dbl.bytes_indexed
         assert(bytes_indexed_before == bytes_indexed_after)
+
+
+if os.getenv("DBL_CPP_EXPERIMENT") == "1":
+    class DBLTestCPPExperiment(unittest.TestCase):
+        def setUp(self):
+            dbl_internal.clean_index()
+            DBL().clean_all()
+
+        def test_verify_outputs_are_the_same(self):
+            dbl = DBL()
+            dbl.set("food", "lettuce")
+            dbl.set("drink", "water")
+            assert dbl.get("food") == decode(dbl_internal.get(b"food"))
+            assert dbl.get("drink") == decode(dbl_internal.get(b"drink"))
+            dbl_internal.clean_index()
+
+        def test_set_and_get(self):
+            dbl_internal.set(b"food", b"broccoli")
+            assert decode(dbl_internal.get(b"food")) == "broccoli"
+
+        def test_set_and_get_2(self):
+            dbl_internal.set(b"drink", b"water")
+            dbl_internal.set(b"food", b"broccoli")
+            assert decode(dbl_internal.get(b"food")) == "broccoli"
+
+            dbl_internal.set(b"food", b"lettuce")
+            assert decode(dbl_internal.get(b"drink")) == "water"
+            assert decode(dbl_internal.get(b"food")) == "lettuce"
+
 
 if __name__ == "__main__":
     unittest.main()

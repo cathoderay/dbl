@@ -54,3 +54,18 @@ dbl.set_bulk(tuple((f"key-{i}", f"value-{i}") for i in range(1, N + 1)), update_
 print("✅ Done.")
 print(dbl.get_index_metadata())
 dbl.clean_all()
+
+
+print(f"\n 🏁 LOAD TEST REPORT (CPP experiment) 🏁 {'-'*50}\n")
+
+print(f"🏃‍➡️ Setting {N} distinct keys in bulk without updating the index...")
+dbl.set_bulk(tuple((f"key-{i}", f"value-{i}") for i in range(1, N + 1)), update_index=False)
+print("✅ Done.")
+
+print("Performing a get with index being built in-memory via Python")
+print(dbl.get("key-42", use_experiment=False))
+
+print("Performing a get using index being built in-memory via C++ shared object")
+print(dbl.get("key-42", use_experiment=True))
+
+dbl.clean_all()
