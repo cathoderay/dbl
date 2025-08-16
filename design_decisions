@@ -44,3 +44,6 @@
 # Problem 9: dictionary footprint of index seems too high
 # Solution 1: consider approaches to reduce it [todo]
 
+# Problem 12: compact operation was removed
+# Solution: reimplement in c++ [todo]
+
