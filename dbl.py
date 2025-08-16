@@ -93,10 +93,10 @@ class DBL:
     @dbl_profile
     @dbl_log
     def set_bulk(self, items):
+        self.validate_bulk(items)
+
         pairs_type = KeyValueItem * len(items)
         pairs = pairs_type()
-
-        self.validate_bulk(items)
 
         for i, (key, value) in enumerate(items):
             pairs[i].key = encode(key)
