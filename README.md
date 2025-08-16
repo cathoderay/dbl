@@ -160,6 +160,21 @@ Thanks for using dbl!
 Don't forget to eat your veggies! 🥦
 ```
 
+Usage example (Python)
+----------------------
+
+```
+    >>> from dbl import DBL
+    >>> dbl = DBL()
+    >>> dbl.set("food", "broccoli")
+    'food => broccoli'
+    >>> dbl.get("food")
+    'broccoli'
+    >>> dbl.set("happy-emoji", "😊")
+    'happy-emoji => 😊'
+```
+
+
 Usage example (REPL in debug mode)
 ----------------------------------
 
@@ -225,20 +240,6 @@ You can also use the REPL in test environment, so it will point to a new db defi
 To start it, you just need to prepend `dbl` command with the env variable `DBL_TEST_ENV` as below:
 ```
    ➜  dbl git:(main) DBL_TEST_ENV=1 dbl
-```
-
-Usage example (Python)
-----------------------
-
-```
-    >>> from dbl import DBL
-    >>> dbl = DBL()
-    >>> dbl.set("food", "broccoli")
-    'food => broccoli'
-    >>> dbl.get("food")
-    'broccoli'
-    >>> dbl.set("happy-emoji", "😊")
-    'happy-emoji => 😊'
 ```
 
 Where is the data stored?
