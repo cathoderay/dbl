@@ -104,16 +104,13 @@ class DBL:
 
         dbl_internal.set_bulk(pairs, len(items))
 
+    @dbl_profile
     @dbl_log
     def build_index(self):
         return dbl_internal.build_index()
 
     @dbl_log
     def compact(self):
-        raise NotImplementedError("Not implemented")
-
-    @dbl_log
-    def compact_and_replace(self):
         raise NotImplementedError("Not implemented")
 
     @dbl_log
@@ -242,8 +239,8 @@ class REPL:
 
         try:
             return self.operations[operator](operands)
-        except KeyError:
-            print("Unknown operation.")
+        except Exception as e:
+            print(str(e))
 
 
 if __name__ == "__main__":
