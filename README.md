@@ -71,6 +71,9 @@ Usage example (REPL)
 
 ```
 ➜  dbl git:(main) dbl
+[__main__] conf file loaded: [conf]
+[helper] conf file loaded: [conf]
+Using /tmp/dbl.data
 
     Welcome to
           _____                    _____                    _____
@@ -115,7 +118,7 @@ Type help to list available operations.
  * clean_compact
  * clean_index
  * clean_all
- * index_metadata
+ * index
 
 => set
 DBL.set() missing 2 required positional arguments: 'key' and 'value'
@@ -129,24 +132,24 @@ DBL.get() missing 1 required positional argument: 'key'
 => get food
 ✅ broccoli
 
-=> index_metadata
+=> index
 ✅ --------------------------------------------------
 Number of keys: 1
 Bytes indexed: 14
-Size of index object in bytes: 184
+Index size in bytes: 184
 --------------------------------------------------
 
 => get drink
-Key not found
+☑️ None
 
 => set drink water
 ✅ drink => water
 
-=> index_metadata
+=> index
 ✅ --------------------------------------------------
 Number of keys: 2
 Bytes indexed: 26
-Size of index object in bytes: 184
+Index size in bytes: 184
 --------------------------------------------------
 
 => get drink
