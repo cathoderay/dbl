@@ -36,14 +36,15 @@
 # Switching to a similiar algorithm in C++, takes around 1 minute and 30 seconds.
 # Searching after index is built in both languages take microseconds to return in the same dataset.
 
+# Problem 9: dictionary footprint of index seems too high
+# Solution 1: consider approaches to reduce it [todo]
+# Note: index was rewritten in C++
+
 [todo]
 
 # Problem 8: multiple processes can write at the same time and mess with data in disk
 # Solution 1: add lock for writes (allow many to read) [todo]
 
-# Problem 9: dictionary footprint of index seems too high
-# Solution 1: consider approaches to reduce it [todo]
-
 # Problem 12: compact operation was removed
-# Solution: reimplement in c++ [todo]
+# Solution: reimplement in C++ [todo]
 
