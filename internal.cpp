@@ -4,10 +4,16 @@
 #include <unordered_map>
 #include <chrono>
 
+namespace fs = std::filesystem;
+
+struct KeyValueItem {
+    const char* key;
+    const char* value;
+};
 
 extern "C" {
     std::unordered_map<std::string, std::vector<long long int>> dbl_index;
-    int bytes_read = 0;
+    long long int bytes_read = 0;
     std::string DATABASE_PATH;
     std::string KEY_VALUE_SEPARATOR;
     std::string END_RECORD;
@@ -25,7 +31,7 @@ extern "C" {
             std::cerr << "Error opening file!" << DATABASE_PATH << std::endl;
             return;
         }
-        
+
         std::string line;
         long long int current = bytes_read;
         int separator_index = 0;
@@ -58,18 +64,35 @@ extern "C" {
             return;
         }
 
-        file << key << KEY_VALUE_SEPARATOR << value << END_RECORD; 
+        file << key << KEY_VALUE_SEPARATOR << value << END_RECORD;
         file.close();
+        build_index();
+    }
+
+    void set_bulk(KeyValueItem* items, int size) {
+        std::ofstream file(DATABASE_PATH, std::ios::app);
+
+        if (!file.is_open()) {
+            std::cerr << "Error opening file!" << DATABASE_PATH << std::endl;
+            return;
+        }
+
+        for(size_t i = 0; i < size; i++) {
+            file << items[i].key << KEY_VALUE_SEPARATOR << items[i].value << END_RECORD;
+        }
+
+        file.close();
+        build_index();
     }
 
     const char* get(const char* key) {
         build_index();
 
-        std::vector<long long int> value_pair = dbl_index[key];
-
-        if (value_pair.size() != 2) {
+        if (dbl_index.count(key) == 0) {
             return "";
         }
+
+        std::vector<long long int> value_pair = dbl_index[key];
 
         long long int start = value_pair[0];
         int size = value_pair[1];
@@ -92,6 +115,14 @@ extern "C" {
     void clean_index() {
         dbl_index.clear();
         bytes_read = 0;
+    }
+
+    long long int get_bytes_read() {
+        return bytes_read;
+    }
+
+    long long int get_index_size() {
+        return dbl_index.size();
     }
 }
 

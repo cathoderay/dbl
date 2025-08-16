@@ -270,94 +270,48 @@ Running load tests
 ------------------
 ```
 ➜  dbl git:(main) ./run_load_test.sh 100000
-[dbl] conf file loaded: [conf_test]
-[helper] conf file loaded: [conf_test]
-
- 🏁 LOAD TEST REPORT 🏁 --------------------------------------------------
-
-Using /tmp/dbl.data-test-session-1755284659.6353788
 --------------------------------------------------
 Starting clean.
+Index: --------------------------------------------------
+  Number of keys: 0
+  Bytes indexed: 0
 --------------------------------------------------
-Number of keys: 0
-Bytes indexed: 0
-Index size in bytes: 64
---------------------------------------------------
-🏃‍➡️ Setting 100000 distinct keys in bulk without updating the index...
-[PROFILE (2025-08-15 16:04:20.188482)] Spent 0.01170492172241211 in _write_file
-[PROFILE (2025-08-15 16:04:20.188524)] Spent 0.42523193359375 in _set_bulk
-[PROFILE (2025-08-15 16:04:20.188537)] Spent 0.4760589599609375 in set_bulk
+🏃‍➡️ Setting 100000 distinct keys in bulk...
+[PROFILE (2025-08-16 17:16:22.764527)] Spent 0.1226658821105957 in validate_bulk
+[PROFILE (2025-08-16 17:16:23.175269)] Spent 0.5881552696228027 in set_bulk
 ✅ Done.
+Index: --------------------------------------------------
+  Number of keys: 100000
+  Bytes indexed: 2177790
 --------------------------------------------------
-Number of keys: 0
-Bytes indexed: 0
-Index size in bytes: 64
+Getting one inexistent key...
+[PROFILE (2025-08-16 17:16:23.180219)] Spent 8.702278137207031e-05 in get
+None
+Getting one existent key...
+[PROFILE (2025-08-16 17:16:23.180323)] Spent 7.390975952148438e-05 in get
+value-1
+Index: --------------------------------------------------
+  Number of keys: 100000
+  Bytes indexed: 2177790
 --------------------------------------------------
-🏃‍➡️ Setting 100000 new entries with the same key=key-52301 in bulk without updating the index...
-[PROFILE (2025-08-15 16:04:20.685854)] Spent 0.011066198348999023 in _write_file
-[PROFILE (2025-08-15 16:04:20.685896)] Spent 0.4045071601867676 in _set_bulk
-[PROFILE (2025-08-15 16:04:20.685909)] Spent 0.4532198905944824 in set_bulk
+Cleaning again...
+Index: --------------------------------------------------
+  Number of keys: 0
+  Bytes indexed: 0
+--------------------------------------------------
+🏃‍➡️ Setting 100000 new entries with the same key=key-22979 in bulk...
+[PROFILE (2025-08-16 17:16:23.425952)] Spent 0.12819409370422363 in validate_bulk
+[PROFILE (2025-08-16 17:16:23.778431)] Spent 0.5332779884338379 in set_bulk
 ✅ Done.
---------------------------------------------------
-Number of keys: 0
-Bytes indexed: 0
-Index size in bytes: 64
+Index: --------------------------------------------------
+  Number of keys: 1
+  Bytes indexed: 2188895
 --------------------------------------------------
 Cleaned database.
 ✅ Done.
+Index: --------------------------------------------------
+  Number of keys: 0
+  Bytes indexed: 0
 --------------------------------------------------
-Number of keys: 0
-Bytes indexed: 0
-Index size in bytes: 64
---------------------------------------------------
-🏃‍➡️ Setting 100000 new entries for key=key-44492 in bulk updating the index...
-[PROFILE (2025-08-15 16:04:21.156303)] Spent 0.010926008224487305 in _write_file
-[PROFILE (2025-08-15 16:04:21.156619)] Spent 0.38173818588256836 in _set_bulk
-[PROFILE (2025-08-15 16:04:21.157836)] Spent 0.0011301040649414062 in _read_file
-[PROFILE (2025-08-15 16:04:21.448647)] Spent 0.29077887535095215 in _update_index_bulk
-[PROFILE (2025-08-15 16:04:21.448955)] Spent 0.29227590560913086 in _build_index
-[PROFILE (2025-08-15 16:04:21.448972)] Spent 0.7198929786682129 in set_bulk
 ✅ Done.
---------------------------------------------------
-Number of keys: 1
-Bytes indexed: 2188895
-Index size in bytes: 184
---------------------------------------------------
-Cleaned database.
-✅ Done.
---------------------------------------------------
-Number of keys: 0
-Bytes indexed: 0
-Index size in bytes: 64
---------------------------------------------------
-🏃‍➡️ Setting 100000 distinct keys in bulk updating the index...
-[PROFILE (2025-08-15 16:04:21.964571)] Spent 0.011846065521240234 in _write_file
-[PROFILE (2025-08-15 16:04:21.964857)] Spent 0.40244412422180176 in _set_bulk
-[PROFILE (2025-08-15 16:04:21.965713)] Spent 0.0008261203765869141 in _read_file
-[PROFILE (2025-08-15 16:04:22.297138)] Spent 0.33139991760253906 in _update_index_bulk
-[PROFILE (2025-08-15 16:04:22.297359)] Spent 0.3324851989746094 in _build_index
-[PROFILE (2025-08-15 16:04:22.297374)] Spent 0.7806746959686279 in set_bulk
-✅ Done.
---------------------------------------------------
-Number of keys: 100000
-Bytes indexed: 2177790
-Index size in bytes: 3844864
---------------------------------------------------
-
- 🏁 LOAD TEST REPORT (CPP experiment) 🏁 --------------------------------------------------
-
-🏃‍➡️ Setting 100000 distinct keys in bulk without updating the index...
-[PROFILE (2025-08-15 16:04:22.827148)] Spent 0.01176309585571289 in _write_file
-[PROFILE (2025-08-15 16:04:22.827508)] Spent 0.4141271114349365 in _set_bulk
-[PROFILE (2025-08-15 16:04:22.827528)] Spent 0.4604308605194092 in set_bulk
-✅ Done.
-Performing a get with index being built in-memory via Python
-[PROFILE (2025-08-15 16:04:22.832897)] Spent 0.0004417896270751953 in _read_file
-[PROFILE (2025-08-15 16:04:23.151692)] Spent 0.3187723159790039 in _update_index_bulk
-[PROFILE (2025-08-15 16:04:23.151919)] Spent 0.3194692134857178 in _build_index
-[PROFILE (2025-08-15 16:04:23.152102)] Spent 0.31968116760253906 in get
-value-42
-Performing a get using index being built in-memory via C++ shared object
-[PROFILE (2025-08-15 16:04:23.312983)] Spent 0.1608130931854248 in get
-value-42
 ```
