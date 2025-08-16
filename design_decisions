@@ -32,7 +32,7 @@
 # Problem 6: is it really faster with index? how much?
 # Solution 1: benchmark it [todo]
 # Notes:
-# Dataset of 1GB takes around 4 minutes to build in Python.
+# It takes around 4 minutes to build index of a dataset of 1GB in Python.
 # Switching to a similiar algorithm in C++, takes around 1 minute and 30 seconds.
 # Searching after index is built in both languages take microseconds to return in the same dataset.
 
