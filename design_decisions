@@ -29,10 +29,14 @@
 # Problem 10: building index step is slow
 # Solution 1: read the whole file once instead of reading byte per byte [done]
 
-[todo]
-
 # Problem 6: is it really faster with index? how much?
 # Solution 1: benchmark it [todo]
+# Notes:
+# Dataset of 1GB takes around 4 minutes to build in Python.
+# Switching to a similiar algorithm in C++, takes around 1 minute and 30 seconds.
+# Searching after index is built in both languages take microseconds to return in the same dataset.
+
+[todo]
 
 # Problem 8: multiple processes can write at the same time and mess with data in disk
 # Solution 1: add lock for writes (allow many to read) [todo]

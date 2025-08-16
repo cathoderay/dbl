@@ -186,7 +186,7 @@ class DBL:
 
     @dbl_log
     @dbl_profile
-    def get(self, key, use_experiment=False):
+    def get(self, key, use_experiment=True):
         if os.getenv("DBL_CPP_EXPERIMENT") == "1" and use_experiment:
             print_debug("Using cpp experiment...")
             value = decode(dbl_internal.get(encode(key)))

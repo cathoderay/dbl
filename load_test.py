@@ -58,9 +58,10 @@ dbl.clean_all()
 
 print(f"\n 🏁 LOAD TEST REPORT (CPP experiment) 🏁 {'-'*50}\n")
 
-print(f"🏃‍➡️ Setting {N} distinct keys in bulk without updating the index...")
-dbl.set_bulk(tuple((f"key-{i}", f"value-{i}") for i in range(1, N + 1)), update_index=False)
-print("✅ Done.")
+for _ in range(1): # change it to 50 to generate dataset of 1GB
+    print(f"🏃‍➡️ Setting {N} distinct keys in bulk without updating the index...")
+    dbl.set_bulk(tuple((f"key-{i}", f"value-{i}") for i in range(1, N + 1)), update_index=False)
+    print("✅ Done.")
 
 print("Performing a get with index being built in-memory via Python")
 print(dbl.get("key-42", use_experiment=False))

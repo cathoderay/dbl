@@ -2,9 +2,11 @@
 #include<fstream>
 #include <iostream>
 #include <unordered_map>
+#include <chrono>
+
 
 extern "C" {
-    std::unordered_map<std::string, std::vector<int>> dbl_index;
+    std::unordered_map<std::string, std::vector<long long int>> dbl_index;
     int bytes_read = 0;
     std::string DATABASE_PATH;
     std::string KEY_VALUE_SEPARATOR;
@@ -25,13 +27,13 @@ extern "C" {
         }
         
         std::string line;
-        int current = bytes_read;
+        long long int current = bytes_read;
         int separator_index = 0;
         int value_size;
         std::string key;
         std::string value;
         std::string l;
-        int read = 0;
+        long long int read = 0;
 
         file.seekg(bytes_read, std::ios::beg);
 
@@ -63,13 +65,13 @@ extern "C" {
     const char* get(const char* key) {
         build_index();
 
-        std::vector<int> value_pair = dbl_index[key];
+        std::vector<long long int> value_pair = dbl_index[key];
 
         if (value_pair.size() != 2) {
             return "";
         }
 
-        int start = value_pair[0];
+        long long int start = value_pair[0];
         int size = value_pair[1];
 
         std::ifstream file(DATABASE_PATH);
@@ -91,4 +93,23 @@ extern "C" {
         dbl_index.clear();
         bytes_read = 0;
     }
+}
+
+int main() {
+    // Uncomment below to profile / optimize functions above
+    /*
+    const char* db_path = "/tmp/dbl.data-test";
+    const char* kv_separator = ",";
+    const char* end_record = "\n";
+    initialize(db_path, kv_separator, end_record);
+    auto start_time = std::chrono::high_resolution_clock::now();
+    build_index();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    long long elapsed_time_us = duration.count(); // Elapsed time in microseconds
+    std::cout << "Index built." << std::endl;
+    std::cout << "Bytes read: " << bytes_read << std::endl;
+    std::cout << "Spent: " << elapsed_time_us << std::endl;
+    return 0;
+    */
 }

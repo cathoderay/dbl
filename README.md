@@ -265,7 +265,7 @@ OK
 Running load tests
 ------------------
 ```
-➜  dbl git:(main) ✗ DBL_CPP_EXPERIMENT=1 ./run_load_test.sh 100000
+➜  dbl git:(main) ./run_load_test.sh 100000
 [dbl] conf file loaded: [conf_test]
 [helper] conf file loaded: [conf_test]
 
