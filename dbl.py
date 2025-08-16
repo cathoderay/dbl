@@ -138,7 +138,10 @@ class DBL:
     def _read_file(self, filename):
         bytes_read, start = [], 0
 
-        if os.path.exists(filename) and os.path.getsize(filename) == self.bytes_indexed:
+        if not os.path.exists(filename):
+            return bytes_read, start
+
+        if os.path.getsize(filename) == self.bytes_indexed:
             print_debug("Index already updated. Skipping.")
         else:
             with open(filename, 'rb') as file:
@@ -186,16 +189,14 @@ class DBL:
 
     @dbl_log
     @dbl_profile
-    def get(self, key, use_experiment=True):
+    def get(self, key, use_experiment=False):
         if os.getenv("DBL_CPP_EXPERIMENT") == "1" and use_experiment:
             print_debug("Using cpp experiment...")
             value = decode(dbl_internal.get(encode(key)))
             return value if len(value) > 0 else None
 
         filename = self.get_filename(is_compact=False)
-        if not os.path.exists(filename):
-            print("Empty db. Use operation 'set' to insert a new entry.")
-            return
+
         self._build_index(filename)
 
         try:

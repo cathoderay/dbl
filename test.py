@@ -1,5 +1,7 @@
 import os
+import threading
 import unittest
+
 
 if not os.getenv("DBL_TEST_ENV", 0) == "1":
     print("You should set DBL_TEST_ENV to run tests.")
@@ -7,11 +9,15 @@ if not os.getenv("DBL_TEST_ENV", 0) == "1":
 
 
 from dbl import DBL, dbl_internal
-from helper import decode
 
 
 class DBLTest(unittest.TestCase):
     def setUp(self):
+        if os.getenv("DBL_CPP_EXPERIMENT") == "1":
+            dbl_internal.clean_index()
+        DBL().clean_all()
+
+    def tearDown(self):
         if os.getenv("DBL_CPP_EXPERIMENT") == "1":
             dbl_internal.clean_index()
         DBL().clean_all()
@@ -94,10 +100,40 @@ class DBLTest(unittest.TestCase):
         assert dbl.bytes_indexed == 0
         assert dbl.get("ooops") == None
 
+    def test_concurrency(self):
+        def thread_one():
+            dbl = DBL()
+            for _ in range(1000):
+                dbl.set("food", "lettuce")
+
+        def thread_two():
+            dbl = DBL()
+            for _ in range(1000):
+                dbl.set("food", "broccoli")
+
+        thread1 = threading.Thread(target=thread_one)
+        thread2 = threading.Thread(target=thread_two)
+
+        thread1.start()
+        thread2.start()
+
+        thread1.join()
+        thread2.join()
+
+        dbl = DBL()
+        assert dbl.get("food") in ["lettuce", "broccoli"]
+        dbl.set("food", "tomato")
+        assert dbl.get("food") == "tomato"
+
 
 if os.getenv("DBL_CPP_EXPERIMENT") == "1":
     class DBLTestCPPExperiment(unittest.TestCase):
         def setUp(self):
+            dbl_internal.clean_index()
+            DBL().clean_all()
+            print("in experiment")
+
+        def tearDown(self):
             dbl_internal.clean_index()
             DBL().clean_all()
 
@@ -105,11 +141,10 @@ if os.getenv("DBL_CPP_EXPERIMENT") == "1":
             dbl = DBL()
             dbl.set("food", "lettuce")
             dbl.set("drink", "water")
-            assert dbl.get("food") == "lettuce"
-            assert dbl.get("drink") == "water"
+            assert dbl.get("food", use_experiment=False) == "lettuce"
+            assert dbl.get("drink", use_experiment=False) == "water"
             assert dbl.get("food") == dbl.get("food", use_experiment=True)
             assert dbl.get("drink") == dbl.get("drink", use_experiment=True)
-            dbl_internal.clean_index()
 
         def test_set_and_get(self):
             dbl = DBL()
