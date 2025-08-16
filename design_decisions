@@ -30,15 +30,16 @@
 # Solution 1: read the whole file once instead of reading byte per byte [done]
 
 # Problem 6: is it really faster with index? how much?
-# Solution 1: benchmark it [todo]
+# Solution 1: benchmark it [done]
 # Notes:
 # It takes around 4 minutes to build index of a dataset of 1GB in Python.
 # Switching to a similiar algorithm in C++, takes around 1 minute and 30 seconds.
 # Searching after index is built in both languages take microseconds to return in the same dataset.
 
 # Problem 9: dictionary footprint of index seems too high
-# Solution 1: consider approaches to reduce it [todo]
+# Solution 1: consider approaches to reduce it [done]
 # Note: index was rewritten in C++
+
 
 [todo]
 
