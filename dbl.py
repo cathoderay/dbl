@@ -147,19 +147,25 @@ class DBL:
     def _remove_file(self, filename):
         if os.path.exists(filename):
             os.remove(filename)
+        assert os.path.exists(filename) == True, \
+        f"It seems file {filename} was not removed correctly. Please, double check it."
 
     @dbl_log
     def clean_database(self):
         self._remove_file(conf.DATABASE_PATH)
         self._clean_index()
+        return True
 
     @dbl_log
     def _clean_index(self):
         dbl_internal.clean_index()
+        assert dbl_internal.get_index_size() == 0, \
+        "It seems index still contains some keys."
 
     @dbl_log
     def clean_index(self):
         self._clean_index()
+        return True
 
     @dbl_log
     def clean_compact(self):
@@ -169,17 +175,19 @@ class DBL:
     def clean_all(self):
         self.clean_index()
         self.clean_database()
+        return True
 
     @dbl_log
     def _get_index_metadata(self):
         metadata = []
-        metadata.append(f"  Number of keys: {dbl_internal.get_index_size()}")
-        metadata.append(f"  Bytes indexed: {dbl_internal.get_bytes_read()}")
+        metadata.append("Index metadata: " + "-"*30)
+        metadata.append(f"- Number of keys: {dbl_internal.get_index_size()}")
+        metadata.append(f"- Bytes indexed: {dbl_internal.get_bytes_read()}")
         return metadata
 
     @dbl_log
     def get_index_metadata(self):
-        return "\n".join(["Index: " + "-"*50] + self._get_index_metadata() + ["-"*50])
+        return "\n".join(self._get_index_metadata() + ["-"*50])
 
 
 class REPL:
@@ -190,14 +198,14 @@ class REPL:
             "help": lambda operands: self.help(),
             "set": lambda operands: self.dbl.set(*operands),
             "get": lambda operands: self.dbl.get(*operands),
-            "compact": lambda operands: self.dbl.compact(),
-            "compact_and_replace": lambda operands: self.dbl.compact_and_replace(),
-            "replace_from_compact": lambda operands: self.dbl.replace_from_compact(),
+            # "compact": lambda operands: self.dbl.compact(),
+            # "compact_and_replace": lambda operands: self.dbl.compact_and_replace(),
+            # "replace_from_compact": lambda operands: self.dbl.replace_from_compact(),
             "build_index": lambda operands: self.dbl.build_index(),
-            "toggle_debug_flag": lambda operands: self.toggle_debug(),
+            "toggle_debug": lambda operands: self.toggle_debug(),
             "check_debug_flag": lambda operands: str(conf.DEBUG),
             "clean_database": lambda operands: self.dbl.clean_database(),
-            "clean_compact": lambda operands: self.dbl.clean_compact(),
+            # "clean_compact": lambda operands: self.dbl.clean_compact(),
             "clean_index": lambda operands: self.dbl.clean_index(),
             "clean_all": lambda operands: self.dbl.clean_all(),
             "index": lambda operands: self.dbl.get_index_metadata(),
@@ -220,7 +228,7 @@ class REPL:
                 if result is None: print("☑️ None"); continue
                 print("✅ " + (result if isinstance(result, str) else "Done."))
             except Exception as e:
-                print(str(e))
+                print("⚠️ " + str(e))
 
     @dbl_log
     def loop(self):
@@ -234,7 +242,7 @@ class REPL:
         print("Don't forget to eat your veggies! 🥦")
 
     def print_instructions(self):
-        print("Type help to list available operations.")
+        print("Type 'help' to list available operations.")
 
     @dbl_log
     def help(self):
@@ -249,7 +257,7 @@ class REPL:
     @dbl_log
     def run(self, operator, operands):
         if operator not in self.operations:
-            raise KeyError("Unknown operation.")
+            raise Exception("🤷🏻‍♂️ Unknown operation. Type 'help' to list available operations.")
 
         return self.operations[operator](operands)
 
