@@ -101,42 +101,33 @@ Using /tmp/dbl.data
     version 0.1
     by Ronald Kaiser
 
-Type help to list available operations.
+Type 'help' to list available operations.
 
 => help
 ✅ Operations available:
  * help
  * set
  * get
- * compact
- * compact_and_replace
- * replace_from_compact
  * build_index
- * toggle_debug_flag
+ * toggle_debug
  * check_debug_flag
  * clean_database
- * clean_compact
  * clean_index
  * clean_all
  * index
-
-=> set
-DBL.set() missing 2 required positional arguments: 'key' and 'value'
+ * find_tail
+ * exit
 
 => set food broccoli
 ✅ food => broccoli
-
-=> get
-DBL.get() missing 1 required positional argument: 'key'
 
 => get food
 ✅ broccoli
 
 => index
-✅ --------------------------------------------------
-Number of keys: 1
-Bytes indexed: 14
-Index size in bytes: 184
+✅ Index metadata: ------------------------------
+- Number of keys: 1
+- Bytes indexed: 14
 --------------------------------------------------
 
 => get drink
@@ -146,16 +137,16 @@ Index size in bytes: 184
 ✅ drink => water
 
 => index
-✅ --------------------------------------------------
-Number of keys: 2
-Bytes indexed: 26
-Index size in bytes: 184
+✅ Index metadata: ------------------------------
+- Number of keys: 2
+- Bytes indexed: 26
 --------------------------------------------------
 
 => get drink
 ✅ water
 
-=> ^C
+=> exit
+
 Thanks for using dbl!
 Don't forget to eat your veggies! 🥦
 ```
