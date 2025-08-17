@@ -129,7 +129,7 @@ class DBL:
         depth = DEPTH_LIMIT
         last = key
         cur = None
-        seen = set()
+        seen = set([last])
         while depth and (cur:= self.get(last)):
             print(f"{last} => {cur}")
             if cur in seen: raise Exception("Cycle detected")
@@ -248,15 +248,10 @@ class REPL:
 
     @dbl_log
     def run(self, operator, operands):
-        try:
-            self.operations[operator]
-        except KeyError:
+        if operator not in self.operations:
             raise KeyError("Unknown operation.")
 
-        try:
-            return self.operations[operator](operands)
-        except Exception as e:
-            print(str(e))
+        return self.operations[operator](operands)
 
 
 if __name__ == "__main__":
