@@ -44,7 +44,7 @@ try:
     dbl_internal = ctypes.CDLL(os.path.join(os.path.dirname(__file__), internal))
 except OSError as e:
     print(f"Error loading library: {e}")
-    print("Ensure {internal} is available (Linux/macOS)")
+    print(f"Please, run compile_internal.sh to ensure {internal} is available (Linux/macOS)")
     exit(-1)
 
 class KeyValueItem(ctypes.Structure):
