@@ -122,5 +122,10 @@ class DBLTest(unittest.TestCase):
         with self.assertRaises(Exception):
             dbl.find_tail("a")
 
+    def test_set_and_get_japanese(self):
+        dbl = DBL()
+        dbl.set("hello:japanese", "こんにちは")
+        assert dbl.get("hello:japanese") == "こんにちは"
+
 if __name__ == "__main__":
     unittest.main()
