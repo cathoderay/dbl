@@ -147,7 +147,7 @@ class DBL:
     def _remove_file(self, filename):
         if os.path.exists(filename):
             os.remove(filename)
-        assert os.path.exists(filename) == True, \
+        assert os.path.exists(filename) == False, \
         f"It seems file {filename} was not removed correctly. Please, double check it."
 
     @dbl_log
@@ -210,6 +210,7 @@ class REPL:
             "clean_all": lambda operands: self.dbl.clean_all(),
             "index": lambda operands: self.dbl.get_index_metadata(),
             "find_tail": lambda operands: self.dbl.find_tail(*operands),
+            "exit": lambda operands: self.exit()
         }
 
     @dbl_log
@@ -260,6 +261,11 @@ class REPL:
             raise Exception("🤷🏻‍♂️ Unknown operation. Type 'help' to list available operations.")
 
         return self.operations[operator](operands)
+
+    @dbl_log
+    def exit(self):
+        self.print_goodbye_message()
+        exit()
 
 
 if __name__ == "__main__":

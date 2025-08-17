@@ -122,6 +122,5 @@ class DBLTest(unittest.TestCase):
         with self.assertRaises(Exception):
             dbl.find_tail("a")
 
-
 if __name__ == "__main__":
     unittest.main()
