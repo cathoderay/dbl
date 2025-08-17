@@ -25,8 +25,6 @@ print(f"[{__name__}] conf file loaded: [{conf.__name__}]")
 from helper import print_debug, encode, decode, print_ascii_logo, dbl_log, dbl_profile, validate
 
 
-IndexValue = namedtuple("IndexValue", "start size")
-
 # CPP integration -------------------------------------------------------------------------------------------------
 
 import ctypes
