@@ -107,6 +107,21 @@ class DBLTest(unittest.TestCase):
         dbl.set("drink", "water")
         assert dbl_internal.get_bytes_read() == 26
 
+    def test_find_tail(self):
+        dbl = DBL()
+        dbl.set("a", "b")
+        dbl.set("b", "c")
+        dbl.set("c", "d")
+        assert dbl.find_tail("a") == "d"
+
+    def test_find_tail_with_cycle(self):
+        dbl = DBL()
+        dbl.set("a", "b")
+        dbl.set("b", "c")
+        dbl.set("c", "a")
+        with self.assertRaises(Exception):
+            dbl.find_tail("a")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -43,7 +43,5 @@ print(dbl.get_index_metadata())
 
 print("Cleaned database.")
 dbl.clean_all()
-print("✅ Done.")
 print(dbl.get_index_metadata())
-
 print("✅ Done.")

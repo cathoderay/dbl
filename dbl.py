@@ -12,7 +12,6 @@ __author__ = "Ronald Kaiser"
 from collections import namedtuple
 import os
 import sys
-import shutil
 from typing import Dict
 
 
@@ -124,6 +123,22 @@ class DBL:
         return value if len(value) > 0 else None
 
     @dbl_log
+    @dbl_profile
+    def find_tail(self, key):
+        DEPTH_LIMIT = 42
+        depth = DEPTH_LIMIT
+        last = key
+        cur = None
+        seen = set()
+        while depth and (cur:= self.get(last)):
+            print(f"{last} => {cur}")
+            if cur in seen: raise Exception("Cycle detected")
+            seen.add(cur)
+            depth -= 1
+            last = cur
+        return last
+
+    @dbl_log
     def compact_and_replace(self):
         self.compact()
         self.replace_from_compact()
@@ -186,6 +201,7 @@ class REPL:
             "clean_index": lambda operands: self.dbl.clean_index(),
             "clean_all": lambda operands: self.dbl.clean_all(),
             "index": lambda operands: self.dbl.get_index_metadata(),
+            "find_tail": lambda operands: self.dbl.find_tail(*operands),
         }
 
     @dbl_log
