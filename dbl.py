@@ -9,10 +9,8 @@
 __author__ = "Ronald Kaiser"
 
 
-from collections import namedtuple
 import os
 import sys
-from typing import Dict
 
 
 if os.getenv("DBL_TEST_ENV") == "1":
