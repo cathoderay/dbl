@@ -1,6 +1,6 @@
 import os
-import threading
 import unittest
+
 
 
 if not os.getenv("DBL_TEST_ENV", 0) == "1":
@@ -20,7 +20,7 @@ class DBLHelperTest(unittest.TestCase):
 
     def test_encode_and_decode(self):
         original = "https://en.wikipedia.or"
-        assert decode(encode(original))  == original
+        assert decode(encode(original)) == original
 
 
 if __name__ == "__main__":
