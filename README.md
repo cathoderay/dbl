@@ -51,8 +51,13 @@ Features
 
 How to run
 ----------
-
-1. You can run it like:
+0. First, you need to compile the C++ code, like:
+  ```
+      $ ./compile_internal.sh
+  ```
+  This step will generate an internal.so that will be used from the Python source code.
+  
+1. Then, you can run it like:
   ```
       $ python3 dbl.py
   ```
@@ -306,3 +311,8 @@ Index: --------------------------------------------------
 --------------------------------------------------
 ✅ Done.
 ```
+
+Contributions
+-------------
+Collaborations are welcome!
+Feel free to send me a message, so we can chat!
