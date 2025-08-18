@@ -116,6 +116,7 @@ class DBL:
     @dbl_log
     def delete(self, key):
         dbl_internal.set(encode(key), encode(conf.DELETE_VALUE))
+        assert self.get(key) == None
         return True
 
     @dbl_log
