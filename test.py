@@ -129,10 +129,16 @@ class DBLTest(unittest.TestCase):
 
     def test_to_reproduce_fixed_bug_and_prevent_it_from_regress(self):
         dbl = DBL()
-        key = "encoding-issue"
-        value = "https://en.wikipedia.or"
+        key, value = "encoding-issue", "https://en.wikipedia.or"
         dbl.set(key, value)
         assert dbl.get(key) == value
+
+    def test_multiple_sets_and_gets(self):
+        dbl = DBL()
+        for i in range(100):
+            key, value = f"key-{i}", f"value-{i}"
+            dbl.set(key, value)
+            dbl.get(key)
 
 
 if __name__ == "__main__":

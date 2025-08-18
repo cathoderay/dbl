@@ -212,7 +212,7 @@ class REPL:
     @dbl_log
     def start(self):
         print_ascii_logo()
-        self.print_instructions()
+        print(self.get_instructions())
         self.loop()
 
     @dbl_log
@@ -238,8 +238,8 @@ class REPL:
         print("\nThanks for using dbl!")
         print("Don't forget to eat your veggies! 🥦")
 
-    def print_instructions(self):
-        print("Type 'help' to list available operations.")
+    def get_instructions(self):
+        return "Type 'help' to list available operations."
 
     @dbl_log
     def help(self):
@@ -254,7 +254,7 @@ class REPL:
     @dbl_log
     def run(self, operator, operands):
         if operator not in self.operations:
-            raise Exception("🤷🏻‍♂️ Unknown operation. Type 'help' to list available operations.")
+            raise Exception(f"🤷🏻‍♂️ Unknown operation. {self.get_instructions()}")
 
         return self.operations[operator](operands)
 
