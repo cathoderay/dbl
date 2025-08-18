@@ -255,9 +255,10 @@ Running unit tests
 ➜  dbl git:(main) ./run_tests.sh
 [dbl] conf file loaded: [conf_test]
 [helper] conf file loaded: [conf_test]
-........
+....
+...........
 ----------------------------------------------------------------------
-Ran 8 tests in 0.003s
+Ran 15 tests in 0.189s
 
 OK
 ```
