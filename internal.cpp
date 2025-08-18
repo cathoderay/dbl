@@ -17,6 +17,7 @@ extern "C" {
     std::string DATABASE_PATH;
     std::string KEY_VALUE_SEPARATOR;
     std::string END_RECORD;
+    std::string ready;
 
     void initialize(const char* database_path, const char* key_value_separator, const char* end_record) {
         DATABASE_PATH = database_path;
@@ -107,9 +108,16 @@ extern "C" {
         file.seekg(start, std::ios::beg);
         file.read(buffer.data(), size);
         file.close();
-        std::string value(buffer.data(), buffer.size());
-        const char* value_b = value.c_str();
-        return value_b;
+
+        // Note: This passes over ownership of data, so it can be read by
+        // Python code without memory being freed up before it's read.
+        // TODO: Think about a more robust solution to this issue.
+        // Perhaps a good solution would be:
+        // 1. receive a request-id
+        // 2. save the response into a map.
+        // 3. when it's read, free-up memory accordingly.
+        ready = buffer.data();
+        return ready.c_str();
     }
 
     void clean_index() {

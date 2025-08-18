@@ -127,7 +127,7 @@ class DBLTest(unittest.TestCase):
         dbl.set("hello:japanese", "こんにちは")
         assert dbl.get("hello:japanese") == "こんにちは"
 
-    def test_encode_and_decode_encoding_issue(self):
+    def test_to_reproduce_fixed_bug_and_prevent_it_from_regress(self):
         dbl = DBL()
         key = "encoding-issue"
         value = "https://en.wikipedia.or"
