@@ -55,7 +55,7 @@ How to run
   ```
       $ ./compile_internal.sh
   ```
-  This step will generate an internal.so that will be used from the Python source code.
+  This step will generate an `internal.so` file that will be used from the Python source code.
   
 1. Then, you can run it like:
   ```
