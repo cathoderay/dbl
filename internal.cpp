@@ -24,7 +24,7 @@ extern "C" {
         const char* database_path,
         const char* key_value_separator,
         const char* end_record,
-        const char* delete_prefix) {
+        const char* delete_value) {
         DATABASE_PATH = database_path;
         KEY_VALUE_SEPARATOR = key_value_separator;
         END_RECORD = end_record;
