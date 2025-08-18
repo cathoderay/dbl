@@ -140,6 +140,11 @@ class DBLTest(unittest.TestCase):
             dbl.set(key, value)
             dbl.get(key)
 
+    def test_remove_key(self):
+        dbl = DBL()
+        dbl.delete("key")
+        assert dbl.get("key") == None
+
 
 if __name__ == "__main__":
     unittest.main()

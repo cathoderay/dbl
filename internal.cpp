@@ -17,19 +17,25 @@ extern "C" {
     std::string DATABASE_PATH;
     std::string KEY_VALUE_SEPARATOR;
     std::string END_RECORD;
+    std::string DELETE_VALUE;
     std::string ready;
 
-    void initialize(const char* database_path, const char* key_value_separator, const char* end_record) {
+    void initialize(
+        const char* database_path,
+        const char* key_value_separator,
+        const char* end_record,
+        const char* delete_prefix) {
         DATABASE_PATH = database_path;
         KEY_VALUE_SEPARATOR = key_value_separator;
         END_RECORD = end_record;
+        DELETE_VALUE = delete_value;
     }
 
     void build_index() {
         std::ifstream file(DATABASE_PATH);
 
         if (!file.is_open()) {
-            std::cerr << "Error opening file!" << DATABASE_PATH << std::endl;
+            std::cerr << "Error opening file: " << DATABASE_PATH << std::endl;
             return;
         }
 
@@ -50,7 +56,12 @@ extern "C" {
             separator_index = l.find(KEY_VALUE_SEPARATOR);
             value_size = line.length() - separator_index - 1;
             key = line.substr(0, separator_index);
-            dbl_index[key] = {current + separator_index + 1, value_size};
+            if (line[separator_index + 1] == DELETE_VALUE[0]) {
+                dbl_index.erase(key);
+            }
+            else {
+                dbl_index[key] = {current + separator_index + 1, value_size};
+            }
             current += line.length() + 1;
             bytes_read = current;
         }
@@ -61,7 +72,7 @@ extern "C" {
         std::ofstream file(DATABASE_PATH, std::ios::app);
 
         if (!file.is_open()) {
-            std::cerr << "Error opening file!" << DATABASE_PATH << std::endl;
+            std::cerr << "Error opening file: " << DATABASE_PATH << std::endl;
             return;
         }
 
@@ -74,7 +85,7 @@ extern "C" {
         std::ofstream file(DATABASE_PATH, std::ios::app);
 
         if (!file.is_open()) {
-            std::cerr << "Error opening file!" << DATABASE_PATH << std::endl;
+            std::cerr << "Error opening file: " << DATABASE_PATH << std::endl;
             return;
         }
 
@@ -101,7 +112,7 @@ extern "C" {
         std::ifstream file(DATABASE_PATH);
 
         if (!file.is_open()) {
-            std::cerr << "Error opening file!" << std::endl;
+            std::cerr << "Error opening file: " << std::endl;
             return "";
         }
         std::vector<char> buffer(size);

@@ -55,7 +55,7 @@ dbl_internal.get.restype = ctypes.c_char_p
 dbl_internal.set.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
 dbl_internal.get_bytes_read.restype = ctypes.c_longlong
 dbl_internal.set_bulk.argtypes = [ctypes.POINTER(KeyValueItem), ctypes.c_int]
-dbl_internal.initialize(encode(conf.DATABASE_PATH), encode(conf.KEY_VALUE_SEPARATOR), encode(conf.END_RECORD))
+dbl_internal.initialize(encode(conf.DATABASE_PATH), encode(conf.KEY_VALUE_SEPARATOR), encode(conf.END_RECORD), encode(conf.DELETE_VALUE))
 
 # -------------------------------------------------------------------------------------------------
 
@@ -64,12 +64,6 @@ class DBL:
     @dbl_log
     def __init__(self):
         print(f"Using {conf.DATABASE_PATH}")
-
-    @dbl_log
-    def get_filename(self, is_compact):
-        if is_compact:
-            return conf.COMPACT_PATH
-        return conf.DATABASE_PATH
 
     @dbl_profile
     @dbl_log
@@ -117,6 +111,12 @@ class DBL:
     def get(self, key):
         value = decode(dbl_internal.get(encode(key)))
         return value if len(value) > 0 else None
+
+    @dbl_profile
+    @dbl_log
+    def delete(self, key):
+        dbl_internal.set(encode(key), encode(conf.DELETE_VALUE))
+        return True
 
     @dbl_log
     @dbl_profile
@@ -194,6 +194,7 @@ class REPL:
             "help": lambda operands: self.help(),
             "set": lambda operands: self.dbl.set(*operands),
             "get": lambda operands: self.dbl.get(*operands),
+            "del": lambda operands: self.dbl.delete(*operands),
             # "compact": lambda operands: self.dbl.compact(),
             # "compact_and_replace": lambda operands: self.dbl.compact_and_replace(),
             # "replace_from_compact": lambda operands: self.dbl.replace_from_compact(),
@@ -218,7 +219,7 @@ class REPL:
     @dbl_log
     def _loop(self):
         while True:
-            print("\n=>", end=" ")
+            print("\ndbl>", end=" ")
             try:
                 operator, *operands = input().split()
                 result = self.run(operator, operands)

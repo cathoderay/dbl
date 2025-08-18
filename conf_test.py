@@ -9,3 +9,4 @@ KEY_VALUE_SEPARATOR = ","
 DEBUG = False
 PROFILE = True
 ENCODING = "utf-8"
+DELETE_VALUE = "�"
