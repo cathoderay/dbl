@@ -46,11 +46,11 @@ def _print_profile(line):
 
 
 def encode(data):
-    return data.encode(conf.ENCODING, errors="ignore")
+    return data.encode(conf.ENCODING, errors="strict")
 
 
 def decode(data):
-    return data.decode(conf.ENCODING, errors="ignore")
+    return data.decode(conf.ENCODING, errors="strict")
 
 
 def dbl_log(func):
