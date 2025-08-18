@@ -1,15 +1,15 @@
-#include<string>
-#include<fstream>
+#include <string>
+#include <fstream>
 #include <iostream>
 #include <unordered_map>
 #include <chrono>
 
-namespace fs = std::filesystem;
 
 struct KeyValueItem {
     const char* key;
     const char* value;
 };
+
 
 extern "C" {
     std::unordered_map<std::string, std::vector<long long int>> dbl_index;
