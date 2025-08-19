@@ -261,51 +261,62 @@ OK
 Running load tests
 ------------------
 ```
-➜  dbl git:(main) ./run_load_test.sh 100000
---------------------------------------------------
-Starting clean.
-Index: --------------------------------------------------
-  Number of keys: 0
-  Bytes indexed: 0
---------------------------------------------------
-🏃‍➡️ Setting 100000 distinct keys in bulk...
-[PROFILE (2025-08-16 17:16:22.764527)] Spent 0.1226658821105957 in validate_bulk
-[PROFILE (2025-08-16 17:16:23.175269)] Spent 0.5881552696228027 in set_bulk
-✅ Done.
-Index: --------------------------------------------------
-  Number of keys: 100000
-  Bytes indexed: 2177790
---------------------------------------------------
+➜  dbl git:(main) ✗ ./run_load_test.sh
+[dbl] conf file loaded: [conf_test]
+[helper] conf file loaded: [conf_test]
+
+ 🏁 LOAD TEST REPORT 🏁 --------------------------------------------------
+
+
+⏩ LoadTestName: distinct-keys
+Using /tmp/dbl.data-test-session-1755622668.5632
+DB clean.
+🏃‍➡️ Setting 100000 distinct keys with values of the same length in bulk...
+[PROFILE (2025-08-19 13:57:48.816990)] Spent 0.12285208702087402 in validate_bulk
+[PROFILE (2025-08-19 13:57:49.220284)] Spent 0.579272985458374 in set_bulk
 Getting one inexistent key...
-[PROFILE (2025-08-16 17:16:23.180219)] Spent 8.702278137207031e-05 in get
+[PROFILE (2025-08-19 13:57:49.225056)] Spent 8.893013000488281e-05 in get
 None
 Getting one existent key...
-[PROFILE (2025-08-16 17:16:23.180323)] Spent 7.390975952148438e-05 in get
+[PROFILE (2025-08-19 13:57:49.225220)] Spent 0.00010800361633300781 in get
 value-1
-Index: --------------------------------------------------
-  Number of keys: 100000
-  Bytes indexed: 2177790
+Index metadata: ------------------------------
+- Number of keys: 100000
+- Bytes indexed: 2177790
 --------------------------------------------------
-Cleaning again...
-Index: --------------------------------------------------
-  Number of keys: 0
-  Bytes indexed: 0
+✅
+
+
+⏩ LoadTestName: same-key
+Using /tmp/dbl.data-test-session-1755622668.5632
+DB clean.
+🏃‍➡️ Setting 100000 new entries with the same key=key-53373 in bulk...
+[PROFILE (2025-08-19 13:57:49.477437)] Spent 0.12712383270263672 in validate_bulk
+[PROFILE (2025-08-19 13:57:49.846597)] Spent 0.5487077236175537 in set_bulk
+Getting one existent key...
+[PROFILE (2025-08-19 13:57:49.850123)] Spent 0.00010704994201660156 in get
+value-100000
+Index metadata: ------------------------------
+- Number of keys: 1
+- Bytes indexed: 2188895
 --------------------------------------------------
-🏃‍➡️ Setting 100000 new entries with the same key=key-22979 in bulk...
-[PROFILE (2025-08-16 17:16:23.425952)] Spent 0.12819409370422363 in validate_bulk
-[PROFILE (2025-08-16 17:16:23.778431)] Spent 0.5332779884338379 in set_bulk
-✅ Done.
-Index: --------------------------------------------------
-  Number of keys: 1
-  Bytes indexed: 2188895
+✅
+
+
+⏩ LoadTestName: larger-values
+Using /tmp/dbl.data-test-session-1755622668.5632
+DB clean.
+🏃‍➡️ Setting 100000 distinct keys with values of length=500 in bulk...
+[PROFILE (2025-08-19 13:57:50.610191)] Spent 0.3070089817047119 in validate_bulk
+[PROFILE (2025-08-19 13:57:53.250600)] Spent 3.28287410736084 in set_bulk
+Getting one existent key (key-7188)...
+[PROFILE (2025-08-19 13:57:53.270691)] Spent 0.00017070770263671875 in get
+7188-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+Index metadata: ------------------------------
+- Number of keys: 100000
+- Bytes indexed: 51677790
 --------------------------------------------------
-Cleaned database.
-✅ Done.
-Index: --------------------------------------------------
-  Number of keys: 0
-  Bytes indexed: 0
---------------------------------------------------
-✅ Done.
+✅
 ```
 
 Contributions
