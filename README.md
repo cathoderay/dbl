@@ -76,7 +76,6 @@ Usage example (REPL)
 
 ```
 ➜  dbl git:(main) dbl
-➜  dbl git:(main) dbl
 [__main__] conf file loaded: [conf]
 [helper] conf file loaded: [conf]
 Using /tmp/dbl.data
