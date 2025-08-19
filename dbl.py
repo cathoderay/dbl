@@ -10,6 +10,7 @@ __author__ = "Ronald Kaiser"
 
 
 import os
+import readline
 import sys
 
 
@@ -219,8 +220,9 @@ class REPL:
 
     @dbl_log
     def _loop(self):
+        readline.parse_and_bind("tab: complete")
         while True:
-            print("\ndbl>", end=" ")
+            print()
             try:
                 operator, *operands = input().split()
                 result = self.run(operator, operands)
