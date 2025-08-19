@@ -15,8 +15,7 @@ class LoadTest:
         self.name = name
 
     def __enter__(self):
-        print()
-        print(f"⏩ LoadTestName: {self.name}")
+        print(f"\n⏩ LoadTestName: {self.name}")
         self.dbl = DBL()
         self.dbl.clean_all()
         print("DB clean.")
@@ -25,14 +24,12 @@ class LoadTest:
     def __exit__(self, exc_type, exc_val, exc_tb):
         print(dbl.get_index_metadata())
         self.dbl.clean_all()
-        print("✅")
-        print()
+        print("✅ Done.\n")
 
 
 print(f"\n 🏁 LOAD TEST REPORT 🏁 {'-'*50}\n")
 
 
-# distinct keys
 with LoadTest("distinct-keys") as dbl:
     n = 100_000
     print(f"🏃‍➡️ Setting {n} distinct keys with values of the same length in bulk...")
@@ -43,7 +40,6 @@ with LoadTest("distinct-keys") as dbl:
     print(dbl.get("key-1"))
 
 
-# same key
 with LoadTest("same-key") as dbl:
     n = 100_000
     random_key = f"key-{random.randint(1, n)}"
@@ -53,7 +49,6 @@ with LoadTest("same-key") as dbl:
     print(dbl.get(random_key))
 
 
-# distinct keys and larger values
 with LoadTest("larger-values") as dbl:
     n = 100_000
     length = 500

@@ -261,7 +261,7 @@ OK
 Running load tests
 ------------------
 ```
-➜  dbl git:(main) ✗ ./run_load_test.sh
+➜  dbl git:(main) ./run_load_test.sh
 [dbl] conf file loaded: [conf_test]
 [helper] conf file loaded: [conf_test]
 
@@ -269,54 +269,54 @@ Running load tests
 
 
 ⏩ LoadTestName: distinct-keys
-Using /tmp/dbl.data-test-session-1755622668.5632
+Using /tmp/dbl.data-test-session-1755623055.884661
 DB clean.
 🏃‍➡️ Setting 100000 distinct keys with values of the same length in bulk...
-[PROFILE (2025-08-19 13:57:48.816990)] Spent 0.12285208702087402 in validate_bulk
-[PROFILE (2025-08-19 13:57:49.220284)] Spent 0.579272985458374 in set_bulk
+[PROFILE (2025-08-19 14:04:16.155197)] Spent 0.1405041217803955 in validate_bulk
+[PROFILE (2025-08-19 14:04:16.548607)] Spent 0.5851309299468994 in set_bulk
 Getting one inexistent key...
-[PROFILE (2025-08-19 13:57:49.225056)] Spent 8.893013000488281e-05 in get
+[PROFILE (2025-08-19 14:04:16.553362)] Spent 7.700920104980469e-05 in get
 None
 Getting one existent key...
-[PROFILE (2025-08-19 13:57:49.225220)] Spent 0.00010800361633300781 in get
+[PROFILE (2025-08-19 14:04:16.553567)] Spent 0.00015878677368164062 in get
 value-1
 Index metadata: ------------------------------
 - Number of keys: 100000
 - Bytes indexed: 2177790
 --------------------------------------------------
-✅
+✅ Done.
 
 
 ⏩ LoadTestName: same-key
-Using /tmp/dbl.data-test-session-1755622668.5632
+Using /tmp/dbl.data-test-session-1755623055.884661
 DB clean.
-🏃‍➡️ Setting 100000 new entries with the same key=key-53373 in bulk...
-[PROFILE (2025-08-19 13:57:49.477437)] Spent 0.12712383270263672 in validate_bulk
-[PROFILE (2025-08-19 13:57:49.846597)] Spent 0.5487077236175537 in set_bulk
+🏃‍➡️ Setting 100000 new entries with the same key=key-69021 in bulk...
+[PROFILE (2025-08-19 14:04:16.794832)] Spent 0.12517714500427246 in validate_bulk
+[PROFILE (2025-08-19 14:04:17.132563)] Spent 0.5110280513763428 in set_bulk
 Getting one existent key...
-[PROFILE (2025-08-19 13:57:49.850123)] Spent 0.00010704994201660156 in get
+[PROFILE (2025-08-19 14:04:17.136216)] Spent 0.00012683868408203125 in get
 value-100000
 Index metadata: ------------------------------
 - Number of keys: 1
 - Bytes indexed: 2188895
 --------------------------------------------------
-✅
+✅ Done.
 
 
 ⏩ LoadTestName: larger-values
-Using /tmp/dbl.data-test-session-1755622668.5632
+Using /tmp/dbl.data-test-session-1755623055.884661
 DB clean.
 🏃‍➡️ Setting 100000 distinct keys with values of length=500 in bulk...
-[PROFILE (2025-08-19 13:57:50.610191)] Spent 0.3070089817047119 in validate_bulk
-[PROFILE (2025-08-19 13:57:53.250600)] Spent 3.28287410736084 in set_bulk
-Getting one existent key (key-7188)...
-[PROFILE (2025-08-19 13:57:53.270691)] Spent 0.00017070770263671875 in get
-7188-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+[PROFILE (2025-08-19 14:04:17.879013)] Spent 0.2985498905181885 in validate_bulk
+[PROFILE (2025-08-19 14:04:20.493158)] Spent 3.2417349815368652 in set_bulk
+Getting one existent key (key-3860)...
+[PROFILE (2025-08-19 14:04:20.513601)] Spent 0.00014519691467285156 in get
+3860-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 Index metadata: ------------------------------
 - Number of keys: 100000
 - Bytes indexed: 51677790
 --------------------------------------------------
-✅
+✅ Done.
 ```
 
 Contributions
