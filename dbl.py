@@ -271,6 +271,5 @@ class REPL:
 if __name__ == "__main__":
     if "--debug" in sys.argv: conf.DEBUG = True
     if "--profile" in sys.argv: conf.PROFILE = True
-    if "--db" in sys.argv: conf.DATABASE_PATH = sys.argv[-1] # todo: do proper parsing
     repl = REPL()
     repl.start()

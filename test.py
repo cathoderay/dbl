@@ -138,7 +138,7 @@ class DBLTest(unittest.TestCase):
         for i in range(100):
             key, value = f"key-{i}", f"value-{i}"
             dbl.set(key, value)
-            dbl.get(key)
+            assert dbl.get(key) == value
 
     def test_remove_key(self):
         dbl = DBL()
