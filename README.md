@@ -316,7 +316,8 @@ Index metadata: ------------------------------
 - Number of keys: 100000
 - Bytes indexed: 51677790
 --------------------------------------------------
-✅ Done.
+✅ Done.``
+
 ```
 
 Contributions

@@ -35,18 +35,18 @@ with LoadTest("distinct-keys") as dbl:
     print(f"🏃‍➡️ Setting {n} distinct keys with values of the same length in bulk...")
     dbl.set_bulk(tuple((f"key-{i}", f"value-{i}") for i in range(1, n + 1)))
     print("Getting one inexistent key...")
-    print(dbl.get("key-0"))
+    assert dbl.get("key-0") == None, "Value is not correct."
     print("Getting one existent key...")
-    print(dbl.get("key-1"))
+    assert dbl.get("key-1") == "value-1", "Value is not correct."
 
 
 with LoadTest("same-key") as dbl:
     n = 100_000
-    random_key = f"key-{random.randint(1, n)}"
+    random_key = f"{random.randint(1, n)}"
     print(f"🏃‍➡️ Setting {n} new entries with the same key={random_key} in bulk...")
-    dbl.set_bulk(tuple((f"{random_key}", f"value-{i}") for i in range(1, n + 1)))
+    dbl.set_bulk(tuple((f"key-{random_key}", f"value-{i}") for i in range(1, n + 1)))
     print("Getting one existent key...")
-    print(dbl.get(random_key))
+    assert dbl.get(f"key-{random_key}") == f"value-{n}", "Value is not correct."
 
 
 with LoadTest("larger-values") as dbl:
@@ -54,6 +54,6 @@ with LoadTest("larger-values") as dbl:
     length = 500
     print(f"🏃‍➡️ Setting {n} distinct keys with values of length={length} in bulk...")
     dbl.set_bulk(tuple((f"key-{i}", f"{i}-" + "b"*length) for i in range(1, n + 1)))
-    random_key = f"key-{random.randint(1, n)}"
+    random_key = f"{random.randint(1, n)}"
     print(f"Getting one existent key ({random_key})...")
-    print(dbl.get(random_key))
+    assert dbl.get(f"key-{random_key}") == f"{random_key}-" + "b"*length, "Value is not correct."
