@@ -49,3 +49,5 @@
 # Problem 12: compact operation was removed
 # Solution: reimplement in C++ [todo]
 
+# Problem 13: c++ is not as productive and error-free as I'd like
+# Solution: Rust (maybe Zig) look like good candidates for the internals. Do a quick poc on it. [todo]
