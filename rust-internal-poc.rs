@@ -1,14 +1,12 @@
 use std::fs::File;
 use std::io::Read;
 use std::collections::HashMap;
-
-
 use std::fmt;
 
 
 impl fmt::Display for IndexValue {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}-{}", self.start, self.size)
+        write!(f, "({}, {})", self.start, self.size)
     }
 }
 
@@ -18,14 +16,14 @@ struct IndexValue {
     size: usize,
 }
 
+const DATABASE_PATH: &str = "/tmp/dbl.data";
+const KEY_VALUE_SEPARATOR:char = ',';
+
 
 fn build_index() -> HashMap<String, IndexValue> {
-    let file_path = "/tmp/dbl.data";
-    const KEY_VALUE_SEPARATOR:char = ',';
-
-    let mut file = match File::open(file_path) {
+    let mut file = match File::open(DATABASE_PATH) {
         Ok(f) => f,
-        Err(e) => panic!("Failed to open file {}: {}", file_path, e),
+        Err(e) => panic!("Failed to open file {}: {}", DATABASE_PATH, e),
     };
 
     let mut content = String::new();
@@ -38,10 +36,9 @@ fn build_index() -> HashMap<String, IndexValue> {
                 let key = &line[0..separator_index];
                 index.insert(key.to_string(), IndexValue {start: separator_index, size: value_size});
             }
-
             return index;
         },
-        Err(e) => panic!("Failed to read file {}: {}", file_path, e),
+        Err(e) => panic!("Failed to read file {}: {}", DATABASE_PATH, e),
     }
 }
 
