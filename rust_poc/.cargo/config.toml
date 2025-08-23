@@ -1,0 +1,20 @@
+# useful flags if you're running on a mac in x86_64 
+# for more info, check https://pyo3.rs/v0.25.1/building-and-distribution.html#manual-builds
+
+[target.x86_64-apple-darwin]
+rustflags = [
+  "-C", "link-arg=-undefined",
+  "-C", "link-arg=dynamic_lookup",
+]
+
+[target.aarch64-apple-darwin]
+rustflags = [
+  "-C", "link-arg=-undefined",
+  "-C", "link-arg=dynamic_lookup",
+]
+
+[build]
+rustflags = [
+  "-C", "link-args=-Wl,-rpath,/Library/Developer/CommandLineTools/Library/Frameworks",
+]
+

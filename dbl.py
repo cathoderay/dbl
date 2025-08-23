@@ -60,6 +60,15 @@ dbl_internal.initialize(encode(conf.DATABASE_PATH), encode(conf.KEY_VALUE_SEPARA
 
 # -------------------------------------------------------------------------------------------------
 
+# Rust integration (WIP) -------------------------------------------------------------------------------------------------
+
+import rust_poc
+
+# TODO: add something like a strategy design pattern to switch between c++ integration and rust one
+print(rust_poc.build_index(0)) # rough integration
+
+# -------------------------------------------------------------------------------------------------
+
 
 class DBL:
     @dbl_log

@@ -1,3 +1,4 @@
+use pyo3::prelude::*;
 use std::fs::File;
 use std::io::Read;
 use std::collections::HashMap;
@@ -23,7 +24,8 @@ const DATABASE_PATH: &str = "/tmp/dbl.data";
 const KEY_VALUE_SEPARATOR: char = ',';
 
 
-fn build_index(bytes_read: u64) -> HashMap<String, IndexValue> {
+#[pyfunction]
+fn build_index(bytes_read: u64) -> () {
     let mut file = match File::open(DATABASE_PATH) {
         Ok(f) => f,
         Err(e) => panic!("Failed to open file {}: {}", DATABASE_PATH, e),
@@ -50,15 +52,15 @@ fn build_index(bytes_read: u64) -> HashMap<String, IndexValue> {
         index.insert(key.clone(), IndexValue {start: value_start, size: value_size});
         current += (line.len() as u64) + 1;
     }
-    return index;
+    for (key, value) in &index {
+        println!("{key} => {value}");
+    };
+    // return index;
 }
 
 
-fn main() {
-    let index: HashMap<String, IndexValue>;
-    let bytes_read: u64 = 0u64;
-    index = build_index(bytes_read);
-    for (key, value) in &index {
-        println!("{key} => {value}");
-    }
+#[pymodule]
+fn rust_poc(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(build_index, m)?)?;
+    Ok(())
 }
