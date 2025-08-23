@@ -131,6 +131,7 @@ dependencies = [
 name = "rust_poc"
 version = "0.1.0"
 dependencies = [
+ "once_cell",
  "pyo3",
 ]
 

@@ -65,6 +65,7 @@ dbl_internal.initialize(encode(conf.DATABASE_PATH), encode(conf.KEY_VALUE_SEPARA
 import rust_poc
 
 # TODO: add something like a strategy design pattern to switch between c++ integration and rust one
+rust_poc.initialize(conf.DATABASE_PATH, conf.KEY_VALUE_SEPARATOR, conf.END_RECORD, conf.DELETE_VALUE)
 print(rust_poc.build_index(0)) # rough integration
 
 # -------------------------------------------------------------------------------------------------
