@@ -30,7 +30,8 @@ This is inspired by the book "Designing Data-Intensive Applications: The Big Ide
 Features
 --------
 
-- Written in pure Python (and a bit of C++)
+- Written in pure Python
+  - and currently experimenting with a bit of C++ and Rust for the most performance-critical internals
 - No third-party dependency
 - Suited for key-value data
 - 2 main operations:
