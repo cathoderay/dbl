@@ -21,7 +21,7 @@ else:
 print(f"[{__name__}] conf file loaded: [{conf.__name__}]")
 
 
-from helper import print_debug, encode, decode, print_ascii_logo, dbl_log, dbl_profile, validate
+from helper import encode, decode, print_ascii_logo, dbl_log, dbl_profile, validate
 
 
 # CPP integration -------------------------------------------------------------------------------------------------
@@ -65,8 +65,9 @@ dbl_internal.initialize(encode(conf.DATABASE_PATH), encode(conf.KEY_VALUE_SEPARA
 import rust_poc
 
 # TODO: add something like a strategy design pattern to switch between c++ integration and rust one
-rust_poc.initialize(conf.DATABASE_PATH, conf.KEY_VALUE_SEPARATOR, conf.END_RECORD, conf.DELETE_VALUE)
-print(rust_poc.build_index(0)) # rough integration
+if os.getenv("DBL_RUST_EXPERIMENT") == "1":
+    dbl_internal = rust_poc
+    dbl_internal.initialize(conf.DATABASE_PATH, conf.KEY_VALUE_SEPARATOR, conf.END_RECORD, conf.DELETE_VALUE)
 
 # -------------------------------------------------------------------------------------------------
 

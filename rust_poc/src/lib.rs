@@ -5,6 +5,9 @@ use std::collections::HashMap;
 use std::fmt;
 use std::io::SeekFrom;
 use std::io::Seek;
+use std::fs::OpenOptions;
+use std::io::{self, Write};
+
 
 
 impl fmt::Display for IndexValue {
@@ -68,17 +71,43 @@ fn initialize(
     delete_value: String,
 ) -> PyResult<()> {
     DATABASE_PATH.set(database_path).map_err(|e| {
-        PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Failed to set database path: {:?}", e))
+        PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Failed to initialize database path: {:?}", e))
     })?;
     KEY_VALUE_SEPARATOR.set(key_value_separator).map_err(|e| {
-        PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Failed to set key value separator: {:?}", e))
+        PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Failed to initialize key value separator: {:?}", e))
     })?;
     END_RECORD.set(end_record).map_err(|e| {
-        PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Failed to set end record: {:?}", e))
+        PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Failed to initialize end record: {:?}", e))
     })?;
     DELETE_VALUE.set(delete_value).map_err(|e| {
-        PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Failed to set delete value: {:?}", e))
+        PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Failed to initialize delete value: {:?}", e))
     })?;
+    Ok(())
+}
+
+#[pyfunction]
+fn set(key: &[u8], value: &[u8]) -> io::Result<()> {
+    let mut file = match OpenOptions::new()
+        .append(true)
+        .write(true)
+        .open(DATABASE_PATH.get().cloned().unwrap()) {
+            Ok(f) => f,
+            Err(e) => panic!("Failed to open file: {}", e)
+    };
+
+    let mut buffer: Vec<u8> = Vec::new();
+    let a: &[u8] = key;
+    let binding = KEY_VALUE_SEPARATOR.get().cloned().unwrap();
+    let b: &[u8] = (&binding).as_bytes();
+    let c: &[u8] = value;
+    let binding = END_RECORD.get().cloned().unwrap();
+    let d: &[u8] = (&binding).as_bytes();
+
+    buffer.extend_from_slice(a);
+    buffer.extend_from_slice(b);
+    buffer.extend_from_slice(c);
+    buffer.extend_from_slice(d);
+    file.write_all(&buffer)?;
     Ok(())
 }
 
@@ -87,5 +116,6 @@ fn initialize(
 fn rust_poc(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(initialize, m)?)?;
     m.add_function(wrap_pyfunction!(build_index, m)?)?;
+    m.add_function(wrap_pyfunction!(set, m)?)?;
     Ok(())
 }

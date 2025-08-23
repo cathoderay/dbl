@@ -13,11 +13,9 @@ from dbl import DBL, dbl_internal
 
 class DBLTest(unittest.TestCase):
     def setUp(self):
-        dbl_internal.clean_index()
         DBL().clean_all()
 
     def tearDown(self):
-        dbl_internal.clean_index()
         DBL().clean_all()
 
     def test_set_value_cannot_contain_end_record_character(self):
