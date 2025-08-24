@@ -7,7 +7,8 @@ use std::io::SeekFrom;
 use std::io::Seek;
 use std::fs::OpenOptions;
 use std::io::{self, Write};
-
+use lazy_static::lazy_static;
+use std::sync::{Arc, Mutex};
 
 
 impl fmt::Display for IndexValue {
@@ -29,6 +30,14 @@ static END_RECORD: once_cell::sync::OnceCell<String> = once_cell::sync::OnceCell
 static DELETE_VALUE: once_cell::sync::OnceCell<String> = once_cell::sync::OnceCell::new();
 
 
+lazy_static! {
+    static ref INDEX: Arc<Mutex<HashMap<String, IndexValue>>> = {
+        let map = HashMap::new();
+        Arc::new(Mutex::new(map))
+    };
+}
+
+
 #[pyfunction]
 fn build_index(bytes_read: u64) -> () {
     let mut file = match File::open(DATABASE_PATH.get().cloned().unwrap()) {
@@ -47,20 +56,16 @@ fn build_index(bytes_read: u64) -> () {
         Err(e) => panic!("Failed to read file: {}", e),
     };
 
-    let mut index: HashMap<String, IndexValue> = HashMap::new();
+    let mut _new_index = INDEX.lock().unwrap();
     let mut current = bytes_read;
     for line in content.lines() {
         let separator_index = line.find(&KEY_VALUE_SEPARATOR.get().cloned().unwrap()).unwrap();
         let value_size: u64 = (line.len() - separator_index - 1) as u64;
         let key: String = line[0..separator_index].to_string();
         let value_start: u64 = current + (separator_index as u64) + 1;
-        index.insert(key.clone(), IndexValue {start: value_start, size: value_size});
+        _new_index.insert(key.clone(), IndexValue {start: value_start, size: value_size});
         current += (line.len() as u64) + 1;
     }
-    for (key, value) in &index {
-        println!("{key} => {value}");
-    };
-    // return index;
 }
 
 #[pyfunction]
@@ -111,11 +116,44 @@ fn set(key: &[u8], value: &[u8]) -> io::Result<()> {
     Ok(())
 }
 
+#[pyfunction]
+fn get(key: &[u8]) ->  () {
+    build_index(0u64);
+    let mut _index = INDEX.lock().unwrap();
+
+    let start: u64;
+    let size: u64;
+
+    if let Some(value_data) = &_index.get(&String::from_utf8(key.to_vec()).unwrap()) {
+        start = value_data.start;
+        size = value_data.size;
+    } else {
+        return
+    }
+
+    let mut file = match File::open(DATABASE_PATH.get().cloned().unwrap()) {
+        Ok(f) => f,
+        Err(e) => panic!("Failed to open file: {}", e),
+    };
+
+    match file.seek(SeekFrom::Start(start)) {
+        Ok(f) => f,
+        Err(e) => panic!("Failed to seek file: {}", e),
+    };
+
+    let mut buffer = vec![0; size.try_into().unwrap()];
+    let _ = file.read_exact(&mut buffer);
+
+    // TODO: deliver back to python result as a [u8] with dynamic size
+    println!("{}", String::from_utf8(buffer).unwrap());
+}
+
 
 #[pymodule]
-fn rust_poc(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn rust_poc(_py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(initialize, m)?)?;
     m.add_function(wrap_pyfunction!(build_index, m)?)?;
     m.add_function(wrap_pyfunction!(set, m)?)?;
+    m.add_function(wrap_pyfunction!(get, m)?)?;
     Ok(())
 }
