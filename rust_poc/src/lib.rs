@@ -9,6 +9,7 @@ use std::fs::OpenOptions;
 use std::io::{self, Write};
 use lazy_static::lazy_static;
 use std::sync::{Arc, Mutex};
+use pyo3::types::PyBytes;
 
 
 impl fmt::Display for IndexValue {
@@ -117,7 +118,7 @@ fn set(key: &[u8], value: &[u8]) -> io::Result<()> {
 }
 
 #[pyfunction]
-fn get(key: &[u8]) ->  () {
+fn get(py: Python<'_>, key: &[u8]) -> PyObject {
     build_index(0u64);
     let mut _index = INDEX.lock().unwrap();
 
@@ -128,7 +129,7 @@ fn get(key: &[u8]) ->  () {
         start = value_data.start;
         size = value_data.size;
     } else {
-        return
+        return PyBytes::new(py, &vec![0; 0]).into()
     }
 
     let mut file = match File::open(DATABASE_PATH.get().cloned().unwrap()) {
@@ -144,13 +145,12 @@ fn get(key: &[u8]) ->  () {
     let mut buffer = vec![0; size.try_into().unwrap()];
     let _ = file.read_exact(&mut buffer);
 
-    // TODO: deliver back to python result as a [u8] with dynamic size
-    println!("{}", String::from_utf8(buffer).unwrap());
+    return PyBytes::new(py, &buffer).into()
 }
 
 
 #[pymodule]
-fn rust_poc(_py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn rust_poc(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(initialize, m)?)?;
     m.add_function(wrap_pyfunction!(build_index, m)?)?;
     m.add_function(wrap_pyfunction!(set, m)?)?;
