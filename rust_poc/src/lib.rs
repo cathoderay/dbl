@@ -67,14 +67,14 @@ fn build_index() -> () {
         Err(e) => panic!("Failed to read file: {}", e),
     };
 
-    let mut new_index = INDEX_.lock().unwrap();
+    let mut index = INDEX_.lock().unwrap();
     let mut current = *bytes_read;
     for line in content.lines() {
         let separator_index = line.find(&KEY_VALUE_SEPARATOR.get().cloned().unwrap()).unwrap();
         let value_size: u64 = (line.len() - separator_index - 1) as u64;
         let key: String = line[0..separator_index].to_string();
         let value_start: u64 = current + (separator_index as u64) + 1;
-        new_index.insert(key.clone(), IndexValue {start: value_start, size: value_size});
+        index.insert(key.clone(), IndexValue {start: value_start, size: value_size});
         current += (line.len() as u64) + 1;
         *bytes_read = current;
     }
