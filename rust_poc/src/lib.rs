@@ -32,21 +32,31 @@ static DELETE_VALUE: once_cell::sync::OnceCell<String> = once_cell::sync::OnceCe
 
 
 lazy_static! {
-    static ref INDEX: Arc<Mutex<HashMap<String, IndexValue>>> = {
+    static ref INDEX_: Arc<Mutex<HashMap<String, IndexValue>>> = {
         let map = HashMap::new();
         Arc::new(Mutex::new(map))
     };
 }
 
 
+lazy_static! {
+    static ref BYTES_READ_: Arc<Mutex<u64>> = {
+        let bytes_read = 0;
+        Arc::new(Mutex::new(bytes_read))
+    };
+}
+
+
 #[pyfunction]
-fn build_index(bytes_read: u64) -> () {
+fn build_index() -> () {
+    let mut bytes_read = BYTES_READ_.lock().unwrap();
+
     let mut file = match File::open(DATABASE_PATH.get().cloned().unwrap()) {
         Ok(f) => f,
         Err(e) => panic!("Failed to open file: {}", e),
     };
 
-    match file.seek(SeekFrom::Start(bytes_read)) {
+    match file.seek(SeekFrom::Start(*bytes_read)) {
         Ok(f) => f,
         Err(e) => panic!("Failed to seek file: {}", e),
     };
@@ -57,15 +67,16 @@ fn build_index(bytes_read: u64) -> () {
         Err(e) => panic!("Failed to read file: {}", e),
     };
 
-    let mut _new_index = INDEX.lock().unwrap();
-    let mut current = bytes_read;
+    let mut new_index = INDEX_.lock().unwrap();
+    let mut current = *bytes_read;
     for line in content.lines() {
         let separator_index = line.find(&KEY_VALUE_SEPARATOR.get().cloned().unwrap()).unwrap();
         let value_size: u64 = (line.len() - separator_index - 1) as u64;
         let key: String = line[0..separator_index].to_string();
         let value_start: u64 = current + (separator_index as u64) + 1;
-        _new_index.insert(key.clone(), IndexValue {start: value_start, size: value_size});
+        new_index.insert(key.clone(), IndexValue {start: value_start, size: value_size});
         current += (line.len() as u64) + 1;
+        *bytes_read = current;
     }
 }
 
@@ -114,18 +125,19 @@ fn set(key: &[u8], value: &[u8]) -> io::Result<()> {
     buffer.extend_from_slice(c);
     buffer.extend_from_slice(d);
     file.write_all(&buffer)?;
+    build_index();
     Ok(())
 }
 
 #[pyfunction]
 fn get(py: Python<'_>, key: &[u8]) -> PyObject {
-    build_index(0u64);
-    let mut _index = INDEX.lock().unwrap();
+    build_index();
+    let index = INDEX_.lock().unwrap();
 
     let start: u64;
     let size: u64;
 
-    if let Some(value_data) = &_index.get(&String::from_utf8(key.to_vec()).unwrap()) {
+    if let Some(value_data) = &index.get(&String::from_utf8(key.to_vec()).unwrap()) {
         start = value_data.start;
         size = value_data.size;
     } else {
@@ -148,6 +160,24 @@ fn get(py: Python<'_>, key: &[u8]) -> PyObject {
     return PyBytes::new(py, &buffer).into()
 }
 
+#[pyfunction]
+fn get_bytes_read() -> u64 {
+    return *BYTES_READ_.lock().unwrap();
+}
+
+#[pyfunction]
+fn get_index_size() -> u64 {
+    return INDEX_.lock().unwrap().len().try_into().unwrap();
+}
+
+#[pyfunction]
+fn clean_index() -> () {
+    let mut index = INDEX_.lock().unwrap();
+    index.clear();
+
+    let mut bytes_read = BYTES_READ_.lock().unwrap();
+    *bytes_read = 0;
+}
 
 #[pymodule]
 fn rust_poc(m: &Bound<'_, PyModule>) -> PyResult<()> {
@@ -155,5 +185,8 @@ fn rust_poc(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(build_index, m)?)?;
     m.add_function(wrap_pyfunction!(set, m)?)?;
     m.add_function(wrap_pyfunction!(get, m)?)?;
+    m.add_function(wrap_pyfunction!(get_bytes_read, m)?)?;
+    m.add_function(wrap_pyfunction!(get_index_size, m)?)?;
+    m.add_function(wrap_pyfunction!(clean_index, m)?)?;
     Ok(())
 }
