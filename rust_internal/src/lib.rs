@@ -197,7 +197,7 @@ fn clean_index() -> () {
 }
 
 #[pymodule]
-fn rust_poc(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn rust_internal(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(initialize, m)?)?;
     m.add_function(wrap_pyfunction!(build_index, m)?)?;
     m.add_function(wrap_pyfunction!(set, m)?)?;

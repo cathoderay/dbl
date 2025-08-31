@@ -60,9 +60,9 @@ cpp_internal.initialize(encode(conf.DATABASE_PATH), encode(conf.KEY_VALUE_SEPARA
 
 # Rust integration (WIP) --------------------------------------------------------------------------
 
-import rust_poc
+import rust_internal
 
-rust_internal = rust_poc
+rust_internal = rust_internal
 rust_internal.initialize(conf.DATABASE_PATH, conf.KEY_VALUE_SEPARATOR, conf.END_RECORD, conf.DELETE_VALUE)
 
 # -------------------------------------------------------------------------------------------------
