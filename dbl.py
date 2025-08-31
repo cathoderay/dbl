@@ -35,7 +35,7 @@ if os.name != 'posix':
     print("Incompatible OS")
     exit(-1)
 
-internal = 'internal.so'
+internal = 'cpp_internal.so'
 
 try:
     cpp_internal = ctypes.CDLL(os.path.join(os.path.dirname(__file__), internal))
@@ -60,7 +60,7 @@ cpp_internal.initialize(encode(conf.DATABASE_PATH), encode(conf.KEY_VALUE_SEPARA
 
 # Rust integration (WIP) --------------------------------------------------------------------------
 
-import rust_internal
+import rust_internal # type: ignore
 
 rust_internal = rust_internal
 rust_internal.initialize(conf.DATABASE_PATH, conf.KEY_VALUE_SEPARATOR, conf.END_RECORD, conf.DELETE_VALUE)
