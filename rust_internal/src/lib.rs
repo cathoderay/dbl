@@ -85,11 +85,13 @@ fn build_index() -> () {
 
     let mut index = INDEX_.lock().unwrap();
     let mut current = *bytes_read;
+    let key_value_separator = KEY_VALUE_SEPARATOR.get().unwrap();
+    let delete_value = DELETE_VALUE.get().unwrap().chars().nth(0);
     for line in content.lines() {
-        let separator_index = line.find(KEY_VALUE_SEPARATOR.get().unwrap()).unwrap();
+        let separator_index = line.find(key_value_separator).unwrap();
         let value_size: u64 = (line.len() - separator_index - 1) as u64;
         let key: String = line[0..separator_index].to_string();
-        if line.chars().nth(separator_index + 1) == DELETE_VALUE.get().unwrap().chars().nth(0) {
+        if line.chars().nth(separator_index + 1) == delete_value {
             index.remove(&key);
         }
         else {
