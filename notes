@@ -40,6 +40,17 @@
 # Solution 1: consider approaches to reduce it [done]
 # Note: index was rewritten in C++
 
+# Problem 13: c++ is not as productive and error-free as I'd like
+# Solution: Rust (maybe Zig) look like good candidates for the internals. Do a quick poc on it. [done]
+# Notes: I decided to rewrite in Rust and benchmark it against cpp. Below, the results:
+------------------------------------------------------------------
+type (n = 10000)     | write (in seconds)   | read (in seconds)
+------------------------------------------------------------------
+cpp                  | 0.6830160617828369   | 0.5692169666290283
+rust                 | 0.4856441020965576   | 0.3923947811126709
+------------------------------------------------------------------
+# The Rust compiler really helps to get the code a safer.
+
 
 [todo]
 
@@ -48,6 +59,3 @@
 
 # Problem 12: compact operation was removed
 # Solution: reimplement in C++ [todo]
-
-# Problem 13: c++ is not as productive and error-free as I'd like
-# Solution: Rust (maybe Zig) look like good candidates for the internals. Do a quick poc on it. [todo]
