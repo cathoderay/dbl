@@ -16,8 +16,7 @@ class DBLTest(unittest.TestCase):
         DBL().clean_all()
 
     def tearDown(self):
-        pass
-        # DBL().clean_all()
+        DBL().clean_all()
 
     def test_set_value_cannot_contain_end_record_character(self):
         dbl = DBL()
