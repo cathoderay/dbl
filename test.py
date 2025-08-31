@@ -104,6 +104,8 @@ class DBLTest(unittest.TestCase):
         dbl = DBL()
         dbl.set("food", "broccoli")
         dbl.set("drink", "water")
+        assert dbl.internal.get_bytes_read() == 0
+        dbl.get("foo")
         assert dbl.internal.get_bytes_read() == 26
 
     def test_find_tail(self):
