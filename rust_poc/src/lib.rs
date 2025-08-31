@@ -135,17 +135,13 @@ fn set(key: &[u8], value: &[u8]) -> io::Result<()> {
     };
 
     let mut buffer: Vec<u8> = Vec::new();
-    let a: &[u8] = key;
-    let binding = KEY_VALUE_SEPARATOR.get().cloned().unwrap();
-    let b: &[u8] = (&binding).as_bytes();
-    let c: &[u8] = value;
-    let binding = END_RECORD.get().cloned().unwrap();
-    let d: &[u8] = (&binding).as_bytes();
+    let key_value_separator = KEY_VALUE_SEPARATOR.get().cloned().unwrap();
+    let end_record = END_RECORD.get().cloned().unwrap();
 
-    buffer.extend_from_slice(a);
-    buffer.extend_from_slice(b);
-    buffer.extend_from_slice(c);
-    buffer.extend_from_slice(d);
+    buffer.extend_from_slice(key);
+    buffer.extend_from_slice(key_value_separator.as_bytes());
+    buffer.extend_from_slice(value);
+    buffer.extend_from_slice(end_record.as_bytes());
     file.write_all(&buffer)?;
     build_index();
     Ok(())
