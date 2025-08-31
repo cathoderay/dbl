@@ -29,7 +29,7 @@ from helper import encode, decode, print_ascii_logo, dbl_log, dbl_profile, valid
 import ctypes
 import os
 
-dbl_internal = None
+cpp_internal = None
 
 if os.name != 'posix':
     print("Incompatible OS")
@@ -38,7 +38,7 @@ if os.name != 'posix':
 internal = 'internal.so'
 
 try:
-    dbl_internal = ctypes.CDLL(os.path.join(os.path.dirname(__file__), internal))
+    cpp_internal = ctypes.CDLL(os.path.join(os.path.dirname(__file__), internal))
 except OSError as e:
     print(f"Error loading library: {e}")
     print(f"Please, run compile_internal.sh to ensure {internal} is available (Linux/macOS)")
@@ -50,31 +50,30 @@ class KeyValueItem(ctypes.Structure):
         ("value", ctypes.c_char_p),
     ]
 
-dbl_internal.initialize.argtypes = [ctypes.c_char_p]*3
-dbl_internal.get.argtypes = [ctypes.c_char_p]
-dbl_internal.get.restype = ctypes.c_char_p
-dbl_internal.set.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
-dbl_internal.get_bytes_read.restype = ctypes.c_longlong
-dbl_internal.set_bulk.argtypes = [ctypes.POINTER(KeyValueItem), ctypes.c_int]
-dbl_internal.initialize(encode(conf.DATABASE_PATH), encode(conf.KEY_VALUE_SEPARATOR), encode(conf.END_RECORD), encode(conf.DELETE_VALUE))
+cpp_internal.initialize.argtypes = [ctypes.c_char_p] * 3
+cpp_internal.get.argtypes = [ctypes.c_char_p]
+cpp_internal.get.restype = ctypes.c_char_p
+cpp_internal.set.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+cpp_internal.get_bytes_read.restype = ctypes.c_longlong
+cpp_internal.set_bulk.argtypes = [ctypes.POINTER(KeyValueItem), ctypes.c_int]
+cpp_internal.initialize(encode(conf.DATABASE_PATH), encode(conf.KEY_VALUE_SEPARATOR), encode(conf.END_RECORD), encode(conf.DELETE_VALUE))
 
-# -------------------------------------------------------------------------------------------------
-
-# Rust integration (WIP) -------------------------------------------------------------------------------------------------
+# Rust integration (WIP) --------------------------------------------------------------------------
 
 import rust_poc
 
-# TODO: add something like a strategy design pattern to switch between c++ integration and rust one
-if os.getenv("DBL_RUST_EXPERIMENT") == "1":
-    dbl_internal = rust_poc
-    dbl_internal.initialize(conf.DATABASE_PATH, conf.KEY_VALUE_SEPARATOR, conf.END_RECORD, conf.DELETE_VALUE)
+rust_internal = rust_poc
+rust_internal.initialize(conf.DATABASE_PATH, conf.KEY_VALUE_SEPARATOR, conf.END_RECORD, conf.DELETE_VALUE)
 
 # -------------------------------------------------------------------------------------------------
 
 
 class DBL:
     @dbl_log
-    def __init__(self):
+    def __init__(self, internal=None):
+        internal = internal if internal else "rust"
+        self.internal = {"rust": rust_internal, "cpp": cpp_internal}[internal]
+        print("Internal:", internal)
         print(f"Using {conf.DATABASE_PATH}")
 
     @dbl_profile
@@ -82,7 +81,7 @@ class DBL:
     def set(self, key, value):
         validate(key, value)
 
-        dbl_internal.set(encode(key), encode(value))
+        self.internal.set(encode(key), encode(value))
         # TODO: check return code
         return f"{key} => {value}"
 
@@ -103,12 +102,12 @@ class DBL:
             pairs[i].key = encode(key)
             pairs[i].value = encode(value)
 
-        dbl_internal.set_bulk(pairs, len(items))
+        self.internal.set_bulk(pairs, len(items))
 
     @dbl_profile
     @dbl_log
     def build_index(self):
-        return dbl_internal.build_index()
+        return self.internal.build_index()
 
     @dbl_log
     def compact(self):
@@ -121,13 +120,13 @@ class DBL:
     @dbl_log
     @dbl_profile
     def get(self, key):
-        value = decode(dbl_internal.get(encode(key)))
+        value = decode(self.internal.get(encode(key)))
         return value if len(value) > 0 else None
 
     @dbl_profile
     @dbl_log
     def delete(self, key):
-        dbl_internal.set(encode(key), encode(conf.DELETE_VALUE))
+        self.internal.set(encode(key), encode(conf.DELETE_VALUE))
         assert self.get(key) == None
         return True
 
@@ -167,8 +166,8 @@ class DBL:
 
     @dbl_log
     def _clean_index(self):
-        dbl_internal.clean_index()
-        assert dbl_internal.get_index_size() == 0, \
+        self.internal.clean_index()
+        assert self.internal.get_index_size() == 0, \
         "It seems index still contains some keys."
 
     @dbl_log
@@ -190,8 +189,8 @@ class DBL:
     def _get_index_metadata(self):
         metadata = []
         metadata.append("Index metadata: " + "-"*30)
-        metadata.append(f"- Number of keys: {dbl_internal.get_index_size()}")
-        metadata.append(f"- Bytes indexed: {dbl_internal.get_bytes_read()}")
+        metadata.append(f"- Number of keys: {self.internal.get_index_size()}")
+        metadata.append(f"- Bytes indexed: {self.internal.get_bytes_read()}")
         return metadata
 
     @dbl_log

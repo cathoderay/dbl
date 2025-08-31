@@ -10,7 +10,7 @@ use std::io::{self, Write};
 use lazy_static::lazy_static;
 use std::sync::{Arc, Mutex};
 use pyo3::types::PyBytes;
-
+use std::path::Path;
 
 impl fmt::Display for IndexValue {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -18,18 +18,15 @@ impl fmt::Display for IndexValue {
     }
 }
 
-
 struct IndexValue {
     start: u64,
     size: u64,
 }
 
-
 static DATABASE_PATH: once_cell::sync::OnceCell<String> = once_cell::sync::OnceCell::new();
 static KEY_VALUE_SEPARATOR: once_cell::sync::OnceCell<String> = once_cell::sync::OnceCell::new();
 static END_RECORD: once_cell::sync::OnceCell<String> = once_cell::sync::OnceCell::new();
 static DELETE_VALUE: once_cell::sync::OnceCell<String> = once_cell::sync::OnceCell::new();
-
 
 lazy_static! {
     static ref INDEX_: Arc<Mutex<HashMap<String, IndexValue>>> = {
@@ -38,7 +35,6 @@ lazy_static! {
     };
 }
 
-
 lazy_static! {
     static ref BYTES_READ_: Arc<Mutex<u64>> = {
         let bytes_read = 0;
@@ -46,9 +42,28 @@ lazy_static! {
     };
 }
 
+fn create_database() -> () {
+    // creates database if it doesn't exist
+
+    let file_path = DATABASE_PATH.get().cloned().unwrap();
+    let path = Path::new(&file_path);
+
+    if !path.exists() {
+        let file = File::create(&file_path);
+        match file {
+            Ok(f) => {
+                println!("File {} created successfully: {:?}", file_path, f);
+            },
+            Err(e) => {
+                eprintln!("Error creating file: {}", e);
+            },
+        }
+    }
+}
 
 #[pyfunction]
 fn build_index() -> () {
+    create_database();
     let mut bytes_read = BYTES_READ_.lock().unwrap();
 
     let mut file = match File::open(DATABASE_PATH.get().cloned().unwrap()) {
@@ -73,8 +88,13 @@ fn build_index() -> () {
         let separator_index = line.find(&KEY_VALUE_SEPARATOR.get().cloned().unwrap()).unwrap();
         let value_size: u64 = (line.len() - separator_index - 1) as u64;
         let key: String = line[0..separator_index].to_string();
-        let value_start: u64 = current + (separator_index as u64) + 1;
-        index.insert(key.clone(), IndexValue {start: value_start, size: value_size});
+        if line.chars().nth(separator_index + 1) == DELETE_VALUE.get().cloned().unwrap().chars().nth(0) {
+            index.remove(&key);
+        }
+        else {
+            let value_start: u64 = current + (separator_index as u64) + 1;
+            index.insert(key.clone(), IndexValue {start: value_start, size: value_size});
+        }
         current += (line.len() as u64) + 1;
         *bytes_read = current;
     }
@@ -99,11 +119,13 @@ fn initialize(
     DELETE_VALUE.set(delete_value).map_err(|e| {
         PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Failed to initialize delete value: {:?}", e))
     })?;
+    create_database();
     Ok(())
 }
 
 #[pyfunction]
 fn set(key: &[u8], value: &[u8]) -> io::Result<()> {
+    create_database();
     let mut file = match OpenOptions::new()
         .append(true)
         .write(true)
@@ -131,6 +153,7 @@ fn set(key: &[u8], value: &[u8]) -> io::Result<()> {
 
 #[pyfunction]
 fn get(py: Python<'_>, key: &[u8]) -> PyObject {
+    create_database();
     build_index();
     let index = INDEX_.lock().unwrap();
 
