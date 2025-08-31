@@ -194,7 +194,7 @@ class DBL:
 
     @dbl_log
     def get_index_metadata(self):
-        return print(self._get_index_metadata())
+        return str(self._get_index_metadata())
 
 
 class REPL:
