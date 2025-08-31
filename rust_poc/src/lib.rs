@@ -142,7 +142,6 @@ fn set(key: &[u8], value: &[u8]) -> io::Result<()> {
         END_RECORD.get().unwrap().as_bytes()]
         .concat()
     )?;
-    build_index();
     Ok(())
 }
 

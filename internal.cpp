@@ -78,7 +78,6 @@ extern "C" {
 
         file << key << KEY_VALUE_SEPARATOR << value << END_RECORD;
         file.close();
-        build_index();
     }
 
     void set_bulk(KeyValueItem* items, int size) {
