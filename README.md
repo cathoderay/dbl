@@ -323,6 +323,40 @@ Index metadata: ------------------------------
 
 ```
 
+Running benchmark tests
+------------------
+```
+➜  dbl git:(main) ✗ ./run_benchmark.sh
+[dbl] conf file loaded: [conf_test]
+[helper] conf file loaded: [conf_test]
+File /tmp/dbl.data-test-session-1756659822.226105 created successfully: File { fd: 3, path: "/private/tmp/dbl.data-test-session-1756659822.226105", read: false, write: true }
+
+ 🏁 BENCHMARK TEST REPORT 🏁 --------------------------------------------------
+
+
+⏩ Benchmark: cpp
+Internal: cpp
+Using /tmp/dbl.data-test-session-1756659822.226105
+DB clean.
+{'number of keys': 10000, 'bytes indexed': 197788}
+✅ Done.
+
+
+⏩ Benchmark: rust
+Internal: rust
+Using /tmp/dbl.data-test-session-1756659822.226105
+DB clean.
+{'number of keys': 10000, 'bytes indexed': 197788}
+✅ Done.
+
+------------------------------------------------------------------
+type (n = 10000)     | write                | read
+------------------------------------------------------------------
+cpp                  | 0.7588629722595215   | 0.5521218776702881
+rust                 | 0.5182549953460693   | 0.40328001976013184
+------------------------------------------------------------------
+```
+
 Contributions
 -------------
 Collaborations are welcome!
