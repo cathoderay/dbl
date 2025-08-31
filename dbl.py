@@ -58,7 +58,7 @@ cpp_internal.get_bytes_read.restype = ctypes.c_longlong
 cpp_internal.set_bulk.argtypes = [ctypes.POINTER(KeyValueItem), ctypes.c_int]
 cpp_internal.initialize(encode(conf.DATABASE_PATH), encode(conf.KEY_VALUE_SEPARATOR), encode(conf.END_RECORD), encode(conf.DELETE_VALUE))
 
-# Rust integration (WIP) --------------------------------------------------------------------------
+# Rust integration --------------------------------------------------------------------------
 
 import rust_internal # type: ignore
 
