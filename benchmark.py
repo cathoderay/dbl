@@ -12,12 +12,11 @@ from dbl import DBL
 
 
 class BenchmarkTest:
-    def __init__(self, internal, type):
+    def __init__(self, internal):
         self.internal = internal
-        self.type = type
 
     def __enter__(self):
-        print(f"\n⏩ Benchmark: {self.internal} | Type: {self.type}")
+        print(f"\n⏩ Benchmark: {self.internal}")
         self.dbl = DBL(internal=self.internal)
         self.dbl.clean_all()
         print("DB clean.")
@@ -37,7 +36,7 @@ result = []
 
 def run():
     for internal in ["cpp", "rust"]:
-        with BenchmarkTest(internal, "read") as dbl:
+        with BenchmarkTest(internal) as dbl:
             def write():
                 for i in range(1, n + 1):
                     dbl.set(f"key-{i}", f"value-{i}")
