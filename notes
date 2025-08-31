@@ -4,58 +4,55 @@
 [done]
 
 # Problem 1: search is slow, have to go through the whole file to find last key/value.
-# Solution: build index in memory pointing to byte position of value. [done]
+# Solution: build index in memory pointing to byte position of value.
 
 # Problem 2: the client looses its index once the command is run.
 # Solution 1: have an index loaded in a instance always available.
-# Solution 2: add repl to interact with the db. [done]
+# Solution 2: add repl to interact with the db.
 
 # Problem 3: many lines for the same key can make the file size greater than it should be
-# Solution 1: offer an operation to compact it [done]
+# Solution 1: offer an operation to compact it.
 
 # Problem 5: compaction does not replace current data
-# Solution 1: offer an option to update it [done]
+# Solution 1: offer an option to update it.
 
 # Problem 7: when new key/value is added by another process, local index is not updated
-# Solution 1: add how many bytes were read, and build index from there [done]
+# Solution 1: add how many bytes were read, and build index from there.
 
 # Problem 4: compact operation is slow
-# Solution 1: offer a compact operation that writes bytes in bulk [done]
+# Solution 1: offer a compact operation that writes bytes in bulk.
 
 # Problem 11: tests use the same database as repl
-# Solution 1: update tests to use a new one for each execution [done]
-# Note: now repl can use test database as well
+# Solution 1: update tests to use a new one for each execution.
+# Note: now repl can use test database as well.
 
 # Problem 10: building index step is slow
-# Solution 1: read the whole file once instead of reading byte per byte [done]
+# Solution 1: read the whole file once instead of reading byte per byte.
 
 # Problem 6: is it really faster with index? how much?
-# Solution 1: benchmark it [done]
-# Notes:
+# Solution 1: Benchmarked it. Below the results:
 # It takes around 4 minutes to build index of a dataset of 1GB in Python.
 # Switching to a similiar algorithm in C++, takes around 1 minute and 30 seconds.
 # Searching after index is built in both languages take microseconds to return in the same dataset.
 
 # Problem 9: dictionary footprint of index seems too high
-# Solution 1: consider approaches to reduce it [done]
-# Note: index was rewritten in C++
+# Solution 1: index was rewritten in C++.
 
 # Problem 13: c++ is not as productive and error-free as I'd like
-# Solution: Rust (maybe Zig) look like good candidates for the internals. Do a quick poc on it. [done]
-# Notes: I decided to rewrite in Rust and benchmark it against cpp. Below, the results:
+# Solution: I decided to rewrite in Rust and benchmark it against cpp. Below, the results:
 ------------------------------------------------------------------
 type (n = 10000)     | write (in seconds)   | read (in seconds)
 ------------------------------------------------------------------
 cpp                  | 0.6830160617828369   | 0.5692169666290283
 rust                 | 0.4856441020965576   | 0.3923947811126709
 ------------------------------------------------------------------
-# The Rust compiler really helps to get the code a safer.
+# The Rust compiler really helps to get the code safer.
 
 
 [todo]
 
 # Problem 8: multiple processes can write at the same time and mess with data in disk
-# Solution 1: add lock for writes (allow many to read) [todo]
+# Solution 1: add lock for writes (allow many to read).
 
 # Problem 12: compact operation was removed
-# Solution: reimplement in C++ [todo]
+# Solution: reimplement in Rust.
