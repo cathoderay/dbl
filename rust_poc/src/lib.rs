@@ -12,6 +12,7 @@ use std::sync::{Arc, Mutex};
 use pyo3::types::PyBytes;
 use std::path::Path;
 
+
 impl fmt::Display for IndexValue {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "({}, {})", self.start, self.size)
@@ -45,7 +46,7 @@ lazy_static! {
 fn create_database() -> () {
     // creates database if it doesn't exist
 
-    let file_path = DATABASE_PATH.get().cloned().unwrap();
+    let file_path = DATABASE_PATH.get().unwrap();
     let path = Path::new(&file_path);
 
     if !path.exists() {
@@ -66,7 +67,7 @@ fn build_index() -> () {
     create_database();
     let mut bytes_read = BYTES_READ_.lock().unwrap();
 
-    let mut file = match File::open(DATABASE_PATH.get().cloned().unwrap()) {
+    let mut file = match File::open(DATABASE_PATH.get().unwrap()) {
         Ok(f) => f,
         Err(e) => panic!("Failed to open file: {}", e),
     };
@@ -85,10 +86,10 @@ fn build_index() -> () {
     let mut index = INDEX_.lock().unwrap();
     let mut current = *bytes_read;
     for line in content.lines() {
-        let separator_index = line.find(&KEY_VALUE_SEPARATOR.get().cloned().unwrap()).unwrap();
+        let separator_index = line.find(KEY_VALUE_SEPARATOR.get().unwrap()).unwrap();
         let value_size: u64 = (line.len() - separator_index - 1) as u64;
         let key: String = line[0..separator_index].to_string();
-        if line.chars().nth(separator_index + 1) == DELETE_VALUE.get().cloned().unwrap().chars().nth(0) {
+        if line.chars().nth(separator_index + 1) == DELETE_VALUE.get().unwrap().chars().nth(0) {
             index.remove(&key);
         }
         else {
@@ -125,24 +126,22 @@ fn initialize(
 
 #[pyfunction]
 fn set(key: &[u8], value: &[u8]) -> io::Result<()> {
-    create_database();
     let mut file = match OpenOptions::new()
         .append(true)
         .write(true)
-        .open(DATABASE_PATH.get().cloned().unwrap()) {
+        .create(true)
+        .open(DATABASE_PATH.get().unwrap()) {
             Ok(f) => f,
             Err(e) => panic!("Failed to open file: {}", e)
     };
 
-    let mut buffer: Vec<u8> = Vec::new();
-    let key_value_separator = KEY_VALUE_SEPARATOR.get().cloned().unwrap();
-    let end_record = END_RECORD.get().cloned().unwrap();
-
-    buffer.extend_from_slice(key);
-    buffer.extend_from_slice(key_value_separator.as_bytes());
-    buffer.extend_from_slice(value);
-    buffer.extend_from_slice(end_record.as_bytes());
-    file.write_all(&buffer)?;
+    file.write_all(&[
+        key,
+        KEY_VALUE_SEPARATOR.get().unwrap().as_bytes(),
+        value,
+        END_RECORD.get().unwrap().as_bytes()]
+        .concat()
+    )?;
     build_index();
     Ok(())
 }
@@ -163,7 +162,7 @@ fn get(py: Python<'_>, key: &[u8]) -> PyObject {
         return PyBytes::new(py, &vec![0; 0]).into()
     }
 
-    let mut file = match File::open(DATABASE_PATH.get().cloned().unwrap()) {
+    let mut file = match File::open(DATABASE_PATH.get().unwrap()) {
         Ok(f) => f,
         Err(e) => panic!("Failed to open file: {}", e),
     };

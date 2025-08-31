@@ -34,44 +34,30 @@ print(f"\n 🏁 BENCHMARK TEST REPORT 🏁 {'-'*50}\n")
 
 n = 10_000
 result = []
-def write():
-    for internal in ["cpp", "rust"]:
-        with BenchmarkTest(internal, "write") as dbl:
-            def write():
-                print(f"🏃‍➡️ Setting {n} distinct keys with values of the same length...")
-                for i in range(1, n + 1):
-                    dbl.set(f"key-{i}", f"value-{i}")
-            start = time()
-            write()
-            duration = time() - start
-            assert dbl.get("key-0") == None
-            assert dbl.get("key-324") == "value-324"
-        result.append([f"{internal}-write", duration])
 
-
-
-def read():
+def run():
     for internal in ["cpp", "rust"]:
         with BenchmarkTest(internal, "read") as dbl:
             def write():
-                print(f"🏃‍➡️ Setting {n} distinct keys with values of the same length...")
                 for i in range(1, n + 1):
                     dbl.set(f"key-{i}", f"value-{i}")
+
+            start = time()
             write()
+            write_duration = time() - start
 
             def read():
-                print(f"🏃‍➡️ Gettting {n} distinct keys with values of the same length...")
                 for i in range(1, n + 1):
                     assert dbl.get(f"key-{i}") == f"value-{i}"
             start = time()
             read()
-            duration = time() - start
-        result.append([f"{internal}-read", duration])
+            read_duration = time() - start
+        result.append([f"{internal}", write_duration, read_duration])
 
 
 def print_results():
     width = 20
-    header = " | ".join(f"{item:<{width}}" for item in [f"type (n = {n})", "time (in seconds)"])
+    header = " | ".join(f"{item:<{width}}" for item in [f"type (n = {n})", "write", "read"])
     print("-" * len(header))
     print(header)
     print("-" * len(header))
@@ -80,6 +66,5 @@ def print_results():
     print("-" * len(header))
 
 
-write()
-read()
+run()
 print_results()
