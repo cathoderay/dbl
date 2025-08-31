@@ -187,15 +187,14 @@ class DBL:
 
     @dbl_log
     def _get_index_metadata(self):
-        metadata = []
-        metadata.append("Index metadata: " + "-"*30)
-        metadata.append(f"- Number of keys: {self.internal.get_index_size()}")
-        metadata.append(f"- Bytes indexed: {self.internal.get_bytes_read()}")
-        return metadata
+        return {
+            "number of keys": self.internal.get_index_size(),
+            "bytes indexed": self.internal.get_bytes_read()
+        }
 
     @dbl_log
     def get_index_metadata(self):
-        return "\n".join(self._get_index_metadata() + ["-"*50])
+        return print(self._get_index_metadata())
 
 
 class REPL:
