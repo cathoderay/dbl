@@ -52,17 +52,25 @@ Features
 
 How to run
 ----------
+Note: This instructions will be easier to follow once I decide which language I'm going to use for the internals.
+
 0. First, you need to compile the C++ code, like:
   ```
       $ ./compile_internal.sh
   ```
   This step will generate an `internal.so` file that will be used from the Python source code.
+
+1. Second, you need to build Rust POC, like:
+```
+      $ ./build_rust_poc.sh
+```
+  This step will generate a `rust_poc.so` file that will be used as a Python module. 
   
-1. Then, you can run it like:
+2. Then, you can run it like:
   ```
       $ python3 dbl.py
   ```
-2. or alternatively you can add an alias to your .zshrc or .bashrc to the dbl.py, like
+3. or alternatively you can add an alias to your .zshrc or .bashrc to the dbl.py, like
   ```
   export PATH=$HOME/code/dbl:$PATH
   alias dbl="dbl.py"
