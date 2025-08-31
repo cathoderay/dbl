@@ -51,12 +51,12 @@ def run():
             start = time()
             read()
             read_duration = time() - start
-        result.append([f"{internal}", write_duration, read_duration])
+        result.append([f"{internal}", write_duration / n, read_duration / n])
 
 
 def print_results():
     width = 20
-    header = " | ".join(f"{item:<{width}}" for item in [f"type (n = {n})", "write (in seconds)", "read (in seconds)"])
+    header = " | ".join(f"{item:<{width}}" for item in [f"type (n = {n})", "write average (sec)", "read avg (sec)"])
     print("-" * len(header))
     print(header)
     print("-" * len(header))

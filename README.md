@@ -335,7 +335,7 @@ Running benchmark tests
 
 ⏩ Benchmark: cpp
 Internal: cpp
-Using /tmp/dbl.data-test-session-1756659949.724519
+Using /tmp/dbl.data-test-session-1756662086.613222
 DB clean.
 {'number of keys': 10000, 'bytes indexed': 197788}
 ✅ Done.
@@ -343,16 +343,16 @@ DB clean.
 
 ⏩ Benchmark: rust
 Internal: rust
-Using /tmp/dbl.data-test-session-1756659949.724519
+Using /tmp/dbl.data-test-session-1756662086.613222
 DB clean.
 {'number of keys': 10000, 'bytes indexed': 197788}
 ✅ Done.
 
 ------------------------------------------------------------------
-type (n = 10000)     | write (in seconds)   | read (in seconds)
+type (n = 10000)     | write average (sec)  | read avg (sec)
 ------------------------------------------------------------------
-cpp                  | 0.6830160617828369   | 0.5692169666290283
-rust                 | 0.4856441020965576   | 0.3923947811126709
+cpp                  | 7.174320220947266e-05 | 5.5613517761230467e-05
+rust                 | 4.976601600646973e-05 | 3.898470401763916e-05
 ------------------------------------------------------------------
 ```
 

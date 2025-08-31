@@ -41,10 +41,10 @@
 # Problem 13: c++ is not as productive and error-free as I'd like
 # Solution: I decided to rewrite in Rust and benchmark it against cpp. Below, the results:
 ------------------------------------------------------------------
-type (n = 10000)     | write (in seconds)   | read (in seconds)
+type (n = 10000)     | write average (sec)  | read avg (sec)
 ------------------------------------------------------------------
-cpp                  | 0.6830160617828369   | 0.5692169666290283
-rust                 | 0.4856441020965576   | 0.3923947811126709
+cpp                  | 7.174320220947266e-05 | 5.5613517761230467e-05
+rust                 | 4.976601600646973e-05 | 3.898470401763916e-05
 ------------------------------------------------------------------
 # The Rust compiler really helps to get the code safer.
 
