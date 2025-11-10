@@ -146,6 +146,18 @@ class DBLTest(unittest.TestCase):
         dbl.delete("key")
         assert dbl.get("key") == None
     
+    def test_allow_commas_in_values(self):
+        dbl = DBL()
+        value = "value, with, commas"
+        dbl.set("key-with-commas", value)
+        assert dbl.get("key-with-commas") == value
+
+    def test_allow_newlines_in_values(self):
+        dbl = DBL()
+        value = "value\nwith\nnewlines"
+        dbl.set("key-with-newlines", value)
+        assert dbl.get("key-with-newlines") == value
+
 
 if __name__ == "__main__":
     unittest.main()
