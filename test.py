@@ -8,7 +8,7 @@ if not os.getenv("DBL_TEST_ENV", 0) == "1":
     exit(-1)
 
 
-from dbl import DBL
+from dbl import DBL, decode, encode
 
 
 class DBLTest(unittest.TestCase):
@@ -157,6 +157,19 @@ class DBLTest(unittest.TestCase):
         value = "value\nwith\nnewlines"
         dbl.set("key-with-newlines", value)
         assert dbl.get("key-with-newlines") == value
+
+
+class DBLHelperTest(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def test_encode_and_decode(self):
+        original = "https://en.wikipedia.or"
+        assert decode(encode(original)) == original
+
 
 
 if __name__ == "__main__":
