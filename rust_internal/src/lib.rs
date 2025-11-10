@@ -87,18 +87,19 @@ fn build_index() -> () {
     let mut current = *bytes_read;
     let key_value_separator = KEY_VALUE_SEPARATOR.get().unwrap();
     let delete_value = DELETE_VALUE.get().unwrap().chars().nth(0);
-    for line in content.lines() {
-        let separator_index = line.find(key_value_separator).unwrap();
-        let value_size: u64 = (line.len() - separator_index - 1) as u64;
-        let key: String = line[0..separator_index].to_string();
-        if line.chars().nth(separator_index + 1) == delete_value {
+    for item in content.split(END_RECORD.get().unwrap()) {
+        if item.is_empty() { continue; }
+        let separator_index = item.find(key_value_separator).unwrap();
+        let value_size: u64 = (item.len() - separator_index - 1) as u64;
+        let key: String = item[0..separator_index].to_string();
+        if item.chars().nth(separator_index + 1) == delete_value {
             index.remove(&key);
         }
         else {
             let value_start: u64 = current + (separator_index as u64) + 1;
             index.insert(key.clone(), IndexValue {start: value_start, size: value_size});
         }
-        current += (line.len() as u64) + 1;
+        current += (item.len() as u64) + 1;
         *bytes_read = current;
     }
 }

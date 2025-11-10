@@ -22,13 +22,13 @@ class DBLTest(unittest.TestCase):
         dbl = DBL()
         assert dbl.internal.get_bytes_read() == 0
         with self.assertRaises(AssertionError):
-            dbl.set("key", "value\n")
+            dbl.set("key", "value\x1E")
 
     def test_set_key_cannot_contain_key_value_separator(self):
         dbl = DBL()
         assert dbl.internal.get_bytes_read() == 0
         with self.assertRaises(AssertionError):
-            dbl.set("key,key", "value")
+            dbl.set("key\x1Dkey", "value")
 
     def test_set_and_get(self):
         dbl = DBL()

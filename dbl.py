@@ -39,7 +39,7 @@ class DBL:
     @dbl_log
     def __init__(self, internal=None):
         self.internal = rust_internal
-        print("Internal:", internal)
+        print("Internal:", self.internal)
         print(f"Using {conf.DATABASE_PATH}")
 
     @dbl_log
