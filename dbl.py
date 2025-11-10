@@ -58,16 +58,17 @@ class DBL:
     @dbl_profile
     @dbl_log
     def set_bulk(self, items):
-        self.validate_bulk(items)
+        pass
+        # self.validate_bulk(items)
 
-        pairs_type = KeyValueItem * len(items)
-        pairs = pairs_type()
+        # pairs_type = KeyValueItem * len(items)
+        # pairs = pairs_type()
 
-        for i, (key, value) in enumerate(items):
-            pairs[i].key = encode(key)
-            pairs[i].value = encode(value)
+        # for i, (key, value) in enumerate(items):
+        #     pairs[i].key = encode(key)
+        #     pairs[i].value = encode(value)
 
-        self.internal.set_bulk(pairs, len(items))
+        # self.internal.set_bulk(pairs, len(items))
 
     @dbl_profile
     @dbl_log
@@ -76,7 +77,8 @@ class DBL:
 
     @dbl_log
     def compact(self):
-        raise NotImplementedError("Not implemented")
+        self.internal.compact()
+        return True
 
     @dbl_log
     def replace_from_compact(self):
@@ -171,7 +173,7 @@ class REPL:
             "set": lambda operands: self.dbl.set(*operands),
             "get": lambda operands: self.dbl.get(*operands),
             "del": lambda operands: self.dbl.delete(*operands),
-            # "compact": lambda operands: self.dbl.compact(),
+            "compact": lambda operands: self.dbl.compact(),
             # "compact_and_replace": lambda operands: self.dbl.compact_and_replace(),
             # "replace_from_compact": lambda operands: self.dbl.replace_from_compact(),
             "build_index": lambda operands: self.dbl.build_index(),

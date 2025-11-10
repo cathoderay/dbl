@@ -127,6 +127,46 @@ fn initialize(
 }
 
 #[pyfunction]
+fn compact() -> io::Result<()> {
+    create_database();
+    build_index();
+    let index = INDEX_.lock().unwrap();
+
+    let temp_db_path = format!("{}.compact", DATABASE_PATH.get().unwrap());
+    let mut temp_file = match OpenOptions::new()
+        .write(true)
+        .create(true)
+        .open(&temp_db_path) {
+            Ok(f) => f,
+            Err(e) => panic!("Failed to open temp file: {}", e)
+    };
+
+    let mut original_file = match File::open(DATABASE_PATH.get().unwrap()) {
+        Ok(f) => f,
+        Err(e) => panic!("Failed to open original file: {}", e),
+    };
+
+    for (key, value_data) in index.iter() {
+        let mut buffer = vec![0; value_data.size.try_into().unwrap()];
+        match original_file.seek(SeekFrom::Start(value_data.start)) {
+            Ok(f) => f,
+            Err(e) => panic!("Failed to seek original file: {}", e),
+        };
+        let _ = original_file.read_exact(&mut buffer);
+
+        temp_file.write_all(&[
+            key.as_bytes(),
+            KEY_VALUE_SEPARATOR.get().unwrap().as_bytes(),
+            &buffer,
+            END_RECORD.get().unwrap().as_bytes()]
+            .concat()
+        )?;
+    }
+
+    Ok(())
+}
+
+#[pyfunction]
 fn set(key: &[u8], value: &[u8]) -> io::Result<()> {
     let mut file = match OpenOptions::new()
         .append(true)
@@ -207,5 +247,6 @@ fn rust_internal(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(get_bytes_read, m)?)?;
     m.add_function(wrap_pyfunction!(get_index_size, m)?)?;
     m.add_function(wrap_pyfunction!(clean_index, m)?)?;
+    m.add_function(wrap_pyfunction!(compact, m)?)?;
     Ok(())
 }
