@@ -160,23 +160,23 @@ class REPL:
     def __init__(self):
         self.dbl = DBL()
         self.operations = {
-            "help": lambda operands: self.help(),
-            "set": lambda operands: self.dbl.set(*operands),
-            "get": lambda operands: self.dbl.get(*operands),
-            "del": lambda operands: self.dbl.delete(*operands),
+            "build_index": lambda operands: self.dbl.build_index(),
+            "check_debug_flag": lambda operands: str(conf.DEBUG),
+            "clean_all": lambda operands: self.dbl.clean_all(),
+            "clean_compact": lambda operands: self.dbl.clean_compact(),
+            "clean_database": lambda operands: self.dbl.clean_database(),
+            "clean_index": lambda operands: self.dbl.clean_index(),
             "compact": lambda operands: self.dbl.compact(),
             "compact_and_replace": lambda operands: self.dbl.compact_and_replace(),
-            "replace_from_compact": lambda operands: self.dbl.replace_from_compact(),
-            "build_index": lambda operands: self.dbl.build_index(),
-            "toggle_debug": lambda operands: self.toggle_debug(),
-            "check_debug_flag": lambda operands: str(conf.DEBUG),
-            "clean_database": lambda operands: self.dbl.clean_database(),
-            "clean_compact": lambda operands: self.dbl.clean_compact(),
-            "clean_index": lambda operands: self.dbl.clean_index(),
-            "clean_all": lambda operands: self.dbl.clean_all(),
-            "index": lambda operands: self.dbl.get_index_metadata(),
+            "del": lambda operands: self.dbl.delete(*operands),
+            "exit": lambda operands: self.exit(),
             "find_tail": lambda operands: self.dbl.find_tail(*operands),
-            "exit": lambda operands: self.exit()
+            "get": lambda operands: self.dbl.get(*operands),
+            "help": lambda operands: self.help(),
+            "index": lambda operands: self.dbl.get_index_metadata(),
+            "replace_from_compact": lambda operands: self.dbl.replace_from_compact(),
+            "set": lambda operands: self.dbl.set(*operands),
+            "toggle_debug": lambda operands: self.toggle_debug(),
         }
 
     @dbl_log
