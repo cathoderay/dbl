@@ -127,18 +127,19 @@ fn initialize(
 }
 
 #[pyfunction]
-fn compact() -> io::Result<()> {
+fn compact(
+    compact_db_path:String,
+) -> io::Result<()> {
     create_database();
     build_index();
     let index = INDEX_.lock().unwrap();
 
-    let temp_db_path = format!("{}.compact", DATABASE_PATH.get().unwrap());
-    let mut temp_file = match OpenOptions::new()
+    let mut compact_file = match OpenOptions::new()
         .write(true)
         .create(true)
-        .open(&temp_db_path) {
+        .open(&compact_db_path) {
             Ok(f) => f,
-            Err(e) => panic!("Failed to open temp file: {}", e)
+            Err(e) => panic!("Failed to open compact file: {}", e)
     };
 
     let mut original_file = match File::open(DATABASE_PATH.get().unwrap()) {
@@ -154,7 +155,7 @@ fn compact() -> io::Result<()> {
         };
         let _ = original_file.read_exact(&mut buffer);
 
-        temp_file.write_all(&[
+        compact_file.write_all(&[
             key.as_bytes(),
             KEY_VALUE_SEPARATOR.get().unwrap().as_bytes(),
             &buffer,

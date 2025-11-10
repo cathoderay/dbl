@@ -77,12 +77,13 @@ class DBL:
 
     @dbl_log
     def compact(self):
-        self.internal.compact()
-        return True
+        self.internal.compact(conf.COMPACT_PATH)
+        return f"{conf.COMPACT_PATH} written."
 
     @dbl_log
     def replace_from_compact(self):
-        raise NotImplementedError("Not implemented")
+        os.rename(conf.COMPACT_PATH, conf.DATABASE_PATH)
+        return f"{conf.DATABASE_PATH} replaced from compact."
 
     @dbl_log
     @dbl_profile
@@ -144,7 +145,8 @@ class DBL:
 
     @dbl_log
     def clean_compact(self):
-        raise NotImplementedError("Not implemented")
+        os.remove(conf.COMPACT_PATH)
+        return f"{conf.COMPACT_PATH} removed."
 
     @dbl_log
     def clean_all(self):
@@ -174,13 +176,13 @@ class REPL:
             "get": lambda operands: self.dbl.get(*operands),
             "del": lambda operands: self.dbl.delete(*operands),
             "compact": lambda operands: self.dbl.compact(),
-            # "compact_and_replace": lambda operands: self.dbl.compact_and_replace(),
-            # "replace_from_compact": lambda operands: self.dbl.replace_from_compact(),
+            "compact_and_replace": lambda operands: self.dbl.compact_and_replace(),
+            "replace_from_compact": lambda operands: self.dbl.replace_from_compact(),
             "build_index": lambda operands: self.dbl.build_index(),
             "toggle_debug": lambda operands: self.toggle_debug(),
             "check_debug_flag": lambda operands: str(conf.DEBUG),
             "clean_database": lambda operands: self.dbl.clean_database(),
-            # "clean_compact": lambda operands: self.dbl.clean_compact(),
+            "clean_compact": lambda operands: self.dbl.clean_compact(),
             "clean_index": lambda operands: self.dbl.clean_index(),
             "clean_all": lambda operands: self.dbl.clean_all(),
             "index": lambda operands: self.dbl.get_index_metadata(),
