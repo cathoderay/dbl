@@ -145,7 +145,7 @@ class DBLTest(unittest.TestCase):
         dbl = DBL()
         dbl.delete("key")
         assert dbl.get("key") == None
-
+    
 
 if __name__ == "__main__":
     unittest.main()

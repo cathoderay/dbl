@@ -15,7 +15,7 @@ class LoadTest:
         self.name = name
 
     def __enter__(self):
-        print(f"\n⏩ LoadTestName: {self.name}")
+        print(f"\n⏩ Load Test: {self.name}")
         self.dbl = DBL()
         self.dbl.clean_all()
         print("DB clean.")

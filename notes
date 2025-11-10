@@ -48,6 +48,9 @@ rust                 | 4.976601600646973e-05 | 3.898470401763916e-05
 ------------------------------------------------------------------
 # The Rust compiler really helps to get the code safer.
 
+# Problem 14: clean up references to C++ source code
+# Solution: removed C++ code as well as benchmark code
+
 
 [todo]
 
@@ -57,4 +60,3 @@ rust                 | 4.976601600646973e-05 | 3.898470401763916e-05
 # Problem 12: compact operation was removed
 # Solution: reimplement in Rust.
 
-# Problem 14: clean up references to C++ source code

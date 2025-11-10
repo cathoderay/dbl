@@ -24,40 +24,6 @@ print(f"[{__name__}] conf file loaded: [{conf.__name__}]")
 from helper import encode, decode, print_ascii_logo, dbl_log, dbl_profile, validate
 
 
-# CPP integration -------------------------------------------------------------------------------------------------
-
-import ctypes
-import os
-
-cpp_internal = None
-
-if os.name != 'posix':
-    print("Incompatible OS")
-    exit(-1)
-
-internal = 'cpp_internal.so'
-
-try:
-    cpp_internal = ctypes.CDLL(os.path.join(os.path.dirname(__file__), internal))
-except OSError as e:
-    print(f"Error loading library: {e}")
-    print(f"Please, run compile_internal.sh to ensure {internal} is available (Linux/macOS)")
-    exit(-1)
-
-class KeyValueItem(ctypes.Structure):
-    _fields_ = [
-        ("key", ctypes.c_char_p),
-        ("value", ctypes.c_char_p),
-    ]
-
-cpp_internal.initialize.argtypes = [ctypes.c_char_p] * 3
-cpp_internal.get.argtypes = [ctypes.c_char_p]
-cpp_internal.get.restype = ctypes.c_char_p
-cpp_internal.set.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
-cpp_internal.get_bytes_read.restype = ctypes.c_longlong
-cpp_internal.set_bulk.argtypes = [ctypes.POINTER(KeyValueItem), ctypes.c_int]
-cpp_internal.initialize(encode(conf.DATABASE_PATH), encode(conf.KEY_VALUE_SEPARATOR), encode(conf.END_RECORD), encode(conf.DELETE_VALUE))
-
 # Rust integration --------------------------------------------------------------------------
 
 import rust_internal # type: ignore
@@ -71,13 +37,12 @@ rust_internal.initialize(conf.DATABASE_PATH, conf.KEY_VALUE_SEPARATOR, conf.END_
 class DBL:
     @dbl_log
     def __init__(self, internal=None):
-        internal = internal if internal else "rust"
-        self.internal = {"rust": rust_internal, "cpp": cpp_internal}[internal]
+        self.internal = rust_internal
         print("Internal:", internal)
         print(f"Using {conf.DATABASE_PATH}")
 
-    @dbl_profile
     @dbl_log
+    @dbl_profile
     def set(self, key, value):
         validate(key, value)
 
