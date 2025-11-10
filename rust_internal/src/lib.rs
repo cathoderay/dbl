@@ -44,8 +44,6 @@ lazy_static! {
 }
 
 fn create_database() -> () {
-    // creates database if it doesn't exist
-
     let file_path = DATABASE_PATH.get().unwrap();
     let path = Path::new(&file_path);
 

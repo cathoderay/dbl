@@ -48,28 +48,12 @@ class DBL:
         validate(key, value)
 
         self.internal.set(encode(key), encode(value))
-        # TODO: check return code
         return f"{key} => {value}"
 
     @dbl_profile
     def validate_bulk(self, items):
         for key, value in items:
             validate(key, value)
-
-    @dbl_profile
-    @dbl_log
-    def set_bulk(self, items):
-        pass
-        # self.validate_bulk(items)
-
-        # pairs_type = KeyValueItem * len(items)
-        # pairs = pairs_type()
-
-        # for i, (key, value) in enumerate(items):
-        #     pairs[i].key = encode(key)
-        #     pairs[i].value = encode(value)
-
-        # self.internal.set_bulk(pairs, len(items))
 
     @dbl_profile
     @dbl_log
