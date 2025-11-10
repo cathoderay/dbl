@@ -1,4 +1,3 @@
 #!/bin/bash
 
-N=$1
-DBL_TEST_ENV=1 python3 load_test.py $N
+DBL_TEST_ENV=1 PYTHONPATH=$PYTHONPATH:../ python3 tests/load_test.py
