@@ -57,7 +57,7 @@ Note: This instructions will be easier to follow once I decide which language I'
   ```
       $ ./build_internals.sh
   ```
-  This step will generate a `cpp_internal.so` as well as `rust_internal.so` file that will be used from the Python source code.
+  This step will generate a `rust_internal.so` file that will be used from the Python source code.
   
 1. Then, you can run it like:
   ```
