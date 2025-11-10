@@ -152,11 +152,6 @@ class DBL:
         return f"{key} => {value}"
 
     @dbl_profile
-    def validate_bulk(self, items):
-        for key, value in items:
-            validate(key, value)
-
-    @dbl_profile
     @dbl_log
     def build_index(self):
         self.internal.build_index()
