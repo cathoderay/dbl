@@ -231,6 +231,13 @@ fn get_index_size() -> u64 {
 }
 
 #[pyfunction]
+fn get_index_keys() -> Vec<String> {
+    let index = INDEX_.lock().unwrap();
+    let keys: Vec<String> = index.keys().cloned().collect();
+    keys
+}
+
+#[pyfunction]
 fn clean_index() -> () {
     let mut index = INDEX_.lock().unwrap();
     index.clear();
@@ -246,6 +253,7 @@ fn rust_internal(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(set, m)?)?;
     m.add_function(wrap_pyfunction!(get, m)?)?;
     m.add_function(wrap_pyfunction!(get_bytes_read, m)?)?;
+    m.add_function(wrap_pyfunction!(get_index_keys, m)?)?;
     m.add_function(wrap_pyfunction!(get_index_size, m)?)?;
     m.add_function(wrap_pyfunction!(clean_index, m)?)?;
     m.add_function(wrap_pyfunction!(compact, m)?)?;

@@ -10,6 +10,7 @@ __author__ = "Ronald Kaiser"
 
 
 import os
+import pprint
 import readline
 import sys
 
@@ -73,7 +74,8 @@ class DBL:
     @dbl_profile
     @dbl_log
     def build_index(self):
-        return self.internal.build_index()
+        self.internal.build_index()
+        return True
 
     @dbl_log
     def compact(self):
@@ -118,6 +120,7 @@ class DBL:
     def compact_and_replace(self):
         self.compact()
         self.replace_from_compact()
+        return True
 
     @dbl_log
     def _remove_file(self, filename):
@@ -156,13 +159,15 @@ class DBL:
 
     @dbl_log
     def _get_index_metadata(self):
-        return {
+        return pprint.pprint({
             "number of keys": self.internal.get_index_size(),
-            "bytes indexed": self.internal.get_bytes_read()
-        }
+            "bytes indexed": self.internal.get_bytes_read(),
+            "keys": self.internal.get_index_keys()
+        })
 
     @dbl_log
     def get_index_metadata(self):
+        self.build_index()
         return str(self._get_index_metadata())
 
 
