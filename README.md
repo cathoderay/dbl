@@ -55,7 +55,7 @@ Note: This instructions will be easier to follow once I decide which language I'
 
 0. First, you need to build internal modules, like:
   ```
-      $ ./build_internals.sh
+      $ ./scripts/build_internals.sh
   ```
   This step will generate a `rust_internal.so` file that will be used from the Python source code.
   
@@ -249,7 +249,7 @@ Running unit tests
 ------------------
 
 ```
-➜  dbl git:(main) ./run_tests.sh
+➜  dbl git:(main) ./scripts/run_tests.sh
 [dbl] conf file loaded: [conf_test]
 [helper] conf file loaded: [conf_test]
 ....
