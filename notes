@@ -56,3 +56,5 @@ rust                 | 4.976601600646973e-05 | 3.898470401763916e-05
 
 # Problem 12: compact operation was removed
 # Solution: reimplement in Rust.
+
+# Problem 14: clean up references to C++ source code
