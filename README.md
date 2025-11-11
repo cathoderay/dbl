@@ -1,10 +1,10 @@
 dbl
 ===
 ```
-+       ▐▌▗▖   █
-+       ▐▌▐▌   █
-+    ▗▞▀▜▌▐▛▀▚▖█
-+    ▝▚▄▟▌▐▙▄▞▘█
+       ▐▌▗▖   █
+       ▐▌▐▌   █
+    ▗▞▀▜▌▐▛▀▚▖█
+    ▝▚▄▟▌▐▙▄▞▘█
 ```
 This is a naive implementation of a key-value database (log structured).
 
