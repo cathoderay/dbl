@@ -57,6 +57,7 @@ How to run
       $ ./scripts/install.sh
   ```
   This step will compile and move necessary files to your `$HOME/.dbl` folder.
+
   Also, a new alias is also added to your `.bashrc` and `.zshrc`.
   
 1. Restart your terminal, so the new alias take effect. Then you can run:
