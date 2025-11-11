@@ -33,7 +33,7 @@ Features
 How to run
 ----------
 
-0. Just run: 
+0. Install: 
   ```
       $ ./scripts/install.sh
   ```
@@ -148,7 +148,7 @@ If you want to specify another path in runtime, you can start the REPL as:
 ```
        $ dbl /path/to/your/db/test.data
 ```
-Alternatively, in your Python code, you can:
+Alternatively, in your Python code you can:
 ```
        >>> from dbl import DBL
        >>> dbl = DBL("/tmp/dbtest.data")
