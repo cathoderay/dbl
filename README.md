@@ -52,13 +52,14 @@ Features
 How to run
 ----------
 
-0. Just run  
+0. Just run: 
   ```
       $ ./scripts/install.sh
   ```
-  This step will compile and move necessary files to your `$HOME/.dbl` folder and add an alias to your `.bashrc` and `.zshrc`.
+  This step will compile and move necessary files to your `$HOME/.dbl` folder.
+  Also, a new alias is also added to your `.bashrc` and `.zshrc`.
   
-1. Restart your terminal, so new alias take effect and you can simple run:
+1. Restart your terminal, so the new alias take effect. Then you can run:
   ```
     $ dbl
   ```
