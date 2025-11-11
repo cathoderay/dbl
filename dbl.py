@@ -24,7 +24,7 @@ else:
     import conf
 print(f"[{__name__}] conf file loaded: [{conf.__name__}]")
 
-import rust_internal # type: ignore
+import dbl_internal # type: ignore
 
 
 def print_debug(data):
@@ -114,12 +114,12 @@ def print_ascii_logo():
 class DBL:
     @dbl_log
     def __init__(self, database_path=conf.DATABASE_PATH):
-        self.internal = rust_internal
+        self.internal = dbl_internal 
         self.initialize_internal(database_path)
         print(f"DBL initialized. Database opened at {database_path}.")
 
     def initialize_internal(self, database_path=conf.DATABASE_PATH):
-        rust_internal.initialize(
+        dbl_internal.initialize(
             database_path,
             conf.KEY_VALUE_SEPARATOR,
             conf.END_RECORD,

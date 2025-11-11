@@ -72,4 +72,4 @@ docs/_build/
 .python-version
 
 # cargo
-rust_internal/target/
+dbl_internal/target/

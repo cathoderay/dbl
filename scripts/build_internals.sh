@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cd rust_internal
+cd dbl_internal
 cargo build --release
-mv ./target/release/librust_internal.dylib ../rust_internal.so
+mv ./target/release/libdbl_internal.dylib ../dbl_internal.so
