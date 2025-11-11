@@ -24,16 +24,7 @@ else:
     import conf
 print(f"[{__name__}] conf file loaded: [{conf.__name__}]")
 
-
-
-# Rust integration --------------------------------------------------------------------------
-
 import rust_internal # type: ignore
-
-rust_internal = rust_internal
-rust_internal.initialize(conf.DATABASE_PATH, conf.KEY_VALUE_SEPARATOR, conf.END_RECORD, conf.DELETE_VALUE)
-
-# -------------------------------------------------------------------------------------------------
 
 
 def print_debug(data):
@@ -108,28 +99,12 @@ def validate(key, value):
 
 def print_ascii_logo():
     print(r"""
-    Welcome to
-          _____                    _____                    _____
-         /\    \                  /\    \                  /\    \
-        /::\    \                /::\    \                /::\____\
-       /::::\    \              /::::\    \              /:::/    /
-      /::::::\    \            /::::::\    \            /:::/    /
-     /:::/\:::\    \          /:::/\:::\    \          /:::/    /
-    /:::/  \:::\    \        /:::/__\:::\    \        /:::/    /
-   /:::/    \:::\    \      /::::\   \:::\    \      /:::/    /
-  /:::/    / \:::\    \    /::::::\   \:::\    \    /:::/    /
- /:::/    /   \:::\ ___\  /:::/\:::\   \:::\ ___\  /:::/    /
-/:::/____/     \:::|    |/:::/__\:::\   \:::|    |/:::/____/
-\:::\    \     /:::|____|\:::\   \:::\  /:::|____|\:::\    \
- \:::\    \   /:::/    /  \:::\   \:::\/:::/    /  \:::\    \
-  \:::\    \ /:::/    /    \:::\   \::::::/    /    \:::\    \
-   \:::\    /:::/    /      \:::\   \::::/    /      \:::\    \
-    \:::\  /:::/    /        \:::\  /:::/    /        \:::\    \
-     \:::\/:::/    /          \:::\/:::/    /          \:::\    \
-      \::::::/    /            \::::::/    /            \:::\    \
-       \::::/    /              \::::/    /              \:::\____\
-        \::/____/                \::/____/                \::/    /
-         ~~                       ~~                       \/____/
+    Welcome to:
+
+       ▐▌▗▖   █
+       ▐▌▐▌   █
+    ▗▞▀▜▌▐▛▀▚▖█
+    ▝▚▄▟▌▐▙▄▞▘█
 
     version 0.1
     by Ronald Kaiser
@@ -138,10 +113,18 @@ def print_ascii_logo():
 
 class DBL:
     @dbl_log
-    def __init__(self, internal=None):
+    def __init__(self, database_path=conf.DATABASE_PATH):
         self.internal = rust_internal
-        print("Internal:", self.internal)
-        print(f"Using {conf.DATABASE_PATH}")
+        self.initialize_internal(database_path)
+        print(f"DBL initialized. Database opened at {database_path}.")
+
+    def initialize_internal(self, database_path=conf.DATABASE_PATH):
+        rust_internal.initialize(
+            database_path,
+            conf.KEY_VALUE_SEPARATOR,
+            conf.END_RECORD,
+            conf.DELETE_VALUE
+        )
 
     @dbl_log
     @dbl_profile
@@ -253,8 +236,8 @@ class DBL:
 
 class REPL:
     @dbl_log
-    def __init__(self):
-        self.dbl = DBL()
+    def __init__(self, database_path=conf.DATABASE_PATH):
+        self.dbl = DBL(database_path)
         self.operations = {
             "build_index": lambda operands: self.dbl.build_index(),
             "check_debug_flag": lambda operands: str(conf.DEBUG),
@@ -336,5 +319,6 @@ class REPL:
 if __name__ == "__main__":
     if "--debug" in sys.argv: conf.DEBUG = True
     if "--profile" in sys.argv: conf.PROFILE = True
-    repl = REPL()
+    database_path = sys.argv[1] if len(sys.argv) > 1 else conf.DATABASE_PATH
+    repl = REPL(database_path)
     repl.start()

@@ -54,10 +54,10 @@ rust                 | 4.976601600646973e-05 | 3.898470401763916e-05
 # Problem 12: compact operation was removed
 # Solution: reimplemented in Rust.
 
+# Problem 15: it should be possible to pass the database path to the library or the cli
+# Solution: a new parameter was added to new instances of DBL class
 
 [todo]
 
 # Problem 8: multiple processes can write at the same time and mess with data in disk
 # Solution 1: add lock for writes (allow many to read).
-
-

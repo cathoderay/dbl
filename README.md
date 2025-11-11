@@ -1,27 +1,10 @@
 dbl
 ===
 ```
-          _____                    _____                    _____
-         /\    \                  /\    \                  /\    \
-        /::\    \                /::\    \                /::\____\
-       /::::\    \              /::::\    \              /:::/    /
-      /::::::\    \            /::::::\    \            /:::/    /
-     /:::/\:::\    \          /:::/\:::\    \          /:::/    /
-    /:::/  \:::\    \        /:::/__\:::\    \        /:::/    /
-   /:::/    \:::\    \      /::::\   \:::\    \      /:::/    /
-  /:::/    / \:::\    \    /::::::\   \:::\    \    /:::/    /
- /:::/    /   \:::\ ___\  /:::/\:::\   \:::\ ___\  /:::/    /
-/:::/____/     \:::|    |/:::/__\:::\   \:::|    |/:::/____/
-\:::\    \     /:::|____|\:::\   \:::\  /:::|____|\:::\    \
- \:::\    \   /:::/    /  \:::\   \:::\/:::/    /  \:::\    \
-  \:::\    \ /:::/    /    \:::\   \::::::/    /    \:::\    \
-   \:::\    /:::/    /      \:::\   \::::/    /      \:::\    \
-    \:::\  /:::/    /        \:::\  /:::/    /        \:::\    \
-     \:::\/:::/    /          \:::\/:::/    /          \:::\    \
-      \::::::/    /            \::::::/    /            \:::\    \
-       \::::/    /              \::::/    /              \:::\____\
-        \::/____/                \::/____/                \::/    /
-         ~~                       ~~                       \/____/
++       ▐▌▗▖   █
++       ▐▌▐▌   █
++    ▗▞▀▜▌▐▛▀▚▖█
++    ▝▚▄▟▌▐▙▄▞▘█
 ```
 This is a naive implementation of a key-value database (log structured).
 
@@ -57,8 +40,7 @@ How to run
       $ ./scripts/install.sh
   ```
   This step will compile and move necessary files to your `$HOME/.dbl` folder.
-
-  Also, a new alias is also added to your `.bashrc` and `.zshrc`.
+  Also, a new alias is added to your `.bashrc` and `.zshrc`.
   
 1. Restart your terminal, so the new alias take effect. Then you can run:
   ```
@@ -69,33 +51,16 @@ Usage example (REPL)
 --------------------
 
 ```
-➜  dbl git:(main) dbl
+➜  dbl git:(main) ✗ dbl
 [__main__] conf file loaded: [conf]
-[helper] conf file loaded: [conf]
-Using /tmp/dbl.data
+DBL initialized. Database opened at /tmp/dbl.data.
 
-    Welcome to
-          _____                    _____                    _____
-         /\    \                  /\    \                  /\    \
-        /::\    \                /::\    \                /::\____\
-       /::::\    \              /::::\    \              /:::/    /
-      /::::::\    \            /::::::\    \            /:::/    /
-     /:::/\:::\    \          /:::/\:::\    \          /:::/    /
-    /:::/  \:::\    \        /:::/__\:::\    \        /:::/    /
-   /:::/    \:::\    \      /::::\   \:::\    \      /:::/    /
-  /:::/    / \:::\    \    /::::::\   \:::\    \    /:::/    /
- /:::/    /   \:::\ ___\  /:::/\:::\   \:::\ ___\  /:::/    /
-/:::/____/     \:::|    |/:::/__\:::\   \:::|    |/:::/____/
-\:::\    \     /:::|____|\:::\   \:::\  /:::|____|\:::\    \
- \:::\    \   /:::/    /  \:::\   \:::\/:::/    /  \:::\    \
-  \:::\    \ /:::/    /    \:::\   \::::::/    /    \:::\    \
-   \:::\    /:::/    /      \:::\   \::::/    /      \:::\    \
-    \:::\  /:::/    /        \:::\  /:::/    /        \:::\    \
-     \:::\/:::/    /          \:::\/:::/    /          \:::\    \
-      \::::::/    /            \::::::/    /            \:::\    \
-       \::::/    /              \::::/    /              \:::\____\
-        \::/____/                \::/____/                \::/    /
-         ~~                       ~~                       \/____/
+    Welcome to:
+
+       ▐▌▗▖   █
+       ▐▌▐▌   █
+    ▗▞▀▜▌▐▛▀▚▖█
+    ▝▚▄▟▌▐▙▄▞▘█
 
     version 0.1
     by Ronald Kaiser
@@ -104,19 +69,23 @@ Type 'help' to list available operations.
 
 help
 ✅ Operations available:
- * help
- * set
- * get
- * del
  * build_index
- * toggle_debug
  * check_debug_flag
+ * clean_all
+ * clean_compact
  * clean_database
  * clean_index
- * clean_all
- * index
- * find_tail
+ * compact
+ * compact_and_replace
+ * del
  * exit
+ * find_tail
+ * get
+ * help
+ * index
+ * replace_from_compact
+ * set
+ * toggle_debug
 
 set food broccoli
 ✅ food => broccoli
@@ -125,10 +94,8 @@ get food
 ✅ broccoli
 
 index
-✅ Index metadata: ------------------------------
-- Number of keys: 1
-- Bytes indexed: 14
---------------------------------------------------
+{'bytes indexed': 14, 'keys': ['food'], 'number of keys': 1}
+✅ None
 
 get drink
 ☑️ None
@@ -137,10 +104,8 @@ set drink water
 ✅ drink => water
 
 index
-✅ Index metadata: ------------------------------
-- Number of keys: 2
-- Bytes indexed: 26
---------------------------------------------------
+{'bytes indexed': 26, 'keys': ['drink', 'food'], 'number of keys': 2}
+✅ None
 
 get drink
 ✅ water
@@ -156,66 +121,15 @@ Usage example (Python)
 
 ```
     >>> from dbl import DBL
+    [dbl] conf file loaded: [conf]
     >>> dbl = DBL()
+    DBL initialized. Database opened at /tmp/dbl.data.
     >>> dbl.set("food", "broccoli")
     'food => broccoli'
     >>> dbl.get("food")
     'broccoli'
     >>> dbl.set("happy-emoji", "😊")
     'happy-emoji => 😊'
-```
-
-
-Usage example (REPL in debug mode)
-----------------------------------
-
-Start your REPL with --debug flag
-```
-➜  dbl git:(main) dbl --debug
-[__main__] conf file loaded: [conf]
-[helper] conf file loaded: [conf]
-[DEBUG (2025-08-19 07:43:24.124656)]  ▶️ Entering __init__ (<__main__.REPL object at 0x101939fd0>,) {}
-[DEBUG (2025-08-19 07:43:24.124697)]  ▶️ Entering __init__ (<__main__.DBL object at 0x10193a3c0>,) {}
-Using /tmp/dbl.data
-[DEBUG (2025-08-19 07:43:24.124714)]  ⬅️ Exiting __init__
-[DEBUG (2025-08-19 07:43:24.124728)]  ⬅️ Exiting __init__
-[DEBUG (2025-08-19 07:43:24.124739)]  ▶️ Entering start (<__main__.REPL object at 0x101939fd0>,) {}
-
-    Welcome to
-          _____                    _____                    _____
-         /\    \                  /\    \                  /\    \
-        /::\    \                /::\    \                /::\____\
-       /::::\    \              /::::\    \              /:::/    /
-      /::::::\    \            /::::::\    \            /:::/    /
-     /:::/\:::\    \          /:::/\:::\    \          /:::/    /
-    /:::/  \:::\    \        /:::/__\:::\    \        /:::/    /
-   /:::/    \:::\    \      /::::\   \:::\    \      /:::/    /
-  /:::/    / \:::\    \    /::::::\   \:::\    \    /:::/    /
- /:::/    /   \:::\ ___\  /:::/\:::\   \:::\ ___\  /:::/    /
-/:::/____/     \:::|    |/:::/__\:::\   \:::|    |/:::/____/
-\:::\    \     /:::|____|\:::\   \:::\  /:::|____|\:::\    \
- \:::\    \   /:::/    /  \:::\   \:::\/:::/    /  \:::\    \
-  \:::\    \ /:::/    /    \:::\   \::::::/    /    \:::\    \
-   \:::\    /:::/    /      \:::\   \::::/    /      \:::\    \
-    \:::\  /:::/    /        \:::\  /:::/    /        \:::\    \
-     \:::\/:::/    /          \:::\/:::/    /          \:::\    \
-      \::::::/    /            \::::::/    /            \:::\    \
-       \::::/    /              \::::/    /              \:::\____\
-        \::/____/                \::/____/                \::/    /
-         ~~                       ~~                       \/____/
-
-    version 0.1
-    by Ronald Kaiser
-
-Type 'help' to list available operations.
-[DEBUG (2025-08-19 07:43:24.124851)]  ▶️ Entering loop (<__main__.REPL object at 0x101939fd0>,) {}
-[DEBUG (2025-08-19 07:43:24.124870)]  ▶️ Entering _loop (<__main__.REPL object at 0x101939fd0>,) {}
-
-get food
-[DEBUG (2025-08-19 07:43:32.499620)]  ▶️ Entering run (<__main__.REPL object at 0x101939fd0>, 'get', ['food']) {}
-[DEBUG (2025-08-19 07:43:32.499669)]  ▶️ Entering get (<__main__.DBL object at 0x10193a3c0>, 'food') {}
-[DEBUG (2025-08-19 07:43:32.499896)]  ⬅️ Exiting get
-[DEBUG (2025-08-19 07:43:32.499918)]  ⬅️ Exiting run
 ```
 
 REPL in test environment
