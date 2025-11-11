@@ -53,22 +53,13 @@ How to run
 ----------
 Note: This instructions will be easier to follow once I decide which language I'm going to use for the internals.
 
-0. First, you need to build internal modules, like:
+0. Just run  
   ```
-      $ ./scripts/build_internals.sh
+      $ ./scripts/install.sh
   ```
-  This step will generate a `rust_internal.so` file that will be used from the Python source code.
+  This step will compile and move necessary files to your $HOME/.dbl folder and add an alias to your .bashrc and .zshrc.
   
-1. Then, you can run it like:
-  ```
-      $ python3 dbl.py
-  ```
-2. or alternatively you can add an alias to your .zshrc or .bashrc to the dbl.py, like
-  ```
-  export PATH=$HOME/code/dbl:$PATH
-  alias dbl="dbl.py"
-  ```
-  and then run it like:
+1. Restart your terminal, so new alias take effect and you can simple run:
   ```
     $ dbl
   ```
