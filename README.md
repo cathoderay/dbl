@@ -51,7 +51,6 @@ Features
 
 How to run
 ----------
-Note: This instructions will be easier to follow once I decide which language I'm going to use for the internals.
 
 0. Just run  
   ```
