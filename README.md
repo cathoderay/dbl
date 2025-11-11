@@ -143,6 +143,20 @@ Where is the data stored?
 -------------------------
 
 The data is stored and retrieved from the path described in `DATABASE_PATH` located at `conf.py`.
+If you want to specify another path in runtime, you can start the REPL as:
+
+```
+       $ dbl /path/to/your/db/test.data
+```
+Alternatively, in your Python code, you can:
+```
+       >>> from dbl import DBL
+       >>> dbl = DBL("/tmp/dbtest.data")
+       DBL initialized. Database opened at /tmp/dbtest.data.
+```
+
+Beware that the path should exist beforehand.
+
 
 Configuration files
 -------------------
