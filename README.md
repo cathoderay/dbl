@@ -41,8 +41,9 @@ How to run
   current setup. I encourage you to read it and adapt to your needs.
   Essentially, this step will compile the Rust internals and move necessary files to your `$HOME/.dbl` folder.
   Also, a new alias is added to your `.bashrc` and `.zshrc`.
+  Restart your terminal session, so the new alias take effect.
   
-1. Restart your terminal, so the new alias take effect. Then you can run:
+1. Then you can run:
   ```
     $ dbl
   ```
