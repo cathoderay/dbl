@@ -116,7 +116,7 @@ class DBL:
     def __init__(self, database_path=conf.DATABASE_PATH):
         self.internal = dbl_internal 
         self.DATABASE_PATH = database_path
-        self.initialize_internal(database_path)
+        self.initialize_internal()
         print(f"DBL initialized. Database opened at {database_path}.")
 
     def initialize_internal(self):
