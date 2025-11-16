@@ -115,12 +115,13 @@ class DBL:
     @dbl_log
     def __init__(self, database_path=conf.DATABASE_PATH):
         self.internal = dbl_internal 
+        self.DATABASE_PATH = database_path
         self.initialize_internal(database_path)
         print(f"DBL initialized. Database opened at {database_path}.")
 
-    def initialize_internal(self, database_path=conf.DATABASE_PATH):
+    def initialize_internal(self):
         dbl_internal.initialize(
-            database_path,
+            self.DATABASE_PATH,
             conf.KEY_VALUE_SEPARATOR,
             conf.END_RECORD,
             conf.DELETE_VALUE
@@ -147,8 +148,8 @@ class DBL:
 
     @dbl_log
     def replace_from_compact(self):
-        os.rename(conf.COMPACT_PATH, conf.DATABASE_PATH)
-        return f"{conf.DATABASE_PATH} replaced from compact."
+        os.rename(conf.COMPACT_PATH, self.DATABASE_PATH)
+        return f"{self.DATABASE_PATH} replaced from compact."
 
     @dbl_log
     @dbl_profile
