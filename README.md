@@ -37,6 +37,8 @@ How to run
   ```
       $ ./scripts/install.sh
   ```
+  This step assumes you have rust installed.
+  (Please, go to https://rust-lang.org/tools/install/ if you don't)
   This step will compile and move necessary files to your `$HOME/.dbl` folder.
   Also, a new alias is added to your `.bashrc` and `.zshrc`.
   
