@@ -222,17 +222,18 @@ class DBL:
         return True
 
     @dbl_log
-    def _get_index_metadata(self):
-        return pprint.pprint({
+    def _print_index_metadata(self):
+        pprint.pprint({
             "number of keys": self.internal.get_index_size(),
             "bytes indexed": self.internal.get_bytes_read(),
             "keys": self.internal.get_index_keys()
         })
 
     @dbl_log
-    def get_index_metadata(self):
+    def print_index_metadata(self):
         self.build_index()
-        return str(self._get_index_metadata())
+        self._print_index_metadata()
+        return True
 
 
 class REPL:
@@ -253,7 +254,7 @@ class REPL:
             "find_tail": lambda operands: self.dbl.find_tail(*operands),
             "get": lambda operands: self.dbl.get(*operands),
             "help": lambda operands: self.help(),
-            "index": lambda operands: self.dbl.get_index_metadata(),
+            "index": lambda operands: self.dbl.print_index_metadata(),
             "replace_from_compact": lambda operands: self.dbl.replace_from_compact(),
             "set": lambda operands: self.dbl.set(*operands),
             "toggle_debug": lambda operands: self.toggle_debug(),
