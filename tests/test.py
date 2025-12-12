@@ -158,6 +158,23 @@ class DBLTest(unittest.TestCase):
         dbl.set("key-with-newlines", value)
         assert dbl.get("key-with-newlines") == value
 
+    def test_compact(self):
+        from conf_test import COMPACT_PATH
+
+        dbl = DBL()
+        for i in range(10):
+            dbl.set("key-0", f"value-{i}")
+
+        bytes_before = os.path.getsize(dbl.DATABASE_PATH)
+
+        dbl.compact()
+
+        bytes_after = os.path.getsize(COMPACT_PATH)
+
+        assert bytes_before == 140
+        assert bytes_after == 14
+        assert dbl.get("key-0") == "value-9"
+
 
 class DBLHelperTest(unittest.TestCase):
     def setUp(self):

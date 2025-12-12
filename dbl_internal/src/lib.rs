@@ -109,6 +109,11 @@ fn initialize(
     end_record: String,
     delete_value: String,
 ) -> PyResult<()> {
+
+    if DATABASE_PATH.get().is_some() {
+        return Ok(()); // Already initialized
+    }
+
     DATABASE_PATH.set(database_path).map_err(|e| {
         PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Failed to initialize database path: {:?}", e))
     })?;
@@ -122,6 +127,7 @@ fn initialize(
         PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Failed to initialize delete value: {:?}", e))
     })?;
     create_database();
+
     Ok(())
 }
 
@@ -184,6 +190,7 @@ fn set(key: &[u8], value: &[u8]) -> io::Result<()> {
         END_RECORD.get().unwrap().as_bytes()]
         .concat()
     )?;
+
     Ok(())
 }
 
