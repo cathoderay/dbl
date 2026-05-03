@@ -157,6 +157,13 @@ class DBL:
         value = decode(self.internal.get(encode(key)))
         return value if len(value) > 0 else None
 
+    @dbl_log
+    @dbl_profile
+    def add(self, key, increment):
+        value = decode(self.internal.get(encode(key)))
+        new_value = str(int(value) + int(increment))
+        return self.set(key, new_value)
+
     @dbl_profile
     @dbl_log
     def delete(self, key):
@@ -241,6 +248,7 @@ class REPL:
     def __init__(self, database_path=conf.DATABASE_PATH):
         self.dbl = DBL(database_path)
         self.operations = {
+            "add": lambda operands: self.dbl.add(*operands),
             "build_index": lambda operands: self.dbl.build_index(),
             "check_debug_flag": lambda operands: str(conf.DEBUG),
             "clean_all": lambda operands: self.dbl.clean_all(),

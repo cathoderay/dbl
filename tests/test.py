@@ -175,6 +175,18 @@ class DBLTest(unittest.TestCase):
         assert bytes_after == 14
         assert dbl.get("key-0") == "value-9"
 
+    def test_add(self):
+        dbl = DBL()
+        dbl.set("counter", 0)
+
+        dbl.add("counter", 5)
+        value = dbl.get("counter")
+        assert value == 5
+
+        dbl.add("counter", -42)
+        value = dbl.get("counter")
+        assert value == -37
+
 
 class DBLHelperTest(unittest.TestCase):
     def setUp(self):
